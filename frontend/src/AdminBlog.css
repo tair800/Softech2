@@ -1,0 +1,37 @@
+.admin-blog-container .image-placeholder {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    width: 100%;
+    height: 180px;
+}
+
+.admin-blog-container .image-actions {
+    right: 8px;
+    top: 8px;
+    display: flex;
+    gap: 6px;
+}
+
+.admin-blog-container .action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+}
+
+.admin-blog-container .action-btn img {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) invert(1) contrast(1.1);
+}
+
+.admin-blog-container .image-info {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    margin-top: 6px;
+}

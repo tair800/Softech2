@@ -1,0 +1,175 @@
+.page-title-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.page-title-content {
+    text-align: center;
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, #17DBFC 0%, #FFFFFF 50%, #467EFE 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.5px;
+}
+
+.page-subtitle {
+    display: none;
+}
+
+/* Custom positioning for different pages */
+.page-title-container.page-title-about {
+    top: 13%;
+}
+
+
+.page-title-container.page-title-services {
+    top: 23%;
+}
+
+.page-title-container.page-title-equipment {
+    top: 10.8%;
+}
+
+.page-title-container.page-title-contact {
+    top: 21.5%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.25rem;
+    }
+}
+
+/* 425px and below: unify title size and bounding */
+@media (max-width: 425px) {
+    .page-title {
+        font-size: 1.5rem !important;
+        max-width: 90vw;
+        min-width: 200px;
+    }
+
+    /* About page */
+    .page-title-container.page-title-about {
+        top: 150px;
+    }
+
+    /* Contact page */
+    .page-title-container.page-title-contact {
+        top: 169px;
+    }
+}
+
+/* Bounded ranges for Equipment page title position on mobile */
+@media (max-width: 320px) {
+    .page-title-container.page-title-equipment {
+        top: 134px;
+    }
+}
+
+@media (min-width: 321px) and (max-width: 360px) {
+    .page-title-container.page-title-equipment {
+        top: 142px;
+    }
+}
+
+@media (min-width: 361px) and (max-width: 375px) {
+    .page-title-container.page-title-equipment {
+        top: 150px;
+    }
+}
+
+@media (min-width: 376px) and (max-width: 425px) {
+    .page-title-container.page-title-equipment {
+        top: 158px;
+    }
+}
+
+@media (min-width: 426px) and (max-width: 480px) {
+    .page-title-container.page-title-equipment {
+        top: 168px;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .page-title-container.page-title-equipment {
+        top: 180px;
+    }
+}
+
+/* Mobile responsive positioning for Services page title */
+@media (max-width: 320px) {
+    .page-title-container.page-title-services {
+        top: 140px;
+    }
+}
+
+@media (min-width: 321px) and (max-width: 360px) {
+    .page-title-container.page-title-services {
+        top: 148px;
+    }
+}
+
+@media (min-width: 361px) and (max-width: 375px) {
+    .page-title-container.page-title-services {
+        top: 156px;
+    }
+}
+
+@media (min-width: 376px) and (max-width: 425px) {
+    .page-title-container.page-title-services {
+        top: 169px;
+    }
+}
+
+@media (min-width: 426px) and (max-width: 480px) {
+    .page-title-container.page-title-services {
+        top: 175px;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .page-title-container.page-title-services {
+        top: 185px;
+    }
+}
+
+/* Tablet portrait/landscape */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .page-title-container.page-title-equipment {
+        top: 280px;
+    }
+}
+
+/* Small/medium laptops */
+@media (min-width: 1025px) and (max-width: 1366px) {
+    .page-title-container.page-title-equipment {
+        top: 220px;
+    }
+}
+
+/* Large laptops */
+@media (min-width: 1367px) and (max-width: 1600px) {
+    .page-title-container.page-title-equipment {
+        top: 240px;
+    }
+}

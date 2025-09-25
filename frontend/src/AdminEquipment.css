@@ -1,0 +1,372 @@
+/* Admin Equipment Page Styles - aligned with AdminAbout */
+
+.admin-equipment-container {
+    padding: 20px 40px;
+}
+
+.admin-equipment-header h2 {
+    color: #ffffff;
+    margin: 0;
+}
+
+/* Buttons */
+.add-btn {
+    background: linear-gradient(90deg, #5c67ff 0%, #ad51ff 100%);
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+
+/* Language Selector - Inline in Cards */
+.language-selector-inline {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.language-selector-inline .form-select {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+}
+
+.language-selector-inline .form-select:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #467EFE !important;
+    box-shadow: 0 0 0 0.2rem rgba(70, 126, 254, 0.25) !important;
+}
+
+.language-selector-inline .form-text {
+    font-size: 12px !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    margin: 0 !important;
+}
+
+/* Card container */
+.admin-equipment-container .admin-about-card {
+    background: linear-gradient(265.98deg, rgba(70, 126, 254, 0.2) -8.44%, rgba(24, 24, 24, 0.2) 94.15%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+}
+
+/* Inputs */
+.admin-equipment-container .form-control,
+.admin-equipment-container .form-select,
+.admin-equipment-container textarea {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+.admin-equipment-container .form-control:focus,
+.admin-equipment-container .form-select:focus,
+.admin-equipment-container textarea:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: #467EFE !important;
+    box-shadow: 0 0 0 0.2rem rgba(70, 126, 254, 0.25) !important;
+    color: #ffffff !important;
+}
+
+.admin-equipment-container .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Form Select Styles */
+.admin-equipment-container .form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.75rem center !important;
+    background-size: 16px 12px !important;
+}
+
+.admin-equipment-container .form-select option {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+.admin-equipment-container .form-select option:checked {
+    background-color: #467EFE !important;
+}
+
+.admin-equipment-container .form-text {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Features and Specifications Section */
+.features-section,
+.specifications-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.features-section h6,
+.specifications-section h6 {
+    color: #ffffff;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.feature-item,
+.spec-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.feature-item .form-control,
+.spec-item .form-control {
+    margin-bottom: 8px;
+}
+
+.feature-item .btn,
+.spec-item .btn {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+/* Categories and Tags */
+.categories-display,
+.tags-display {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.categories-display h6,
+.tags-display h6 {
+    color: #ffffff;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.badge {
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin: 2px;
+}
+
+.badge.bg-primary {
+    background-color: #467EFE !important;
+}
+
+.badge.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+/* Table */
+.table-dark.table-striped {
+    --bs-table-bg: rgba(17, 18, 20, 0.6);
+    --bs-table-striped-bg: rgba(255, 255, 255, 0.05);
+    --bs-table-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table-dark.table-striped img {
+    border-radius: 6px;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    width: 95%;
+    max-width: 720px;
+    background: linear-gradient(265.98deg, rgba(70, 126, 254, 0.15) -8.44%, rgba(24, 24, 24, 0.9) 94.15%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    color: #fff;
+}
+
+.modal-header,
+.modal-footer {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Pagination Styles */
+.pagination {
+    margin: 0;
+    gap: 5px;
+}
+
+.page-link {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+}
+
+.page-item.active .page-link {
+    background: #467EFE;
+    border-color: #467EFE;
+    color: #ffffff;
+}
+
+.page-item.disabled .page-link {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Image Upload Styles */
+.image-upload-container {
+    position: relative;
+}
+
+.image-placeholder {
+    position: relative;
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 200px;
+    width: 100%;
+}
+
+.image-actions {
+    position: absolute;
+    left: 10px !important;
+    bottom: 10px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.action-btn:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.action-btn img {
+    width: 16px;
+    height: 16px;
+    filter: invert(1);
+}
+
+.image-info {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    margin-top: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .admin-equipment-container {
+        padding: 15px 20px;
+    }
+
+    .feature-item .d-flex,
+    .spec-item .d-flex {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .feature-item .btn,
+    .spec-item .btn {
+        align-self: flex-end;
+    }
+}
+
+/* Order Management Styles */
+.admin-equipment-container .badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 8px;
+}
+
+.admin-equipment-container .btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+    padding: 4px 8px;
+    font-size: 12px;
+    min-width: 32px;
+}
+
+.admin-equipment-container .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+.admin-equipment-container .btn-outline-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.admin-equipment-container .features-section,
+.admin-equipment-container .specifications-section {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.admin-equipment-container .feature-item,
+.admin-equipment-container .specification-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-equipment-container .alert-info {
+    background-color: rgba(13, 202, 240, 0.1);
+    border-color: rgba(13, 202, 240, 0.3);
+    color: #0dcaf0;
+}
+
+.admin-equipment-container .alert-sm {
+    font-size: 12px;
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+}
+
+.admin-equipment-container .alert strong {
+    color: #0dcaf0;
+}

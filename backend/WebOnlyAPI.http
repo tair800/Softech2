@@ -1,0 +1,6 @@
+@WebOnlyAPI_HostAddress = http://localhost:5098
+
+GET {{WebOnlyAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
