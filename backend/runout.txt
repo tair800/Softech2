@@ -37,7 +37,7 @@ fail: Microsoft.EntityFrameworkCore.Database.Command[20102]
       DROP TABLE [ProductSections];
 [Startup] Migration failed: Cannot drop the table 'ProductSections', because it does not exist or you do not have permission.
 info: Microsoft.Hosting.Lifetime[14]
-      Now listening on: http://localhost:5098
+      Now listening on: https://softech-api.webonly.io
 info: Microsoft.Hosting.Lifetime[0]
       Application started. Press Ctrl+C to shut down.
 info: Microsoft.Hosting.Lifetime[0]

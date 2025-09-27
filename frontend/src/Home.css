@@ -436,8 +436,8 @@ body {
 
     .circular-progress {
         position: relative;
-        width: 411px;
-        height: 325px;
+        width: 580px;
+        height: 460px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -448,13 +448,49 @@ body {
         top: 233px;
         clip-path: inset(0 0 50% 0);
     }
+
+    .circular-progress svg {
+        width: 580px;
+        height: 460px;
+    }
+
+    .circle-logo-icon {
+        width: 480px;
+        height: 125px;
+    }
+
+    .slider-name {
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .slider-name:hover {
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .slider-name.active {
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .slider-name.active:hover {
+        font-size: 32px;
+    }
+}
+
+/* Medium screens (1280px and above) */
+@media (min-width: 1280px) and (max-width: 1919px) {
+    .circular-progress {
+        top: 167px;
+    }
 }
 
 /* Large screens (1920px and above) */
 @media (min-width: 1920px) {
     .circular-progress {
-        width: 450px;
-        height: 360px;
+        width: 580px;
+        height: 640px;
         top: 233px;
     }
 }

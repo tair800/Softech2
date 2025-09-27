@@ -81,8 +81,14 @@ function CircularProgress({ currentIndex, totalSlides, slides, language }) {
                     const x = centerX + textRadius * Math.cos(angle);
                     const y = centerY + textRadius * Math.sin(angle);
                     const isActive = index === currentIndex;
-                    const fontSize = Math.max(8, base * (isSmall ? 0.025 : 0.035)); // Responsive font size
-                    const activeFontSize = fontSize * (isSmall ? 1.2 : 1.5); // Smaller scale boost on mobile
+                    // Check if screen is 1920px or larger
+                    const isLargeScreen = window.innerWidth >= 1920;
+                    const fontSize = isLargeScreen ?
+                        Math.max(18, base * 0.045) : // Larger font size for 1920px+ screens
+                        Math.max(8, base * (isSmall ? 0.025 : 0.035)); // Original responsive font size
+                    const activeFontSize = isLargeScreen ?
+                        fontSize * 1.6 : // Larger scale boost for 1920px+ screens
+                        fontSize * (isSmall ? 1.2 : 1.5); // Original scale boost
 
                     return (
                         <text
@@ -96,7 +102,7 @@ function CircularProgress({ currentIndex, totalSlides, slides, language }) {
                                 fontSize: isActive ? activeFontSize : fontSize,
                                 fontWeight: isActive ? '700' : '500',
                                 fill: isActive ? '#17DBFC' : '#ffffff',
-                                transform: `rotate(${angle * 180 / Math.PI + 90}deg) scale(${isActive ? (isSmall ? 1.15 : 1.35) : 1})`,
+                                transform: `rotate(${angle * 180 / Math.PI + 90}deg) scale(${isActive ? (isLargeScreen ? 1.5 : (isSmall ? 1.15 : 1.35)) : 1})`,
                                 transformOrigin: `${x}px ${y}px`,
                                 transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
                             }}
@@ -130,14 +136,14 @@ export default function Home() {
     useEffect(() => {
         const fetchSliders = async () => {
             try {
-                const response = await fetch('http://localhost:5098/api/sliders');
+                const response = await fetch('https://softech-api.webonly.io/api/sliders');
                 if (response.ok) {
                     const data = await response.json();
                     console.log('API Response:', data);
                     // Transform API data to match frontend expectations
                     const transformedSlides = data.map(slide => ({
                         id: slide.id,
-                        img: slide.imageUrl ? `http://localhost:5098${slide.imageUrl}` : '/assets/slider1.png',
+                        img: slide.imageUrl ? `https://softech-api.webonly.io${slide.imageUrl}` : '/assets/slider1.png',
                         name: slide.name || 'Default',
                         nameEn: slide.nameEn || 'Default',
                         nameRu: slide.nameRu || 'По умолчанию'
@@ -198,18 +204,49 @@ export default function Home() {
 
     // Update transform for smooth scrolling
     useEffect(() => {
-        if (scrollerRef.current) {
+        if (scrollerRef.current && slides.length > 0) {
             const gapWidth = 20; // 20px gap between images
             const totalItemWidth = imageWidth + gapWidth;
-            const scrollPosition = currentIndex * totalItemWidth;
+
+            // Debug logging
+            console.log('Slider Debug:', {
+                currentIndex,
+                imageWidth,
+                totalItemWidth,
+                slidesLength: slides.length,
+                viewportWidth: window.innerWidth
+            });
+
+            // Let's try a different approach
+            // We want the active slide to appear in the center of the viewport
+            // The viewport width is window.innerWidth
+            // Each slide should take 1/3 of the viewport width
+            // We need to position the scroller so that the active slide is centered
+
+            // Calculate the center position of the viewport
+            const viewportCenter = window.innerWidth / 2;
+
+            // Calculate the position of the active slide in the middle copy
+            const middleCopyStart = slides.length * totalItemWidth;
+            const activeSlidePosition = middleCopyStart + (currentIndex * totalItemWidth);
+
+            // Calculate how much we need to move the scroller to center the active slide
+            const slideCenter = activeSlidePosition + (imageWidth / 2);
+            const scrollPosition = slideCenter - viewportCenter;
+
+            console.log('Viewport center:', viewportCenter);
+            console.log('Active slide position:', activeSlidePosition);
+            console.log('Slide center:', slideCenter);
+            console.log('Scroll position:', scrollPosition);
+
             scrollerRef.current.style.transform = `translateX(-${scrollPosition}px)`;
         }
-    }, [currentIndex, imageWidth]);
+    }, [currentIndex, imageWidth, slides.length]);
 
 
 
     const nextSlide = () => {
-        if (!isTransitioning) {
+        if (!isTransitioning && slides.length > 0) {
             setIsTransitioning(true);
             setDirection('next');
             setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
@@ -221,7 +258,7 @@ export default function Home() {
     };
 
     const prevSlide = () => {
-        if (!isTransitioning) {
+        if (!isTransitioning && slides.length > 0) {
             setIsTransitioning(true);
             setDirection('prev');
             setCurrentIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length);

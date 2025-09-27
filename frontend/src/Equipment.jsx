@@ -41,7 +41,7 @@ function Equipment() {
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -96,7 +96,7 @@ function Equipment() {
 
             // If there's a search term, use API search
             if (filters.search && filters.search.trim() !== '') {
-                const searchUrl = `http://localhost:5098/api/equipment/search?q=${encodeURIComponent(filters.search.trim())}`;
+                const searchUrl = `https://softech-api.webonly.io/api/equipment/search?q=${encodeURIComponent(filters.search.trim())}`;
 
 
                 const response = await fetch(searchUrl);
@@ -240,7 +240,7 @@ function Equipment() {
 
         const fetchEquipment = async () => {
             try {
-                const res = await fetch(`http://localhost:5098/api/equipment/full`);
+                const res = await fetch(`https://softech-api.webonly.io/api/equipment/full`);
                 if (!res.ok) throw new Error('Failed to load equipment');
                 const data = await res.json();
 

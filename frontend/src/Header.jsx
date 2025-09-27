@@ -61,9 +61,9 @@ function Header() {
                         <img src={dropdownIcon} alt="Dropdown Icon" className="dropdown-icon" width="21" height="21" />
                         {dropdownOpen && (
                             <div className="lang-dropdown">
-                                <div className="lang-option" onClick={() => setLanguage('az')}>az</div>
-                                <div className="lang-option" onClick={() => setLanguage('en')}>en</div>
-                                <div className="lang-option" onClick={() => setLanguage('ru')}>rus</div>
+                                <div className="lang-option" onClick={() => setLanguage('az')}>AZ</div>
+                                <div className="lang-option" onClick={() => setLanguage('en')}>EN</div>
+                                <div className="lang-option" onClick={() => setLanguage('ru')}>RU</div>
                             </div>
                         )}
                     </div>

@@ -3,7 +3,7 @@ import './AdminEquipment.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'http://localhost:5098/api';
+const API = 'https://softech-api.webonly.io/api';
 
 export default function AdminEquipment() {
     const [equipments, setEquipments] = useState([]);
@@ -39,7 +39,7 @@ export default function AdminEquipment() {
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -1258,8 +1258,8 @@ export default function AdminEquipment() {
                                                     const result = await response.json();
                                                     let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                     // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('http://localhost:5098')) {
-                                                        imageUrl = imageUrl.replace('http://localhost:5098', '');
+                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                                                     }
                                                     setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, imageUrl, imageFile: file } : x));
                                                 } else {
@@ -1412,8 +1412,8 @@ export default function AdminEquipment() {
                                                         const result = await response.json();
                                                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                         // Convert full URL to relative path if needed
-                                                        if (imageUrl.startsWith('http://localhost:5098')) {
-                                                            imageUrl = imageUrl.replace('http://localhost:5098', '');
+                                                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                                                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                                                         }
                                                         setForm({ ...form, imageUrl, imageFile: file });
                                                     } else {

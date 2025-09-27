@@ -17,7 +17,7 @@ function EquipmentDetail() {
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -38,7 +38,7 @@ function EquipmentDetail() {
         const fetchEquipment = async () => {
             try {
                 setLoading(true);
-                const res = await fetch(`http://localhost:5098/api/equipment/${id}`);
+                const res = await fetch(`https://softech-api.webonly.io/api/equipment/${id}`);
                 if (!res.ok) throw new Error('Failed to load equipment');
                 const data = await res.json();
 
@@ -56,7 +56,7 @@ function EquipmentDetail() {
     useEffect(() => {
         const fetchSimilarEquipment = async () => {
             try {
-                const res = await fetch(`http://localhost:5098/api/equipment`);
+                const res = await fetch(`https://softech-api.webonly.io/api/equipment`);
                 if (!res.ok) throw new Error('Failed to load similar equipment');
                 const data = await res.json();
 

@@ -2,12 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import Swal from 'sweetalert2';
 import './AdminAbout.css';
 
-const API = 'http://localhost:5098/api';
+const API = 'https://softech-api.webonly.io/api';
 
 export default function AdminAbout() {
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/employee.png';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -719,8 +719,8 @@ export default function AdminAbout() {
                         const result = await response.json();
                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                         // Convert full URL to relative path if needed
-                        if (imageUrl.startsWith('http://localhost:5098')) {
-                            imageUrl = imageUrl.replace('http://localhost:5098', '');
+                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                         }
                         handleMainContentChange('imageUrl', imageUrl);
                     } else {
@@ -771,8 +771,8 @@ export default function AdminAbout() {
                         const result = await response.json();
                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                         // Convert full URL to relative path if needed
-                        if (imageUrl.startsWith('http://localhost:5098')) {
-                            imageUrl = imageUrl.replace('http://localhost:5098', '');
+                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                         }
                         const updatedDirector = { ...director, imageUrl };
                         setDirector(updatedDirector);
@@ -822,8 +822,8 @@ export default function AdminAbout() {
                         const result = await response.json();
                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                         // Convert full URL to relative path if needed
-                        if (imageUrl.startsWith('http://localhost:5098')) {
-                            imageUrl = imageUrl.replace('http://localhost:5098', '');
+                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                         }
                         const updatedEmployees = employees.map(emp =>
                             emp.id === employeeId ? { ...emp, imageUrl } : emp
@@ -883,8 +883,8 @@ export default function AdminAbout() {
                             const result = await response.json();
                             let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                             // Convert full URL to relative path if needed
-                            if (imageUrl.startsWith('http://localhost:5098')) {
-                                imageUrl = imageUrl.replace('http://localhost:5098', '');
+                            if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                                imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                             }
 
                             newImages.push({
@@ -967,8 +967,8 @@ export default function AdminAbout() {
                         const result = await response.json();
                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                         // Convert full URL to relative path if needed
-                        if (imageUrl.startsWith('http://localhost:5098')) {
-                            imageUrl = imageUrl.replace('http://localhost:5098', '');
+                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                         }
                         setNewEmployee({ ...newEmployee, imageUrl: imageUrl });
                     } else {

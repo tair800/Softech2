@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './AdminProducts.css';
 
-const API = 'http://localhost:5098/api';
+const API = 'https://softech-api.webonly.io/api';
 
 export default function AdminSliders() {
     const [items, setItems] = useState([]);
@@ -11,7 +11,7 @@ export default function AdminSliders() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         return url;
     };
 

@@ -21,6 +21,7 @@
 /* Blog Detail Page Styles */
 .blog-detail-page {
     min-height: 100vh;
+    margin-top: 15rem;
 }
 
 /* Mobile sizing bounds */

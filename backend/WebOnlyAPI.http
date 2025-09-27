@@ -1,4 +1,4 @@
-@WebOnlyAPI_HostAddress = http://localhost:5098
+@WebOnlyAPI_HostAddress = https://softech-api.webonly.io
 
 GET {{WebOnlyAPI_HostAddress}}/weatherforecast/
 Accept: application/json

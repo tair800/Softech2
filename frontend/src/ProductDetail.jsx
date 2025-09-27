@@ -7,6 +7,23 @@ import './ProductDetail.css';
 function ProductDetail() {
     const { id } = useParams();
     const { language } = useLanguage();
+
+    // Translation function
+    const t = (key) => {
+        const dict = {
+            readMore: {
+                az: 'Daha çox',
+                en: 'Read more',
+                ru: 'Читать далее'
+            },
+            readLess: {
+                az: 'Daha az',
+                en: 'Read less',
+                ru: 'Читать меньше'
+            }
+        };
+        return (dict[key] && (dict[key][language] || dict[key].az)) || key;
+    };
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -21,7 +38,7 @@ function ProductDetail() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         return url;
     };
 
@@ -29,7 +46,7 @@ function ProductDetail() {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const res = await fetch(`http://localhost:5098/api/products/${id}?language=${language}`);
+                const res = await fetch(`https://softech-api.webonly.io/api/products/${id}?language=${language}`);
                 if (!res.ok) throw new Error('Failed to load product');
                 const data = await res.json();
 
@@ -291,7 +308,7 @@ function ProductDetail() {
                         <div className="product-detail-line"></div>
                         <p className="product-detail-description">{product.detailDescription}</p>
                         <div className="product-detail-scroll" onClick={isExpanded ? handleReadLess : handleReadMore}>
-                            <span>{isExpanded ? 'Daha az' : 'Daha çox'}</span>
+                            <span>{isExpanded ? t('readLess') : t('readMore')}</span>
                             <img src="/assets/arrowDown.png" alt="Arrow down" className={`scroll-arrow ${isExpanded ? 'rotated' : ''}`} />
                         </div>
                     </div>

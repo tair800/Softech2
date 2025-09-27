@@ -29,7 +29,7 @@ function Contact() {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:5098/api/contact', {
+            const response = await fetch('https://softech-api.webonly.io/api/contact', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -57,6 +57,7 @@ function Contact() {
             phone: { az: 'Telefon', en: 'Phone', ru: 'Телефон' },
             email: { az: 'Elektron poçt', en: 'Email', ru: 'Электронная почта' },
             location: { az: 'Məkan', en: 'Location', ru: 'Местоположение' },
+            locationFull: { az: 'Baku, Azerbaijan', en: 'Baku, Azerbaijan', ru: 'Баку, Азербайджан' },
             yourInfo: { az: 'Sizin məlumatlarınız', en: 'Your information', ru: 'Ваша информация' },
             nameLabel: { az: 'Adınız', en: 'Your name', ru: 'Ваше имя' },
             namePh: { az: 'Sənin adın', en: 'Your name', ru: 'Ваше имя' },
@@ -105,30 +106,38 @@ function Contact() {
                             <p>{t('desc')}</p>
                         </div>
                         <div className="contact-location">
-                            <a href="https://maps.google.com/maps?q=1+Ahmad+Rajabli,+Baku,+Azerbaijan" target="_blank" rel="noopener noreferrer">
-                                <span>1 Ahmad Rajabli, Baku, Azerbaijan</span>
-                            </a>
+                            <span>{t('locationFull')}</span>
                         </div>
                         <div className="contact-info">
                             <div className="contact-item">
                                 <div className="contact-icon">
                                     <img src={contactPhoneIcon} alt={t('phone')} />
                                 </div>
-                                <span>+994 55 274 23 03 <br />
-                                    +994 51 252 15 56</span>
+                                <span>
+                                    <a href="tel:+994552742303" style={{ color: 'inherit', textDecoration: 'none' }}>+994 55 274 23 03</a> <br />
+                                    <a href="tel:+994512521556" style={{ color: 'inherit', textDecoration: 'none' }}>+994 51 252 15 56</a>
+                                </span>
                             </div>
 
                             <div className="contact-item">
                                 <div className="contact-icon">
                                     <img src={contactMailIcon} alt={t('email')} />
                                 </div>
-                                <span>cavidn@softech.az</span>
+                                <span>
+                                    <a href="mailto:cavidn@softech.az" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                        cavidn@softech.az
+                                    </a>
+                                </span>
                             </div>
                             <div className="contact-item">
                                 <div className="contact-icon">
                                     <img src={contactLocationIcon} alt={t('location')} />
                                 </div>
-                                <span>Baku</span>
+                                <span>
+                                    <a href="https://maps.google.com/maps?q=1+Ahmad+Rajabli,+Baku,+Azerbaijan" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                        1 Ahmad Rajabli, {t('locationFull')}
+                                    </a>
+                                </span>
                             </div>
                         </div>
                     </div>

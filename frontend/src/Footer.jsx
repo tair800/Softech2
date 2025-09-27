@@ -21,7 +21,7 @@ function Footer() {
             madeby: {
                 az: 'Veb-sayt Webonly tərəfindən hazırlanıb.',
                 en: 'Website developed by Webonly.',
-                ru: 'Сайт разработан Webonly.'
+                ru: 'Веб-сайт разработан компанией Webonly'
             },
             rights: {
                 az: 'Copywrite @2025. Bütün hüquqlar qorunur.',
@@ -30,7 +30,7 @@ function Footer() {
             },
             products: { az: 'Məhsullar', en: 'Products', ru: 'Продукты' },
             contact: { az: 'Əlaqə', en: 'Contact', ru: 'Контакты' },
-            location: { az: 'Baku, Azerbaijan', en: 'Baku, Azerbaijan', ru: 'Баку, Азербайджан' },
+            location: { az: '1 Ahmad Rajabli, Baku, Azerbaijan', en: '1 Ahmad Rajabli, Baku, Azerbaijan', ru: '1 Ahmad Rajabli, Баку, Азербайджан' },
             emailPh: { az: 'Email daxil edin', en: 'Enter your email', ru: 'Введите ваш email' }
         };
         return (dict[key] && (dict[key][language] || dict[key].az)) || key;
@@ -77,11 +77,13 @@ function Footer() {
                         </button>
                     </form>
                     <div className="footer-socials">
-                        <a href="#" aria-label="YouTube"><FontAwesomeIcon icon={faYoutube} /></a>
                         <a href="https://www.facebook.com/Softech.az/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><FontAwesomeIcon icon={faFacebookF} /></a>
-                        <a href="#" aria-label="X"><FontAwesomeIcon icon={faXTwitter} /></a>
                         <a href="https://www.instagram.com/softech_erp/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FontAwesomeIcon icon={faInstagram} /></a>
-                        <a href="#" aria-label="LinkedIn"><FontAwesomeIcon icon={faLinkedinIn} /></a>
+                    </div>
+                    <hr className="footer-divider" />
+                    <div className="footer-meta-row">
+                        <div className="footer-madeby">{t('madeby')}</div>
+                        <div className="footer-copyright">{t('rights')}</div>
                     </div>
                 </div>
 
@@ -93,20 +95,21 @@ function Footer() {
                                 <li key={idx}>{label}</li>
                             ))}
                         </ul>
-                        <hr className="footer-divider" />
-                        <div className="footer-meta-row">
-                            <div className="footer-madeby">{t('madeby')}</div>
-                            <div className="footer-copyright">{t('rights')}</div>
-                        </div>
                     </div>
 
                     <div className="footer-col footer-col-right">
                         <h3 className="footer-title">{t('contact')}</h3>
                         <ul className="footer-contact">
-                            <li><FontAwesomeIcon icon={faLocationDot} className="footer-contact-icon" /> {t('location')}</li>
-                            <li><FontAwesomeIcon icon={faPhone} className="footer-contact-icon" />+994 55 274 23 03 <br />
-                                +994 51 252 15 56</li>
-                            <li><FontAwesomeIcon icon={faEnvelope} className="footer-contact-icon" /> <a href="mailto:example@mail.az" style={{ color: 'inherit', textDecoration: 'none' }}>cavidn@softech.az</a></li>
+                            <li><FontAwesomeIcon icon={faLocationDot} className="footer-contact-icon" />
+                                <a href="https://maps.google.com/maps?q=1+Ahmad+Rajabli,+Baku,+Azerbaijan" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>{t('location')}</a>
+                            </li>
+                            <li><FontAwesomeIcon icon={faPhone} className="footer-contact-icon" />
+                                <a href="tel:+994552742303" style={{ color: 'inherit', textDecoration: 'none' }}>+994 55 274 23 03</a>
+                            </li>
+                            <li><FontAwesomeIcon icon={faPhone} className="footer-contact-icon" />
+                                <a href="tel:+994512521556" style={{ color: 'inherit', textDecoration: 'none' }}>+994 51 252 15 56</a>
+                            </li>
+                            <li><FontAwesomeIcon icon={faEnvelope} className="footer-contact-icon" /> <a href="mailto:cavidn@softech.az" style={{ color: 'inherit', textDecoration: 'none' }}>cavidn@softech.az</a></li>
                         </ul>
                     </div>
                 </div>

@@ -228,6 +228,16 @@
   font-weight: 500;
 }
 
+.contact-item a {
+  transition: all 0.3s ease;
+}
+
+.contact-item a:hover {
+  color: #17DBFC !important;
+  text-decoration: underline !important;
+  transform: translateX(5px);
+}
+
 .contact-right-section {
   flex: 0 0 auto;
   height: 400px;

@@ -109,12 +109,24 @@
       "PackagePath": "staticwebassets\\uploads\\employees\\20250925120029461_Frame 1786 (2).png"
     },
     {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250925220137921_logo 2.svg",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250925220137921_logo 2.svg"
+    },
+    {
       "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\equipment\\.gitkeep",
       "PackagePath": "staticwebassets\\uploads\\equipment\\.gitkeep"
     },
     {
       "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\.gitkeep",
       "PackagePath": "staticwebassets\\uploads\\products\\.gitkeep"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\1\\20250925215722837_typcn_location.svg",
+      "PackagePath": "staticwebassets\\uploads\\products\\1\\20250925215722837_typcn_location.svg"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\1\\20250925215729235_typcn_location.svg",
+      "PackagePath": "staticwebassets\\uploads\\products\\1\\20250925215729235_typcn_location.svg"
     },
     {
       "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\services\\.gitkeep",

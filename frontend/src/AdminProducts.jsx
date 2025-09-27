@@ -3,7 +3,7 @@ import './AdminProducts.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'http://localhost:5098/api';
+const API = 'https://softech-api.webonly.io/api';
 
 export default function AdminProducts() {
     const [products, setProducts] = useState([]);
@@ -63,7 +63,7 @@ export default function AdminProducts() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         return url;
     };
 
@@ -1264,8 +1264,8 @@ export default function AdminProducts() {
                                                     const result = await response.json();
                                                     let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                     // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('http://localhost:5098')) {
-                                                        imageUrl = imageUrl.replace('http://localhost:5098', '');
+                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                                                     }
                                                     setNewProduct({ ...newProduct, section1Image: imageUrl });
                                                 } else {
@@ -1332,8 +1332,8 @@ export default function AdminProducts() {
                                                     const result = await response.json();
                                                     let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                     // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('http://localhost:5098')) {
-                                                        imageUrl = imageUrl.replace('http://localhost:5098', '');
+                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                                                     }
                                                     setNewProduct({ ...newProduct, section2Image: imageUrl });
                                                 } else {
@@ -1400,8 +1400,8 @@ export default function AdminProducts() {
                                                     const result = await response.json();
                                                     let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                     // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('http://localhost:5098')) {
-                                                        imageUrl = imageUrl.replace('http://localhost:5098', '');
+                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                                                     }
                                                     setNewProduct({ ...newProduct, section3Image: imageUrl });
                                                 } else {
@@ -1454,8 +1454,8 @@ export default function AdminProducts() {
                                                     const result = await response.json();
                                                     let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                     // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('http://localhost:5098')) {
-                                                        imageUrl = imageUrl.replace('http://localhost:5098', '');
+                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                                                     }
                                                     setNewImagePreview(imageUrl);
                                                 } else {
@@ -1512,8 +1512,8 @@ export default function AdminProducts() {
                                                     const result = await response.json();
                                                     let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                     // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('http://localhost:5098')) {
-                                                        imageUrl = imageUrl.replace('http://localhost:5098', '');
+                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                                                     }
                                                     setNewIconPreview(imageUrl);
                                                 } else {

@@ -12,17 +12,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        builder =>
-        {
-            builder.WithOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:3000")
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowCredentials();
-        });
-});
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy("AllowAll",
+//         builder =>
+//         {
+//             builder.WithOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:3000")
+//                    .AllowAnyMethod()
+//                    .AllowAnyHeader()
+//                    .AllowCredentials();
+//         });
+// });
 
 // Add DbContext - SQLite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -61,7 +61,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowAll");
+// app.UseCors("AllowAll");
 app.UseStaticFiles();
 
 app.MapControllers();
