@@ -161,6 +161,13 @@ namespace WebOnlyAPI.Controllers
             return Ok(results);
         }
 
+        [HttpGet("main")]
+        public async Task<ActionResult<IEnumerable<EquipmentListResponseDto>>> GetMainEquipment()
+        {
+            var items = await _equipmentService.GetMainEquipmentAsync();
+            return Ok(items);
+        }
+
         [HttpPost("fix-blob-urls")]
         public async Task<IActionResult> FixBlobUrls()
         {

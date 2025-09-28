@@ -41,6 +41,10 @@
       "PackagePath": "staticwebassets\\uploads\\blogs\\1\\20250925122024819_Frame 2147225542.png"
     },
     {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\blogs\\1\\20250928201010123_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\blogs\\1\\20250928201010123_logo 2.png"
+    },
+    {
       "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\.gitkeep",
       "PackagePath": "staticwebassets\\uploads\\employees\\.gitkeep"
     },
@@ -113,8 +117,92 @@
       "PackagePath": "staticwebassets\\uploads\\employees\\20250925220137921_logo 2.svg"
     },
     {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250928195742774_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250928195742774_logo 2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250928200452879_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250928200452879_logo 2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250928200456747_clarity_date-solid (2).png",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250928200456747_clarity_date-solid (2).png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250928200524096_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250928200524096_logo 2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250928200528402_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250928200528402_logo 2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250928200632840_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250928200632840_logo 2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250928200946817_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250928200946817_logo 2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250928200954677_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250928200954677_logo 2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250928201006275_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250928201006275_logo 2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250928201016442_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250928201016442_logo 2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250928201026864_image 296 (2).png",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250928201026864_image 296 (2).png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\employees\\20250928201035497_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\employees\\20250928201035497_logo 2.png"
+    },
+    {
       "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\equipment\\.gitkeep",
       "PackagePath": "staticwebassets\\uploads\\equipment\\.gitkeep"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\equipment\\20250928195744222_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\equipment\\20250928195744222_logo 2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\equipment\\equipment1.png",
+      "PackagePath": "staticwebassets\\uploads\\equipment\\equipment1.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\equipment\\equipment2.png",
+      "PackagePath": "staticwebassets\\uploads\\equipment\\equipment2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\equipment\\slider1.png",
+      "PackagePath": "staticwebassets\\uploads\\equipment\\slider1.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\equipment\\slider2.png",
+      "PackagePath": "staticwebassets\\uploads\\equipment\\slider2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\equipment\\slider3.png",
+      "PackagePath": "staticwebassets\\uploads\\equipment\\slider3.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\equipment\\slider4.png",
+      "PackagePath": "staticwebassets\\uploads\\equipment\\slider4.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\equipment\\slider5.png",
+      "PackagePath": "staticwebassets\\uploads\\equipment\\slider5.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\equipment\\slider6.png",
+      "PackagePath": "staticwebassets\\uploads\\equipment\\slider6.png"
     },
     {
       "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\.gitkeep",
@@ -127,6 +215,38 @@
     {
       "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\1\\20250925215729235_typcn_location.svg",
       "PackagePath": "staticwebassets\\uploads\\products\\1\\20250925215729235_typcn_location.svg"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\1\\20250928200551710_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\products\\1\\20250928200551710_logo 2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\1\\20250928200557339_model.png",
+      "PackagePath": "staticwebassets\\uploads\\products\\1\\20250928200557339_model.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\1\\20250928200603991_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\products\\1\\20250928200603991_logo 2.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\1\\20250928200612151_clarity_clock-solid (1).png",
+      "PackagePath": "staticwebassets\\uploads\\products\\1\\20250928200612151_clarity_clock-solid (1).png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\1\\20250928200618345_image 296 (2).png",
+      "PackagePath": "staticwebassets\\uploads\\products\\1\\20250928200618345_image 296 (2).png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\2\\20250928202916725_image 279.png",
+      "PackagePath": "staticwebassets\\uploads\\products\\2\\20250928202916725_image 279.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\8\\20250928200931952_clarity_clock-solid (1).png",
+      "PackagePath": "staticwebassets\\uploads\\products\\8\\20250928200931952_clarity_clock-solid (1).png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\products\\8\\20250928200931966_05.instagram.png",
+      "PackagePath": "staticwebassets\\uploads\\products\\8\\20250928200931966_05.instagram.png"
     },
     {
       "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\services\\.gitkeep",
@@ -151,6 +271,10 @@
     {
       "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\services\\icons\\20250925071726756_Frame 1000004543.png",
       "PackagePath": "staticwebassets\\uploads\\services\\icons\\20250925071726756_Frame 1000004543.png"
+    },
+    {
+      "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\services\\icons\\20250928200957333_logo 2.png",
+      "PackagePath": "staticwebassets\\uploads\\services\\icons\\20250928200957333_logo 2.png"
     },
     {
       "Id": "C:\\Users\\taira\\Downloads\\webonly-fix\\backend\\wwwroot\\uploads\\sliders\\.gitkeep",

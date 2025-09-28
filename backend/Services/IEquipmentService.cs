@@ -11,6 +11,7 @@ namespace WebOnlyAPI.Services
         Task<EquipmentResponseDto?> UpdateAsync(int id, UpdateEquipmentDto dto);
         Task<bool> DeleteAsync(int id);
         Task<IEnumerable<EquipmentResponseDto>> SearchByNameAsync(string searchTerm);
+        Task<IEnumerable<EquipmentListResponseDto>> GetMainEquipmentAsync();
 
         // Category CRUD operations
         Task<IEnumerable<EquipmentCategoryDto>> GetCategoriesAsync();

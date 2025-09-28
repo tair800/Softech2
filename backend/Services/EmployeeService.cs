@@ -29,12 +29,14 @@ namespace WebOnlyAPI.Services
                     if (lang == "en")
                     {
                         var src = employees.First(x => x.Id == e.Id);
+                        e.Name = string.IsNullOrWhiteSpace(src.NameEn) ? e.Name : src.NameEn!;
                         e.Position = string.IsNullOrWhiteSpace(src.PositionEn) ? e.Position : src.PositionEn!;
                         e.Description = string.IsNullOrWhiteSpace(src.DescriptionEn) ? e.Description : src.DescriptionEn!;
                     }
                     else if (lang == "ru")
                     {
                         var src = employees.First(x => x.Id == e.Id);
+                        e.Name = string.IsNullOrWhiteSpace(src.NameRu) ? e.Name : src.NameRu!;
                         e.Position = string.IsNullOrWhiteSpace(src.PositionRu) ? e.Position : src.PositionRu!;
                         e.Description = string.IsNullOrWhiteSpace(src.DescriptionRu) ? e.Description : src.DescriptionRu!;
                     }
@@ -53,11 +55,13 @@ namespace WebOnlyAPI.Services
                 var lang = language.ToLowerInvariant();
                 if (lang == "en")
                 {
+                    dto.Name = string.IsNullOrWhiteSpace(employee.NameEn) ? dto.Name : employee.NameEn!;
                     dto.Position = string.IsNullOrWhiteSpace(employee.PositionEn) ? dto.Position : employee.PositionEn!;
                     dto.Description = string.IsNullOrWhiteSpace(employee.DescriptionEn) ? dto.Description : employee.DescriptionEn!;
                 }
                 else if (lang == "ru")
                 {
+                    dto.Name = string.IsNullOrWhiteSpace(employee.NameRu) ? dto.Name : employee.NameRu!;
                     dto.Position = string.IsNullOrWhiteSpace(employee.PositionRu) ? dto.Position : employee.PositionRu!;
                     dto.Description = string.IsNullOrWhiteSpace(employee.DescriptionRu) ? dto.Description : employee.DescriptionRu!;
                 }
@@ -70,6 +74,8 @@ namespace WebOnlyAPI.Services
             var employee = new Employee
             {
                 Name = createDto.Name,
+                NameEn = createDto.NameEn,
+                NameRu = createDto.NameRu,
                 Position = createDto.Position,
                 PositionEn = createDto.PositionEn,
                 PositionRu = createDto.PositionRu,
@@ -96,6 +102,8 @@ namespace WebOnlyAPI.Services
                 return null;
 
             employee.Name = updateDto.Name;
+            employee.NameEn = updateDto.NameEn;
+            employee.NameRu = updateDto.NameRu;
             employee.Position = updateDto.Position;
             employee.PositionEn = updateDto.PositionEn;
             employee.PositionRu = updateDto.PositionRu;
@@ -131,6 +139,8 @@ namespace WebOnlyAPI.Services
             {
                 Id = employee.Id,
                 Name = employee.Name,
+                NameEn = employee.NameEn,
+                NameRu = employee.NameRu,
                 Position = employee.Position,
                 PositionEn = employee.PositionEn,
                 PositionRu = employee.PositionRu,

@@ -41,6 +41,20 @@ export const StaggeredMenu = ({
     const itemEntranceTweenRef = useRef(null);
     const { language, setLanguage } = useLanguage();
 
+    // Update text lines based on language
+    useLayoutEffect(() => {
+        const symbols = {
+            az: ['+', '−'],
+            en: ['+', '−'],
+            ru: ['+', '−']
+        };
+        // Set symbols for menu and close
+        const baseSymbols = symbols[language] || symbols.en;
+        // If menu is closed, show +; if open, show -
+        const currentSymbol = open ? baseSymbols[1] : baseSymbols[0];
+        setTextLines([currentSymbol]);
+    }, [language, open]);
+
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
             const panel = panelRef.current;
@@ -59,9 +73,7 @@ export const StaggeredMenu = ({
 
             const offscreen = position === 'left' ? -100 : 100;
             gsap.set([panel, ...preLayers], { xPercent: offscreen });
-            gsap.set(plusH, { transformOrigin: '50% 50%', rotate: 0 });
-            gsap.set(plusV, { transformOrigin: '50% 50%', rotate: 90 });
-            gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
+            // Let CSS handle the icon line transforms
             gsap.set(textInner, { yPercent: 0 });
             if (toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
         });
@@ -231,11 +243,13 @@ export const StaggeredMenu = ({
     const animateIcon = useCallback(opening => {
         const icon = iconRef.current;
         if (!icon) return;
-        spinTweenRef.current?.kill();
+
         if (opening) {
-            spinTweenRef.current = gsap.to(icon, { rotate: 225, duration: 0.8, ease: 'power4.out', overwrite: 'auto' });
+            // Show X icon when menu opens
+            icon.classList.add('x-state');
         } else {
-            spinTweenRef.current = gsap.to(icon, { rotate: 0, duration: 0.35, ease: 'power3.inOut', overwrite: 'auto' });
+            // Show plus icon when menu closes
+            icon.classList.remove('x-state');
         }
     }, []);
 
@@ -275,13 +289,26 @@ export const StaggeredMenu = ({
         if (!inner) return;
         textCycleAnimRef.current?.kill();
 
-        const currentLabel = opening ? 'Menu' : 'Close';
-        const targetLabel = opening ? 'Close' : 'Menu';
+        // Get the base symbols
+        const symbols = {
+            az: ['+', '−'],
+            en: ['+', '−'],
+            ru: ['+', '−']
+        };
+        const baseSymbols = symbols[language] || symbols.en;
+        const menuSymbol = baseSymbols[0];
+        const closeSymbol = baseSymbols[1];
+
+        // Logic: 
+        // - When opening (opening = true): start with "+", end with "−"
+        // - When closing (opening = false): start with "−", end with "+"
+        const currentLabel = opening ? menuSymbol : closeSymbol;
+        const targetLabel = opening ? closeSymbol : menuSymbol;
         const cycles = 3;
         const seq = [currentLabel];
         let last = currentLabel;
         for (let i = 0; i < cycles; i++) {
-            last = last === 'Menu' ? 'Close' : 'Menu';
+            last = last === menuSymbol ? closeSymbol : menuSymbol;
             seq.push(last);
         }
         if (last !== targetLabel) seq.push(targetLabel);
@@ -296,7 +323,7 @@ export const StaggeredMenu = ({
             duration: 0.5 + lineCount * 0.07,
             ease: 'power4.out'
         });
-    }, []);
+    }, [language, open]);
 
     const toggleMenu = useCallback(() => {
         const target = !openRef.current;
@@ -352,18 +379,36 @@ export const StaggeredMenu = ({
                     onClick={toggleMenu}
                     type="button"
                 >
-                    <span ref={textWrapRef} className="sm-toggle-textWrap" aria-hidden="true">
+                    <span ref={textWrapRef} className="sm-toggle-textWrap" aria-hidden="true" style={{ display: 'none' }}>
                         <span ref={textInnerRef} className="sm-toggle-textInner">
-                            {textLines.map((l, i) => (
-                                <span className="sm-toggle-line" key={i}>
-                                    {l}
-                                </span>
-                            ))}
+                            {textLines.map((l, i) => {
+                                // Determine if this is menu or close symbol
+                                const symbols = {
+                                    az: ['+', '−'],
+                                    en: ['+', '−'],
+                                    ru: ['+', '−']
+                                };
+                                const baseSymbols = symbols[language] || symbols.en;
+                                const isMenuSymbol = l === baseSymbols[0];
+                                const isCloseSymbol = l === baseSymbols[1];
+
+                                return (
+                                    <span
+                                        className={`sm-toggle-line ${isMenuSymbol ? 'menu-state' : ''} ${isCloseSymbol ? 'close-state' : ''}`}
+                                        key={i}
+                                    >
+                                        {l}
+                                    </span>
+                                );
+                            })}
                         </span>
                     </span>
                     <span ref={iconRef} className="sm-icon" aria-hidden="true">
-                        <span ref={plusHRef} className="sm-icon-line" />
-                        <span ref={plusVRef} className="sm-icon-line sm-icon-line-v" />
+                        <span className="sm-icon-plus">
+                            <span ref={plusHRef} className="sm-icon-line" />
+                            <span ref={plusVRef} className="sm-icon-line sm-icon-line-v" />
+                        </span>
+                        <span className="sm-icon-x">×</span>
                     </span>
                 </button>
             </header>
@@ -377,8 +422,10 @@ export const StaggeredMenu = ({
                         onClick={toggleMenu}
                         type="button"
                     >
-                        <span className="sm-toggle-textWrap" aria-hidden="true">
-                            <span className="sm-toggle-textInner"><span className="sm-toggle-line">Close</span></span>
+                        <span className="sm-toggle-textWrap" aria-hidden="true" style={{ display: 'none' }}>
+                            <span className="sm-toggle-textInner">
+                                <span className="sm-toggle-line close-state">{textLines[1]}</span>
+                            </span>
                         </span>
                         <span className="sm-icon" aria-hidden="true">
                             <span className="sm-icon-line" />

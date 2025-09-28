@@ -19,6 +19,8 @@ namespace WebOnlyAPI.Models
         [StringLength(500)]
         public string? ImageUrl { get; set; }
         
+        public int? ProductId { get; set; }
+        
         public int OrderIndex { get; set; }
         
         public bool IsActive { get; set; } = true;

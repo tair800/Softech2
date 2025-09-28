@@ -80,11 +80,6 @@ function Footer() {
                         <a href="https://www.facebook.com/Softech.az/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><FontAwesomeIcon icon={faFacebookF} /></a>
                         <a href="https://www.instagram.com/softech_erp/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FontAwesomeIcon icon={faInstagram} /></a>
                     </div>
-                    <hr className="footer-divider" />
-                    <div className="footer-meta-row">
-                        <div className="footer-madeby">{t('madeby')}</div>
-                        <div className="footer-copyright">{t('rights')}</div>
-                    </div>
                 </div>
 
                 <div className="footer-center-right-row">
@@ -114,6 +109,15 @@ function Footer() {
                     </div>
                 </div>
                 <img src={footerLogo} alt="Footer Decorative" className="footer-bg-img" />
+            </div>
+            <hr className="footer-divider" />
+            <div className="footer-meta-row">
+                <div className="footer-madeby">
+                    <a href="https://webonly.io/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                        {t('madeby')}
+                    </a>
+                </div>
+                <div className="footer-copyright">{t('rights')}</div>
             </div>
         </footer>
     );

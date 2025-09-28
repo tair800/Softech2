@@ -804,3 +804,20 @@ body {
 @media (min-width: 2561px) {
     /* Ultra wide desktop styles */
 }
+
+/* 393x852 Resolution Specific Styles */
+@media (min-width: 393px) and (max-width: 393px) and (min-height: 852px) and (max-height: 852px) {
+    .circular-progress {
+        top: 238px;
+    }
+
+    .image-slide {
+        width: 100vw !important;
+        max-width: 100vw;
+        height: 50vh;
+    }
+
+    .image-scroller {
+        gap: 0px;
+    }
+}

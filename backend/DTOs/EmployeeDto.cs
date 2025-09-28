@@ -5,6 +5,8 @@ namespace WebOnlyAPI.DTOs
     public class CreateEmployeeDto
     {
         public string Name { get; set; } = string.Empty;
+        public string? NameEn { get; set; }
+        public string? NameRu { get; set; }
         public string Position { get; set; } = string.Empty;
         public string? PositionEn { get; set; }
         public string? PositionRu { get; set; }
@@ -20,6 +22,8 @@ namespace WebOnlyAPI.DTOs
     public class UpdateEmployeeDto
     {
         public string Name { get; set; } = string.Empty;
+        public string? NameEn { get; set; }
+        public string? NameRu { get; set; }
         public string Position { get; set; } = string.Empty;
         public string? PositionEn { get; set; }
         public string? PositionRu { get; set; }
@@ -36,6 +40,8 @@ namespace WebOnlyAPI.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
+        public string? NameEn { get; set; }
+        public string? NameRu { get; set; }
         public string Position { get; set; } = string.Empty;
         public string? PositionEn { get; set; }
         public string? PositionRu { get; set; }

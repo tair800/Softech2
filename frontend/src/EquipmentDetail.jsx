@@ -4,6 +4,8 @@ import SimilarEquipmentCard from './components/SimilarEquipmentCard';
 import './EquipmentDetail.css';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 
+const API = 'http://localhost:5098/api';
+
 function EquipmentDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -17,7 +19,7 @@ function EquipmentDetail() {
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -38,7 +40,7 @@ function EquipmentDetail() {
         const fetchEquipment = async () => {
             try {
                 setLoading(true);
-                const res = await fetch(`https://softech-api.webonly.io/api/equipment/${id}`);
+                const res = await fetch(`${API}/equipment/${id}`);
                 if (!res.ok) throw new Error('Failed to load equipment');
                 const data = await res.json();
 
@@ -56,7 +58,7 @@ function EquipmentDetail() {
     useEffect(() => {
         const fetchSimilarEquipment = async () => {
             try {
-                const res = await fetch(`https://softech-api.webonly.io/api/equipment`);
+                const res = await fetch(`${API}/equipment`);
                 if (!res.ok) throw new Error('Failed to load similar equipment');
                 const data = await res.json();
 
@@ -66,7 +68,7 @@ function EquipmentDetail() {
                 // Use all available equipment (no artificial limit)
                 setSimilarEquipment(filtered);
             } catch (e) {
-                // Error handling for similar equipment fetch
+                console.error('Error loading similar equipment:', e);
             }
         };
 
@@ -117,7 +119,19 @@ function EquipmentDetail() {
             <div className="equipment-detail-container">
                 <div className="equipment-detail-center">
                     <h2>{language === 'en' ? 'Error' : language === 'ru' ? 'Ошибка' : 'Xəta'}: {error}</h2>
-                    <button onClick={() => navigate('/equipment')} className="back-btn">
+                    <button
+                        onClick={() => navigate('/equipment')}
+                        style={{
+                            background: 'linear-gradient(90deg, #007bff, #00d4ff)',
+                            border: 'none',
+                            color: 'white',
+                            padding: '12px 24px',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            fontSize: '16px',
+                            marginTop: '20px'
+                        }}
+                    >
                         {language === 'en' ? 'Back to Equipment' : language === 'ru' ? 'Назад к оборудованию' : 'Avadanlıqlara qayıt'}
                     </button>
                 </div>
@@ -130,13 +144,39 @@ function EquipmentDetail() {
             <div className="equipment-detail-container">
                 <div className="equipment-detail-center">
                     <h2>{language === 'en' ? 'Equipment not found' : language === 'ru' ? 'Оборудование не найдено' : 'Avadanlıq tapılmadı'}</h2>
-                    <button onClick={() => navigate('/equipment')} className="back-btn">
+                    <button
+                        onClick={() => navigate('/equipment')}
+                        style={{
+                            background: 'linear-gradient(90deg, #007bff, #00d4ff)',
+                            border: 'none',
+                            color: 'white',
+                            padding: '12px 24px',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            fontSize: '16px',
+                            marginTop: '20px'
+                        }}
+                    >
                         {language === 'en' ? 'Back to Equipment' : language === 'ru' ? 'Назад к оборудованию' : 'Avadanlıqlara qayıt'}
                     </button>
                 </div>
             </div>
         );
     }
+
+    // Ensure equipment has required fields with fallbacks
+    const safeEquipment = {
+        id: equipment.id || 0,
+        name: equipment.name || 'Unknown Equipment',
+        description: equipment.description || '',
+        descriptionEn: equipment.descriptionEn || '',
+        descriptionRu: equipment.descriptionRu || '',
+        version: equipment.version || '',
+        core: equipment.core || '',
+        imageUrl: equipment.imageUrl || '',
+        features: equipment.features || [],
+        specifications: equipment.specifications || []
+    };
 
     return (
         <div className="equipment-detail-container">
@@ -147,26 +187,43 @@ function EquipmentDetail() {
 
             <div className="equipment-detail-content">
                 <div className="equipment-detail-left">
-                    <h1 className="equipment-detail-title">{equipment.name}</h1>
+                    <h1 className="equipment-detail-title">{safeEquipment.name}</h1>
                     <p className="equipment-detail-description">
-                        {pickByLanguage(language || 'az', equipment.descriptionEn, equipment.descriptionRu, equipment.description)}
+                        {pickByLanguage(language || 'az', safeEquipment.descriptionEn, safeEquipment.descriptionRu, safeEquipment.description)}
                     </p>
                     <div className="equipment-detail-features">
-                        {(equipment.features || []).map((featureObj, index) => {
-                            const currentLang = language || 'az';
-                            const text = pickByLanguage(currentLang, featureObj.featureEn, featureObj.featureRu, featureObj.feature);
-                            return (
-                                <div key={index} className="equipment-feature-item">
-                                    <div className="feature-checkmark">✓</div>
-                                    <span className="feature-text">{text}</span>
-                                </div>
-                            );
-                        })}
+                        {(() => {
+                            // Handle both JSON string and array formats for features
+                            let features = [];
+                            if (safeEquipment.features) {
+                                if (typeof safeEquipment.features === 'string') {
+                                    try {
+                                        features = JSON.parse(safeEquipment.features);
+                                    } catch (e) {
+                                        console.warn('Failed to parse features JSON:', e);
+                                        features = [];
+                                    }
+                                } else if (Array.isArray(safeEquipment.features)) {
+                                    features = safeEquipment.features;
+                                }
+                            }
+
+                            return features.map((featureObj, index) => {
+                                const currentLang = language || 'az';
+                                const text = pickByLanguage(currentLang, featureObj.featureEn, featureObj.featureRu, featureObj.feature);
+                                return (
+                                    <div key={index} className="equipment-feature-item">
+                                        <div className="feature-checkmark">✓</div>
+                                        <span className="feature-text">{text}</span>
+                                    </div>
+                                );
+                            });
+                        })()}
                     </div>
                 </div>
                 <div className="equipment-detail-right">
                     <div className="equipment-image-container">
-                        <img src={resolveUrl(equipment.imageUrl)} alt={equipment.name} className="equipment-detail-image" />
+                        <img src={resolveUrl(safeEquipment.imageUrl)} alt={safeEquipment.name} className="equipment-detail-image" />
                     </div>
                 </div>
             </div>
@@ -183,41 +240,74 @@ function EquipmentDetail() {
 
             <div className="equipment-specifications-section">
                 <div className="equipment-specifications-header">
-                    <div className="equipment-model">{equipment.version || equipment.core || 'Model'}</div>
-                    {equipment.specifications && equipment.specifications.length > 6 && (
-                        <button className="equipment-detail-nav-button" onClick={() => setCurrentPage(currentPage === 0 ? 1 : 0)}>
-                            <span className="button-text">
-                                {currentPage === 0
-                                    ? (language === 'en' ? 'More' : language === 'ru' ? 'Больше' : 'Daha çox')
-                                    : (language === 'en' ? 'Less' : language === 'ru' ? 'Меньше' : 'Daha az')}
-                            </span>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: currentPage === 1 ? 'rotate(180deg)' : 'rotate(0deg)' }}>
-                                <path d="M9 18L15 12L9 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </button>
-                    )}
+                    <div className="equipment-model">{safeEquipment.version || safeEquipment.core || 'Model'}</div>
+                    {(() => {
+                        // Check if we have more than 6 specifications
+                        let specifications = [];
+                        if (safeEquipment.specifications && Array.isArray(safeEquipment.specifications)) {
+                            specifications = safeEquipment.specifications.filter(spec => {
+                                const currentLang = language || 'az';
+                                const displayKey = pickByLanguage(currentLang, spec.keyEn, spec.keyRu, spec.key);
+                                const displayValue = pickByLanguage(currentLang, spec.valueEn, spec.valueRu, spec.value);
+                                return displayKey !== 'model' && displayValue && displayValue.trim() !== '';
+                            });
+                        }
+
+                        if (specifications.length > 6) {
+                            return (
+                                <button className="equipment-detail-nav-button" onClick={() => setCurrentPage(currentPage === 0 ? 1 : 0)}>
+                                    <span className="button-text">
+                                        {currentPage === 0
+                                            ? (language === 'en' ? 'More' : language === 'ru' ? 'Больше' : 'Daha çox')
+                                            : (language === 'en' ? 'Less' : language === 'ru' ? 'Меньше' : 'Daha az')}
+                                    </span>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: currentPage === 1 ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                                        <path d="M9 18L15 12L9 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </button>
+                            );
+                        }
+                        return null;
+                    })()}
                 </div>
 
                 <div className="equipment-specifications-list">
-                    {equipment.specifications && equipment.specifications.length > 0 ? (
-                        <>
-                            {/* Always show first 6 specifications */}
-                            {(equipment.specifications || [])
-                                .map(spec => {
-                                    const currentLang = language || 'az';
-                                    const displayKey = pickByLanguage(currentLang, spec.keyEn, spec.keyRu, spec.key);
-                                    const displayValue = pickByLanguage(currentLang, spec.valueEn, spec.valueRu, spec.value);
-                                    return { ...spec, displayKey, displayValue };
-                                })
-                                .filter(spec => spec.displayKey !== 'model' && spec.displayValue && spec.displayValue.trim() !== '')
-                                .slice(0, 6)
-                                .map((spec) => {
+                    {(() => {
+                        // Handle specifications data - could be array or undefined
+                        let specifications = [];
+                        if (safeEquipment.specifications) {
+                            if (Array.isArray(safeEquipment.specifications)) {
+                                specifications = safeEquipment.specifications;
+                            }
+                        }
+
+                        if (specifications.length === 0) {
+                            return (
+                                <div className="text-center text-muted py-4">
+                                    {language === 'en' ? 'No specifications available' : language === 'ru' ? 'Характеристики отсутствуют' : 'Xüsusiyyətlər mövcud deyil'}
+                                </div>
+                            );
+                        }
+
+                        const processedSpecs = specifications
+                            .map(spec => {
+                                const currentLang = language || 'az';
+                                const displayKey = pickByLanguage(currentLang, spec.keyEn, spec.keyRu, spec.key);
+                                const displayValue = pickByLanguage(currentLang, spec.valueEn, spec.valueRu, spec.value);
+                                return { ...spec, displayKey, displayValue };
+                            })
+                            .filter(spec => spec.displayKey !== 'model' && spec.displayValue && spec.displayValue.trim() !== '');
+
+                        return (
+                            <>
+                                {/* Always show first 6 specifications */}
+                                {processedSpecs.slice(0, 6).map((spec) => {
                                     const parts = spec.displayValue.split(' - ');
                                     const topValue = parts[0];
                                     const bottomValue = parts[1] || '';
 
                                     return (
-                                        <div key={spec.id} className="specification-item specification-item-base">
+                                        <div key={spec.id || Math.random()} className="specification-item specification-item-base">
                                             <div className="spec-label">{spec.displayKey}</div>
                                             <div className="spec-line-css"></div>
                                             <div className="spec-value">
@@ -228,25 +318,16 @@ function EquipmentDetail() {
                                     );
                                 })}
 
-                            {/* Additional specifications that slide up when button is clicked */}
-                            {equipment.specifications.length > 6 && (
-                                <div className={`additional-specifications ${currentPage === 1 ? 'show' : 'hide'}`}>
-                                    {(equipment.specifications || [])
-                                        .map(spec => {
-                                            const currentLang = language || 'az';
-                                            const displayKey = pickByLanguage(currentLang, spec.keyEn, spec.keyRu, spec.key);
-                                            const displayValue = pickByLanguage(currentLang, spec.valueEn, spec.valueRu, spec.value);
-                                            return { ...spec, displayKey, displayValue };
-                                        })
-                                        .filter(spec => spec.displayKey !== 'model' && spec.displayValue && spec.displayValue.trim() !== '')
-                                        .slice(6, 12)
-                                        .map((spec) => {
+                                {/* Additional specifications that slide up when button is clicked */}
+                                {processedSpecs.length > 6 && (
+                                    <div className={`additional-specifications ${currentPage === 1 ? 'show' : 'hide'}`}>
+                                        {processedSpecs.slice(6, 12).map((spec) => {
                                             const parts = spec.displayValue.split(' - ');
                                             const topValue = parts[0];
                                             const bottomValue = parts[1] || '';
 
                                             return (
-                                                <div key={spec.id} className="specification-item specification-item-additional">
+                                                <div key={spec.id || Math.random()} className="specification-item specification-item-additional">
                                                     <div className="spec-label">{spec.displayKey}</div>
                                                     <div className="spec-line-css"></div>
                                                     <div className="spec-value">
@@ -256,14 +337,11 @@ function EquipmentDetail() {
                                                 </div>
                                             );
                                         })}
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <div className="text-center text-muted py-4">
-                            {language === 'en' ? 'No specifications available' : language === 'ru' ? 'Характеристики отсутствуют' : 'Xüsusiyyətlər mövcud deyil'}
-                        </div>
-                    )}
+                                    </div>
+                                )}
+                            </>
+                        );
+                    })()}
                 </div>
             </div>
 

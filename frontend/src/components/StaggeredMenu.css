@@ -56,7 +56,7 @@
 
 .sm-toggle-textWrap {
     position: relative;
-    display: inline-block;
+    display: none;
     height: 1em;
     overflow: hidden;
     white-space: nowrap;
@@ -66,12 +66,28 @@
     display: flex;
     flex-direction: column;
     line-height: 1;
+    overflow: visible;
 }
 
 .sm-toggle-line {
-    display: block;
-    height: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Menu button state */
+.sm-toggle-line.menu-state {
+    height: 17px;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+/* Close button state */
+.sm-toggle-line.close-state {
+    font-weight: 600;
+    height: 10px;
     line-height: 1;
+    font-size: 20px;
 }
 
 .sm-icon {
@@ -92,10 +108,47 @@
     background: currentColor;
     border-radius: 2px;
     transform: translate(-50%, -50%);
+    transition: transform 0.4s ease;
 }
 
 .sm-icon-line-v {
     transform: translate(-50%, -50%) rotate(90deg);
+    transition: transform 0.4s ease;
+}
+
+/* Icon switching states */
+.sm-icon-plus {
+    display: inline-block;
+    transition: opacity 0.3s ease;
+}
+
+.sm-icon-x {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: 600;
+    display: none;
+    transition: opacity 0.3s ease;
+}
+
+/* When menu is open (x-state), show X and hide plus */
+.sm-icon.x-state .sm-icon-plus {
+    display: none;
+}
+
+.sm-icon.x-state .sm-icon-x {
+    display: block;
+}
+
+/* When menu is closed, show plus and hide X */
+.sm-icon:not(.x-state) .sm-icon-plus {
+    display: inline-block;
+}
+
+.sm-icon:not(.x-state) .sm-icon-x {
+    display: none;
 }
 
 .staggered-menu-panel {

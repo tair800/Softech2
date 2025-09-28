@@ -1,18 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import './AdminProducts.css';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 export default function AdminSliders() {
     const [items, setItems] = useState([]);
+    const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [creating, setCreating] = useState({ name: '', imageUrl: '', orderIndex: 0, isActive: true });
+    const [creating, setCreating] = useState({ name: '', imageUrl: '', productId: null, orderIndex: 0, isActive: true });
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
+    };
+
+    const loadProducts = async () => {
+        try {
+            const res = await fetch(`${API}/products`);
+            if (!res.ok) throw new Error('Failed to load products');
+            const data = await res.json();
+            setProducts(data);
+        } catch (e) {
+            console.error('Failed to load products:', e);
+        }
     };
 
     const load = async () => {
@@ -29,7 +41,10 @@ export default function AdminSliders() {
         }
     };
 
-    useEffect(() => { load(); }, []);
+    useEffect(() => {
+        load();
+        loadProducts();
+    }, []);
 
     const uploadImage = async (file, setter) => {
         if (!file) return;
@@ -54,6 +69,7 @@ export default function AdminSliders() {
             nameEn: it.nameEn || '',
             nameRu: it.nameRu || '',
             imageUrl: it.imageUrl || '',
+            productId: it.productId || null,
             orderIndex: it.orderIndex ?? 0,
             isActive: !!it.isActive
         };
@@ -69,7 +85,7 @@ export default function AdminSliders() {
     const create = async () => {
         const res = await fetch(`${API}/sliders`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(creating) });
         if (!res.ok) throw new Error('Create failed');
-        setCreating({ name: '', imageUrl: '', orderIndex: 0, isActive: true });
+        setCreating({ name: '', imageUrl: '', productId: null, orderIndex: 0, isActive: true });
         await load();
     };
 
@@ -107,6 +123,27 @@ export default function AdminSliders() {
                                 <label className="col-sm-3 col-form-label">Name (RU)</label>
                                 <div className="col-sm-9"><input className="form-control" value={it.nameRu || ''} onChange={(e) => setItems(prev => prev.map(x => x.id === it.id ? { ...x, nameRu: e.target.value } : x))} /></div>
                             </div>
+                            <div className="form-group row g-3 align-items-start">
+                                <label className="col-sm-3 col-form-label">Linked Product</label>
+                                <div className="col-sm-9">
+                                    <select
+                                        className="form-control"
+                                        value={it.productId || ''}
+                                        onChange={(e) => setItems(prev => prev.map(x => x.id === it.id ? { ...x, productId: e.target.value ? parseInt(e.target.value) : null } : x))}
+                                        style={{ color: 'black' }}
+                                    >
+                                        <option value="" style={{ color: 'black' }}>Select a product...</option>
+                                        {products.map(product => (
+                                            <option key={product.id} value={product.id} style={{ color: 'black' }}>
+                                                {product.name} (ID: {product.id})
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="d-flex gap-2 mt-2">
+                                <button className="btn btn-primary" onClick={async () => { await save({ ...it, nameEn: it.nameEn || '', nameRu: it.nameRu || '' }); await load(); }}>Yadda saxla</button>
+                            </div>
 
                         </div>
                         <div className="col-12 col-lg-4">
@@ -133,9 +170,6 @@ export default function AdminSliders() {
                                     }
                                     e.target.value = '';
                                 }} />
-                            </div>
-                            <div className="d-flex gap-2 mt-2">
-                                <button className="btn btn-primary" onClick={async () => { await save({ ...it, nameEn: it.nameEn || '', nameRu: it.nameRu || '' }); await load(); }}>Yadda saxla</button>
                             </div>
                         </div>
                     </div>

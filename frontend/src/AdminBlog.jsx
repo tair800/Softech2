@@ -3,7 +3,7 @@ import './AdminBlog.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 export default function AdminBlog() {
     const [blogs, setBlogs] = useState([]);
@@ -16,7 +16,6 @@ export default function AdminBlog() {
         title1: '', desc1: '', title1En: '', title1Ru: '', desc1En: '', desc1Ru: '',
         title2: '', desc2: '', title2En: '', title2Ru: '', desc2En: '', desc2Ru: '',
         features: '',
-        title3: '', desc3: '', title3En: '', title3Ru: '', desc3En: '', desc3Ru: '',
         mainImageUrl: '',
         detailImg1Url: '',
         detailImg2Url: '',
@@ -28,9 +27,14 @@ export default function AdminBlog() {
     const [newDetailFiles, setNewDetailFiles] = useState({ 1: null, 2: null, 3: null, 4: null });
     const [newDetailPreviews, setNewDetailPreviews] = useState({ 1: '', 2: '', 3: '', 4: '' });
 
+    // Dynamic sections state
+    const [blogSections, setBlogSections] = useState({}); // blogId -> sections array
+    const [showSectionsModal, setShowSectionsModal] = useState(false);
+    const [selectedBlogId, setSelectedBlogId] = useState(null);
+
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 
@@ -164,12 +168,6 @@ export default function AdminBlog() {
             (b.desc2En || '') !== (o.desc2En || '') ||
             (b.desc2Ru || '') !== (o.desc2Ru || '') ||
             (serializeFeatures(b._features || []) || '') !== (o.features || '') ||
-            (b.title3 || '') !== (o.title3 || '') ||
-            (b.desc3 || '') !== (o.desc3 || '') ||
-            (b.title3En || '') !== (o.title3En || '') ||
-            (b.title3Ru || '') !== (o.title3Ru || '') ||
-            (b.desc3En || '') !== (o.desc3En || '') ||
-            (b.desc3Ru || '') !== (o.desc3Ru || '') ||
             (b.mainImageUrl || '') !== (o.mainImageUrl || '') ||
             (b.detailImg1Url || '') !== (o.detailImg1Url || '') ||
             (b.detailImg2Url || '') !== (o.detailImg2Url || '') ||
@@ -208,8 +206,6 @@ export default function AdminBlog() {
                     title2: b.title2 || '', desc2: b.desc2 || '',
                     title2En: b.title2En || '', title2Ru: b.title2Ru || '', desc2En: b.desc2En || '', desc2Ru: b.desc2Ru || '',
                     features: serializeFeatures(b._features || []),
-                    title3: b.title3 || '', desc3: b.desc3 || '',
-                    title3En: b.title3En || '', title3Ru: b.title3Ru || '', desc3En: b.desc3En || '', desc3Ru: b.desc3Ru || '',
                     mainImageUrl: b.mainImageUrl || '',
                     detailImg1Url: b.detailImg1Url || '',
                     detailImg2Url: b.detailImg2Url || '',
@@ -246,11 +242,94 @@ export default function AdminBlog() {
     const openCreate = () => setShowModal(true);
     const closeCreate = () => {
         setShowModal(false);
-        setNewBlog({ title1: '', desc1: '', title1En: '', title1Ru: '', desc1En: '', desc1Ru: '', title2: '', desc2: '', title2En: '', title2Ru: '', desc2En: '', desc2Ru: '', features: '', title3: '', desc3: '', title3En: '', title3Ru: '', desc3En: '', desc3Ru: '', mainImageUrl: '', detailImg1Url: '', detailImg2Url: '', detailImg3Url: '', detailImg4Url: '' });
+        setNewBlog({ title1: '', desc1: '', title1En: '', title1Ru: '', desc1En: '', desc1Ru: '', title2: '', desc2: '', title2En: '', title2Ru: '', desc2En: '', desc2Ru: '', features: '', mainImageUrl: '', detailImg1Url: '', detailImg2Url: '', detailImg3Url: '', detailImg4Url: '' });
         setNewMainFile(null);
         setNewMainPreview('');
         setNewDetailFiles({ 1: null, 2: null, 3: null, 4: null });
         setNewDetailPreviews({ 1: '', 2: '', 3: '', 4: '' });
+    };
+
+    // Dynamic sections management
+    const loadBlogSections = async (blogId) => {
+        try {
+            const response = await fetch(`${API}/blogsections/blog/${blogId}`);
+            if (response.ok) {
+                const sections = await response.json();
+                setBlogSections(prev => ({ ...prev, [blogId]: sections }));
+            }
+        } catch (error) {
+            console.error('Error loading blog sections:', error);
+        }
+    };
+
+    const openSectionsModal = (blogId) => {
+        setSelectedBlogId(blogId);
+        loadBlogSections(blogId);
+        setShowSectionsModal(true);
+    };
+
+    const closeSectionsModal = () => {
+        setShowSectionsModal(false);
+        setSelectedBlogId(null);
+    };
+
+    const addSection = async () => {
+        if (!selectedBlogId) return;
+
+        const newSection = {
+            blogId: selectedBlogId,
+            title: 'New Section',
+            titleEn: '',
+            titleRu: '',
+            description: '',
+            descriptionEn: '',
+            descriptionRu: '',
+            orderIndex: (blogSections[selectedBlogId] || []).length
+        };
+
+        try {
+            const response = await fetch(`${API}/blogsections`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newSection)
+            });
+
+            if (response.ok) {
+                await loadBlogSections(selectedBlogId);
+            }
+        } catch (error) {
+            console.error('Error adding section:', error);
+        }
+    };
+
+    const updateSection = async (sectionId, updatedSection) => {
+        try {
+            const response = await fetch(`${API}/blogsections/${sectionId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedSection)
+            });
+
+            if (response.ok) {
+                await loadBlogSections(selectedBlogId);
+            }
+        } catch (error) {
+            console.error('Error updating section:', error);
+        }
+    };
+
+    const deleteSection = async (sectionId) => {
+        try {
+            const response = await fetch(`${API}/blogsections/${sectionId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                await loadBlogSections(selectedBlogId);
+            }
+        } catch (error) {
+            console.error('Error deleting section:', error);
+        }
     };
 
     const createBlog = async () => {
@@ -263,8 +342,6 @@ export default function AdminBlog() {
                     title2: newBlog.title2 || '', desc2: newBlog.desc2 || '',
                     title2En: newBlog.title2En || '', title2Ru: newBlog.title2Ru || '', desc2En: newBlog.desc2En || '', desc2Ru: newBlog.desc2Ru || '',
                     features: newBlog.features || '',
-                    title3: newBlog.title3 || '', desc3: newBlog.desc3 || '',
-                    title3En: newBlog.title3En || '', title3Ru: newBlog.title3Ru || '', desc3En: newBlog.desc3En || '', desc3Ru: newBlog.desc3Ru || '',
                     mainImageUrl: newBlog.mainImageUrl || '',
                     detailImg1Url: newBlog.detailImg1Url || '',
                     detailImg2Url: newBlog.detailImg2Url || '',
@@ -305,9 +382,6 @@ export default function AdminBlog() {
                         title1En: created.title1En || newBlog.title1En || '', title1Ru: created.title1Ru || newBlog.title1Ru || '', desc1En: created.desc1En || newBlog.desc1En || '', desc1Ru: created.desc1Ru || newBlog.desc1Ru || '',
                         title2En: created.title2En || newBlog.title2En || '', title2Ru: created.title2Ru || newBlog.title2Ru || '', desc2En: created.desc2En || newBlog.desc2En || '', desc2Ru: created.desc2Ru || newBlog.desc2Ru || '',
                         features: created.features || newBlog.features || '',
-                        title3: created.title3 || newBlog.title3 || '',
-                        desc3: created.desc3 || newBlog.desc3 || '',
-                        title3En: created.title3En || newBlog.title3En || '', title3Ru: created.title3Ru || newBlog.title3Ru || '', desc3En: created.desc3En || newBlog.desc3En || '', desc3Ru: created.desc3Ru || newBlog.desc3Ru || '',
                         mainImageUrl: updatedPayload.mainImageUrl || created.mainImageUrl || '',
                         detailImg1Url: updatedPayload.detailImg1Url || created.detailImg1Url || '',
                         detailImg2Url: updatedPayload.detailImg2Url || created.detailImg2Url || '',
@@ -423,30 +497,6 @@ export default function AdminBlog() {
                                 <label className="col-sm-3 col-form-label">Desc 2 (RU)</label>
                                 <div className="col-sm-9"><textarea className="form-control" rows={3} value={b.desc2Ru || ''} onChange={(e) => setBlogs(prev => prev.map(x => x.id === b.id ? { ...x, desc2Ru: e.target.value } : x))} /></div>
                             </div>
-                            <div className="form-group row g-3 align-items-start">
-                                <label className="col-sm-3 col-form-label">Title 3 (AZ)</label>
-                                <div className="col-sm-9"><input className="form-control" value={b.title3 || ''} onChange={(e) => setBlogs(prev => prev.map(x => x.id === b.id ? { ...x, title3: e.target.value } : x))} /></div>
-                            </div>
-                            <div className="form-group row g-3 align-items-start">
-                                <label className="col-sm-3 col-form-label">Title 3 (EN)</label>
-                                <div className="col-sm-9"><input className="form-control" value={b.title3En || ''} onChange={(e) => setBlogs(prev => prev.map(x => x.id === b.id ? { ...x, title3En: e.target.value } : x))} /></div>
-                            </div>
-                            <div className="form-group row g-3 align-items-start">
-                                <label className="col-sm-3 col-form-label">Title 3 (RU)</label>
-                                <div className="col-sm-9"><input className="form-control" value={b.title3Ru || ''} onChange={(e) => setBlogs(prev => prev.map(x => x.id === b.id ? { ...x, title3Ru: e.target.value } : x))} /></div>
-                            </div>
-                            <div className="form-group row g-3 align-items-start">
-                                <label className="col-sm-3 col-form-label">Desc 3 (AZ)</label>
-                                <div className="col-sm-9"><textarea className="form-control" rows={3} value={b.desc3 || ''} onChange={(e) => setBlogs(prev => prev.map(x => x.id === b.id ? { ...x, desc3: e.target.value } : x))} /></div>
-                            </div>
-                            <div className="form-group row g-3 align-items-start">
-                                <label className="col-sm-3 col-form-label">Desc 3 (EN)</label>
-                                <div className="col-sm-9"><textarea className="form-control" rows={3} value={b.desc3En || ''} onChange={(e) => setBlogs(prev => prev.map(x => x.id === b.id ? { ...x, desc3En: e.target.value } : x))} /></div>
-                            </div>
-                            <div className="form-group row g-3 align-items-start">
-                                <label className="col-sm-3 col-form-label">Desc 3 (RU)</label>
-                                <div className="col-sm-9"><textarea className="form-control" rows={3} value={b.desc3Ru || ''} onChange={(e) => setBlogs(prev => prev.map(x => x.id === b.id ? { ...x, desc3Ru: e.target.value } : x))} /></div>
-                            </div>
 
                             {/* Features section (same UX as equipment) */}
                             <div className="form-group row g-3 align-items-start features-section">
@@ -528,6 +578,7 @@ export default function AdminBlog() {
                         <div className="d-flex gap-2">
                             <button className="btn btn-primary" disabled={!hasChanges(b)} onClick={() => saveBlog(b.id)}>Yadda saxla</button>
                             <button className="btn btn-outline-light" disabled={!hasChanges(b)} onClick={() => undoBlog(b.id)}>Undo</button>
+                            <button className="btn btn-secondary" onClick={() => openSectionsModal(b.id)}>Manage Sections</button>
                         </div>
                     </div>
                 </div>
@@ -600,30 +651,6 @@ export default function AdminBlog() {
                                 <textarea className="form-control" rows="3" placeholder='[ { "feature": "item" } ]' value={newBlog.features} onChange={(e) => setNewBlog({ ...newBlog, features: e.target.value })} />
                                 <small className="form-text text-muted">Admin equipment-style editor is available after creation on the card.</small>
                             </div>
-                            <div className="form-group mb-3">
-                                <label className="form-label">Title 3</label>
-                                <input className="form-control" value={newBlog.title3} onChange={(e) => setNewBlog({ ...newBlog, title3: e.target.value })} />
-                            </div>
-                            <div className="form-group mb-3">
-                                <label className="form-label">Title 3 (EN)</label>
-                                <input className="form-control" value={newBlog.title3En} onChange={(e) => setNewBlog({ ...newBlog, title3En: e.target.value })} />
-                            </div>
-                            <div className="form-group mb-3">
-                                <label className="form-label">Title 3 (RU)</label>
-                                <input className="form-control" value={newBlog.title3Ru} onChange={(e) => setNewBlog({ ...newBlog, title3Ru: e.target.value })} />
-                            </div>
-                            <div className="form-group mb-3">
-                                <label className="form-label">Desc 3</label>
-                                <textarea className="form-control" rows="3" value={newBlog.desc3} onChange={(e) => setNewBlog({ ...newBlog, desc3: e.target.value })} />
-                            </div>
-                            <div className="form-group mb-3">
-                                <label className="form-label">Desc 3 (EN)</label>
-                                <textarea className="form-control" rows="3" value={newBlog.desc3En} onChange={(e) => setNewBlog({ ...newBlog, desc3En: e.target.value })} />
-                            </div>
-                            <div className="form-group mb-3">
-                                <label className="form-label">Desc 3 (RU)</label>
-                                <textarea className="form-control" rows="3" value={newBlog.desc3Ru} onChange={(e) => setNewBlog({ ...newBlog, desc3Ru: e.target.value })} />
-                            </div>
 
                             {/* Image pickers */}
                             <div className="row g-3">
@@ -681,6 +708,166 @@ export default function AdminBlog() {
                         <div className="modal-footer">
                             <button className="btn btn-secondary" onClick={closeCreate}>Ləğv et</button>
                             <button className="btn btn-primary" onClick={createBlog}>Əlavə et</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Sections Management Modal */}
+            {showSectionsModal && (
+                <div className="modal-overlay" onClick={closeSectionsModal}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', background: '#2c3e50', color: 'white' }}>
+                        <div className="modal-header" style={{ background: '#34495e', borderBottom: '1px solid #4a5f7a' }}>
+                            <h3 className="modal-title" style={{ color: 'white' }}>Manage Blog Sections</h3>
+                            <button className="modal-close" onClick={closeSectionsModal} style={{ color: 'white' }}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <div className="modal-body" style={{ background: '#2c3e50' }}>
+                            <div className="d-flex justify-content-between align-items-center mb-3">
+                                <h5 style={{ color: 'white' }}>Dynamic Sections</h5>
+                                <button className="btn btn-success btn-sm" onClick={addSection} style={{ border: 'none', outline: 'none' }}>
+                                    + Add Section
+                                </button>
+                            </div>
+
+                            {(blogSections[selectedBlogId] || []).map((section, index) => (
+                                <div key={section.id} className="mb-4" style={{
+                                    background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 100%)',
+                                    border: '2px solid #4a5f7a',
+                                    borderRadius: '12px',
+                                    padding: '20px',
+                                    boxShadow: '0 4px 8px rgba(0,0,0,0.3)'
+                                }}>
+                                    <div className="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 style={{ color: '#ecf0f1', margin: 0, fontWeight: '600' }}>Section #{index + 1}</h6>
+                                        <div className="d-flex gap-2">
+                                            <button
+                                                className="btn btn-success btn-sm"
+                                                onClick={() => updateSection(section.id, section)}
+                                                style={{ fontSize: '12px', padding: '4px 8px' }}
+                                            >
+                                                Save
+                                            </button>
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => deleteSection(section.id)}
+                                                style={{ fontSize: '12px', padding: '4px 8px' }}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="row g-3">
+                                        <div className="col-md-4">
+                                            <label className="form-label" style={{ color: '#bdc3c7', fontSize: '13px', fontWeight: '500' }}>Title (AZ)</label>
+                                            <input
+                                                className="form-control"
+                                                style={{
+                                                    background: '#1a252f',
+                                                    color: 'white',
+                                                    border: '1px solid #5a6c7d',
+                                                    borderRadius: '6px',
+                                                    fontSize: '14px'
+                                                }}
+                                                value={section.title || ''}
+                                                onChange={(e) => updateSection(section.id, { ...section, title: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label className="form-label" style={{ color: '#bdc3c7', fontSize: '13px', fontWeight: '500' }}>Title (EN)</label>
+                                            <input
+                                                className="form-control"
+                                                style={{
+                                                    background: '#1a252f',
+                                                    color: 'white',
+                                                    border: '1px solid #5a6c7d',
+                                                    borderRadius: '6px',
+                                                    fontSize: '14px'
+                                                }}
+                                                value={section.titleEn || ''}
+                                                onChange={(e) => updateSection(section.id, { ...section, titleEn: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label className="form-label" style={{ color: '#bdc3c7', fontSize: '13px', fontWeight: '500' }}>Title (RU)</label>
+                                            <input
+                                                className="form-control"
+                                                style={{
+                                                    background: '#1a252f',
+                                                    color: 'white',
+                                                    border: '1px solid #5a6c7d',
+                                                    borderRadius: '6px',
+                                                    fontSize: '14px'
+                                                }}
+                                                value={section.titleRu || ''}
+                                                onChange={(e) => updateSection(section.id, { ...section, titleRu: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-12">
+                                            <label className="form-label" style={{ color: '#bdc3c7', fontSize: '13px', fontWeight: '500' }}>Description (AZ)</label>
+                                            <textarea
+                                                className="form-control"
+                                                rows="3"
+                                                style={{
+                                                    background: '#1a252f',
+                                                    color: 'white',
+                                                    border: '1px solid #5a6c7d',
+                                                    borderRadius: '6px',
+                                                    fontSize: '14px'
+                                                }}
+                                                value={section.description || ''}
+                                                onChange={(e) => updateSection(section.id, { ...section, description: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-12">
+                                            <label className="form-label" style={{ color: '#bdc3c7', fontSize: '13px', fontWeight: '500' }}>Description (EN)</label>
+                                            <textarea
+                                                className="form-control"
+                                                rows="3"
+                                                style={{
+                                                    background: '#1a252f',
+                                                    color: 'white',
+                                                    border: '1px solid #5a6c7d',
+                                                    borderRadius: '6px',
+                                                    fontSize: '14px'
+                                                }}
+                                                value={section.descriptionEn || ''}
+                                                onChange={(e) => updateSection(section.id, { ...section, descriptionEn: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-12">
+                                            <label className="form-label" style={{ color: '#bdc3c7', fontSize: '13px', fontWeight: '500' }}>Description (RU)</label>
+                                            <textarea
+                                                className="form-control"
+                                                rows="3"
+                                                style={{
+                                                    background: '#1a252f',
+                                                    color: 'white',
+                                                    border: '1px solid #5a6c7d',
+                                                    borderRadius: '6px',
+                                                    fontSize: '14px'
+                                                }}
+                                                value={section.descriptionRu || ''}
+                                                onChange={(e) => updateSection(section.id, { ...section, descriptionRu: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+
+                            {(!blogSections[selectedBlogId] || blogSections[selectedBlogId].length === 0) && (
+                                <div className="text-center py-4" style={{ color: '#bdc3c7' }}>
+                                    No sections yet. Click "Add Section" to create one.
+                                </div>
+                            )}
+                        </div>
+                        <div className="modal-footer" style={{ background: '#34495e', borderTop: '1px solid #4a5f7a' }}>
+                            <button className="btn btn-secondary" onClick={closeSectionsModal}>Close</button>
                         </div>
                     </div>
                 </div>

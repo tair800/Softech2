@@ -68,7 +68,7 @@ export default function UserProfile() {
 
         try {
             const token = localStorage.getItem('adminToken');
-            const response = await fetch('https://softech-api.webonly.io/api/auth/change-password', {
+            const response = await fetch('http://localhost:5098/api/auth/change-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

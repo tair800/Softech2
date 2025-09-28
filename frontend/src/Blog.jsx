@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './Blog.css';
 import PageTitle from './components/PageTitle';
-import { Link } from 'react-router-dom';
 import LazySpline from './components/LazySpline.jsx';
+import BlogSlider from './components/BlogSlider.jsx';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 function Blog() {
     const [blogs, setBlogs] = useState([]);
@@ -35,7 +35,7 @@ function Blog() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 
@@ -57,6 +57,16 @@ function Blog() {
         fetchBlogs();
         return () => { isMounted = false; };
     }, []);
+
+    // Transform blog data for BlogSlider
+    const transformedBlogs = blogs.map((blog, index) => ({
+        id: blog.id,
+        image: resolveUrl(blog.mainImageUrl) || resolveUrl(blog.detailImg1Url) || "/assets/equipment1.png",
+        alt: pick(blog.title1, blog.title1En, blog.title1Ru) || "Blog",
+        number: String(index + 1).padStart(2, '0'),
+        title: pick(blog.title1, blog.title1En, blog.title1Ru) || `Blog ${index + 1}`,
+        description: pick(blog.desc1, blog.desc1En, blog.desc1Ru) || "Blog description"
+    }));
 
     return (
         <div className="blog-container">
@@ -88,113 +98,19 @@ function Blog() {
                     </div>
                 </div>
 
-                {/* Blog images gallery */}
-                <div className="row g-4 blog-gallery mt-2 pt-5">
+                {/* Blog Slider */}
+                <div className="blog-slider-section mt-2 pt-5">
                     {/* Loading/Error */}
                     {loading && (
-                        <div className="col-12 text-center text-white-50">{t('loading')}</div>
+                        <div className="text-center text-white-50">{t('loading')}</div>
                     )}
                     {(!loading && error) && (
-                        <div className="col-12 text-center text-danger">{error}</div>
+                        <div className="text-center text-danger">{error}</div>
                     )}
 
-                    {/* Map first blog to the three-card gallery layout */}
-                    {(!loading && !error && blogs.length > 0) && (
-                        <>
-                            {/* First image */}
-                            <div className="col-12 col-md-6 col-lg-4">
-                                <Link to={`/blog/${blogs[0]?.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    <div className="blog-image-card">
-                                        <img src={resolveUrl(blogs[0]?.detailImg1Url) || "/assets/equipment1.png"} alt="Blog 1" onError={(e) => { e.currentTarget.src = "/assets/equipment1.png"; }} />
-                                    </div>
-                                    <div className="blog-caption">
-                                        <div className="blog-caption-inner">
-                                            <div className="row g-2 align-items-stretch">
-                                                <div className="col-4 col-md-3">
-                                                    <div className="cap-number-box">
-                                                        <span className="cap-number">01</span>
-                                                    </div>
-                                                </div>
-                                                <div className="col-8 col-md-9">
-                                                    <div className="cap-title-box">
-                                                        <h2>{pick(blogs[0]?.title1, blogs[0]?.title1En, blogs[0]?.title1Ru)}</h2>
-                                                    </div>
-                                                </div>
-                                                <div className="col-12">
-                                                    <div className="cap-desc-box">
-                                                        <p>{pick(blogs[0]?.desc1, blogs[0]?.desc1En, blogs[0]?.desc1Ru)}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
-
-                            {/* Second image - tall */}
-                            <div className="col-12 col-md-6 col-lg-4">
-                                <Link to={`/blog/${blogs[0]?.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    <div className="blog-image-card tall">
-                                        <img src={resolveUrl(blogs[0]?.mainImageUrl) || "/assets/equipment1.png"} alt="Blog 2" onError={(e) => { e.currentTarget.src = "/assets/equipment1.png"; }} />
-                                        {/* Top overlay for number and title */}
-                                        <div className="blog-caption-overlay blog-caption-top">
-                                            <div className="blog-caption-inner">
-                                                <div className="row g-2 align-items-stretch mt-2">
-                                                    <div className="col-3">
-                                                        <div className="cap-number-box">
-                                                            <span className="cap-number">02</span>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-9">
-                                                        <div className="cap-title-box">
-                                                            <h2>{pick(blogs[0]?.title2, blogs[0]?.title2En, blogs[0]?.title2Ru)}</h2>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/* Bottom overlay for description */}
-                                        <div className="blog-caption-overlay blog-caption-bottom">
-                                            <div className="blog-caption-inner">
-                                                <div className="cap-desc-box">
-                                                    <p>{pick(blogs[0]?.desc2, blogs[0]?.desc2En, blogs[0]?.desc2Ru)}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
-
-                            {/* Third image */}
-                            <div className="col-12 col-md-6 col-lg-4">
-                                <Link to={`/blog/${blogs[0]?.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    <div className="blog-image-card">
-                                        <img src={resolveUrl(blogs[0]?.detailImg4Url || blogs[0]?.detailImg2Url)} alt="Blog 3" onError={(e) => { e.currentTarget.src = "/assets/equipment1.png"; }} />
-                                    </div>
-                                    <div className="blog-caption">
-                                        <div className="blog-caption-inner">
-                                            <div className="row g-2 align-items-stretch">
-                                                <div className="col-4 col-md-3">
-                                                    <div className="cap-number-box">
-                                                        <span className="cap-number">03</span>
-                                                    </div>
-                                                </div>
-                                                <div className="col-8 col-md-9">
-                                                    <div className="cap-title-box">
-                                                        <h2>{pick(blogs[0]?.title3, blogs[0]?.title3En, blogs[0]?.title3Ru)}</h2>
-                                                    </div>
-                                                </div>
-                                                <div className="col-12">
-                                                    <div className="cap-desc-box">
-                                                        <p>{pick(blogs[0]?.desc3, blogs[0]?.desc3En, blogs[0]?.desc3Ru)}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
-                        </>
+                    {/* Blog Slider */}
+                    {(!loading && !error && transformedBlogs.length > 0) && (
+                        <BlogSlider blogData={transformedBlogs} />
                     )}
                 </div>
             </div>

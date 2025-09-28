@@ -46,6 +46,11 @@ const BlogSlider = ({
         }
     ]
 }) => {
+    // Function to truncate description text
+    const truncateDescription = (text, maxLength = 125) => {
+        if (!text || text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    };
     const [currentIndex, setCurrentIndex] = useState(1); // Start with middle card (index 1)
     const [isAnimating, setIsAnimating] = useState(false);
     const [slideDirection, setSlideDirection] = useState('');
@@ -145,7 +150,7 @@ const BlogSlider = ({
                                 </div>
                                 <div className="col-12">
                                     <div className="cap-desc-box">
-                                        <p>{visibleCards.left.description}</p>
+                                        <p>{truncateDescription(visibleCards.left.description)}</p>
                                     </div>
                                 </div>
                             </div>
@@ -193,7 +198,7 @@ const BlogSlider = ({
                         <div className="blog-caption-overlay blog-caption-bottom">
                             <div className="blog-caption-inner">
                                 <div className="cap-desc-box">
-                                    <p>{visibleCards.middle.description}</p>
+                                    <p>{truncateDescription(visibleCards.middle.description)}</p>
                                 </div>
                             </div>
                         </div>
@@ -235,7 +240,7 @@ const BlogSlider = ({
                                 </div>
                                 <div className="col-12">
                                     <div className="cap-desc-box">
-                                        <p>{visibleCards.right.description}</p>
+                                        <p>{truncateDescription(visibleCards.right.description)}</p>
                                     </div>
                                 </div>
                             </div>

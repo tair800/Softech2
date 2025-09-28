@@ -30,11 +30,38 @@ namespace WebOnlyAPI.Services
                 Version = e.Version,
                 Core = e.Core,
                 ImageUrl = e.ImageUrl,
+                IsMain = e.IsMain,
                 CategoryNames = e.CategoryMappings.Select(cm => cm.Category.Name).ToList(),
                 TagNames = e.TagMappings.Select(tm => tm.Tag.Name).ToList()
             }).ToList();
 
             // No language overrides for equipment list; names are unique
+
+            return list;
+        }
+
+        public async Task<IEnumerable<EquipmentListResponseDto>> GetMainEquipmentAsync()
+        {
+            var equipments = await _context.Equipment
+                .Where(e => e.IsMain == true)
+                .Include(e => e.CategoryMappings)
+                    .ThenInclude(cm => cm.Category)
+                .Include(e => e.TagMappings)
+                    .ThenInclude(tm => tm.Tag)
+                .OrderBy(e => e.CreatedAt)
+                .ToListAsync();
+
+            var list = equipments.Select(e => new EquipmentListResponseDto
+            {
+                Id = e.Id,
+                Name = e.Name,
+                Version = e.Version,
+                Core = e.Core,
+                ImageUrl = e.ImageUrl,
+                IsMain = e.IsMain,
+                CategoryNames = e.CategoryMappings.Select(cm => cm.Category.Name).ToList(),
+                TagNames = e.TagMappings.Select(tm => tm.Tag.Name).ToList()
+            }).ToList();
 
             return list;
         }
@@ -214,6 +241,7 @@ namespace WebOnlyAPI.Services
                 e.DescriptionEn = dto.DescriptionEn;
                 e.DescriptionRu = dto.DescriptionRu;
                 e.ImageUrl = dto.ImageUrl;
+                e.IsMain = dto.IsMain;
                 e.UpdatedAt = DateTime.UtcNow;
 
                 // Update features
@@ -383,6 +411,7 @@ namespace WebOnlyAPI.Services
                 DescriptionEn = e.DescriptionEn,
                 DescriptionRu = e.DescriptionRu,
                 ImageUrl = e.ImageUrl,
+                IsMain = e.IsMain,
                 CreatedAt = e.CreatedAt,
                 UpdatedAt = e.UpdatedAt,
                 Features = e.FeaturesList.Select(f => new EquipmentFeatureDto

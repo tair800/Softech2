@@ -2,12 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import Swal from 'sweetalert2';
 import './AdminAbout.css';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 export default function AdminAbout() {
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/employee.png';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -41,6 +41,8 @@ export default function AdminAbout() {
     const [modalType, setModalType] = useState(''); // 'employee' or 'reference'
     const [newEmployee, setNewEmployee] = useState({
         name: '',
+        nameEn: '',
+        nameRu: '',
         position: '',
         phone: '',
         email: '',
@@ -407,6 +409,8 @@ export default function AdminAbout() {
         setModalType('');
         setNewEmployee({
             name: '',
+            nameEn: '',
+            nameRu: '',
             position: '',
             phone: '',
             email: '',
@@ -719,8 +723,8 @@ export default function AdminAbout() {
                         const result = await response.json();
                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                         // Convert full URL to relative path if needed
-                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                        if (imageUrl.startsWith('http://localhost:5098')) {
+                            imageUrl = imageUrl.replace('http://localhost:5098', '');
                         }
                         handleMainContentChange('imageUrl', imageUrl);
                     } else {
@@ -771,8 +775,8 @@ export default function AdminAbout() {
                         const result = await response.json();
                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                         // Convert full URL to relative path if needed
-                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                        if (imageUrl.startsWith('http://localhost:5098')) {
+                            imageUrl = imageUrl.replace('http://localhost:5098', '');
                         }
                         const updatedDirector = { ...director, imageUrl };
                         setDirector(updatedDirector);
@@ -822,8 +826,8 @@ export default function AdminAbout() {
                         const result = await response.json();
                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                         // Convert full URL to relative path if needed
-                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                        if (imageUrl.startsWith('http://localhost:5098')) {
+                            imageUrl = imageUrl.replace('http://localhost:5098', '');
                         }
                         const updatedEmployees = employees.map(emp =>
                             emp.id === employeeId ? { ...emp, imageUrl } : emp
@@ -883,8 +887,8 @@ export default function AdminAbout() {
                             const result = await response.json();
                             let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                             // Convert full URL to relative path if needed
-                            if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                                imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                            if (imageUrl.startsWith('http://localhost:5098')) {
+                                imageUrl = imageUrl.replace('http://localhost:5098', '');
                             }
 
                             newImages.push({
@@ -967,8 +971,8 @@ export default function AdminAbout() {
                         const result = await response.json();
                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                         // Convert full URL to relative path if needed
-                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                        if (imageUrl.startsWith('http://localhost:5098')) {
+                            imageUrl = imageUrl.replace('http://localhost:5098', '');
                         }
                         setNewEmployee({ ...newEmployee, imageUrl: imageUrl });
                     } else {
@@ -1447,6 +1451,32 @@ export default function AdminAbout() {
                                     </div>
                                     <div className="col-12">
                                         <div className="form-group row g-3 align-items-start">
+                                            <label className="col-sm-3 col-form-label">Heading (EN)</label>
+                                            <div className="col-sm-9">
+                                                <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    value={employee.nameEn || ''}
+                                                    onChange={(e) => handleEmployeeChange(employee.id, 'nameEn', e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-12">
+                                        <div className="form-group row g-3 align-items-start">
+                                            <label className="col-sm-3 col-form-label">Heading (RU)</label>
+                                            <div className="col-sm-9">
+                                                <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    value={employee.nameRu || ''}
+                                                    onChange={(e) => handleEmployeeChange(employee.id, 'nameRu', e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-12">
+                                        <div className="form-group row g-3 align-items-start">
                                             <label className="col-sm-3 col-form-label">Job name</label>
                                             <div className="col-sm-9">
                                                 <input
@@ -1589,6 +1619,24 @@ export default function AdminAbout() {
                                             placeholder="İşçi adını daxil edin"
                                             value={newEmployee.name}
                                             onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="form-group mb-3">
+                                        <label className="form-label">Ad Soyad (EN)</label>
+                                        <input
+                                            className="form-control"
+                                            placeholder="Employee name in English"
+                                            value={newEmployee.nameEn || ''}
+                                            onChange={(e) => setNewEmployee({ ...newEmployee, nameEn: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="form-group mb-3">
+                                        <label className="form-label">Ad Soyad (RU)</label>
+                                        <input
+                                            className="form-control"
+                                            placeholder="Имя сотрудника на русском"
+                                            value={newEmployee.nameRu || ''}
+                                            onChange={(e) => setNewEmployee({ ...newEmployee, nameRu: e.target.value })}
                                         />
                                     </div>
                                     <div className="form-group mb-3">

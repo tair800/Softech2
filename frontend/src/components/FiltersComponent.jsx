@@ -107,11 +107,11 @@ const FiltersComponent = ({ onFilterChange, selectedLanguage = 'en' }) => {
             setLoading(true);
 
             // Fetch categories with language parameter
-            const categoriesResponse = await fetch(`https://softech-api.webonly.io/api/equipment/categories?language=${selectedLanguage}`);
+            const categoriesResponse = await fetch(`http://localhost:5098/api/equipment/categories?language=${selectedLanguage}`);
             const categoriesData = await categoriesResponse.json();
 
             // Fetch tags with language parameter
-            const tagsResponse = await fetch(`https://softech-api.webonly.io/api/equipment/tags?language=${selectedLanguage}`);
+            const tagsResponse = await fetch(`http://localhost:5098/api/equipment/tags?language=${selectedLanguage}`);
             const tagsData = await tagsResponse.json();
 
             setCategories(categoriesData);

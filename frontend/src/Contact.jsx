@@ -29,7 +29,7 @@ function Contact() {
         e.preventDefault();
 
         try {
-            const response = await fetch('https://softech-api.webonly.io/api/contact', {
+            const response = await fetch('http://localhost:5098/api/contact', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ function Contact() {
             phone: { az: 'Telefon', en: 'Phone', ru: 'Телефон' },
             email: { az: 'Elektron poçt', en: 'Email', ru: 'Электронная почта' },
             location: { az: 'Məkan', en: 'Location', ru: 'Местоположение' },
-            locationFull: { az: 'Baku, Azerbaijan', en: 'Baku, Azerbaijan', ru: 'Баку, Азербайджан' },
+            locationFull: { az: 'Bakı, Azərbaycan', en: 'Baku, Azerbaijan', ru: 'Баку, Азербайджан' },
             yourInfo: { az: 'Sizin məlumatlarınız', en: 'Your information', ru: 'Ваша информация' },
             nameLabel: { az: 'Adınız', en: 'Your name', ru: 'Ваше имя' },
             namePh: { az: 'Sənin adın', en: 'Your name', ru: 'Ваше имя' },

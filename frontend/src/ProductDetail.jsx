@@ -38,7 +38,7 @@ function ProductDetail() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 
@@ -46,7 +46,7 @@ function ProductDetail() {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const res = await fetch(`https://softech-api.webonly.io/api/products/${id}?language=${language}`);
+                const res = await fetch(`http://localhost:5098/api/products/${id}?language=${language}`);
                 if (!res.ok) throw new Error('Failed to load product');
                 const data = await res.json();
 
@@ -144,6 +144,11 @@ function ProductDetail() {
         if (!isExpanded) {
             setShowSections(true);
             setIsExpanded(true);
+            // Show scroller wrapper
+            const scrollerWrapper = document.querySelector('.scroller-wrapper');
+            if (scrollerWrapper) {
+                scrollerWrapper.classList.add('visible');
+            }
             // Scroll to first section after animation
             setTimeout(() => {
                 scrollToSection(1);
@@ -153,6 +158,11 @@ function ProductDetail() {
 
     const handleReadLess = () => {
         setIsExpanded(false);
+        // Hide scroller wrapper
+        const scrollerWrapper = document.querySelector('.scroller-wrapper');
+        if (scrollerWrapper) {
+            scrollerWrapper.classList.remove('visible');
+        }
         // Scroll back to main section
         setTimeout(() => {
             setShowSections(false);

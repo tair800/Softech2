@@ -28,6 +28,7 @@ namespace WebOnlyAPI.Data
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<VisitorAnalytics> VisitorAnalytics { get; set; }
         public DbSet<Blog> Blogs { get; set; }
+        public DbSet<BlogSection> BlogSections { get; set; }
         
         // User system DbSets
         public DbSet<User> Users { get; set; }
@@ -57,6 +58,7 @@ namespace WebOnlyAPI.Data
             modelBuilder.Entity<Slider>().ToTable("Sliders");
             modelBuilder.Entity<VisitorAnalytics>().ToTable("VisitorAnalytics");
             modelBuilder.Entity<Blog>().ToTable("Blogs");
+            modelBuilder.Entity<BlogSection>().ToTable("BlogSections");
 
             // Configure relationships
             modelBuilder.Entity<Equipment>()
@@ -73,6 +75,12 @@ namespace WebOnlyAPI.Data
                 .HasMany(p => p.Images)
                 .WithOne(i => i.Product)
                 .HasForeignKey(i => i.ProductId);
+
+            modelBuilder.Entity<Blog>()
+                .HasMany(b => b.Sections)
+                .WithOne(s => s.Blog)
+                .HasForeignKey(s => s.BlogId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Configure many-to-many relationships for Equipment Categories and Tags
             modelBuilder.Entity<EquipmentCategoryMapping>()

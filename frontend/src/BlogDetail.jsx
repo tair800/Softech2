@@ -8,6 +8,7 @@ import { useLanguage } from './contexts/LanguageContext.jsx';
 const BlogDetail = () => {
     const { id } = useParams();
     const [blog, setBlog] = useState(null);
+    const [blogSections, setBlogSections] = useState([]);
     const [sliderBlogs, setSliderBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -22,11 +23,11 @@ const BlogDetail = () => {
         return (dict[key] && (dict[key][language] || dict[key].az)) || key;
     };
 
-    const API = 'https://softech-api.webonly.io/api';
+    const API = 'http://localhost:5098/api';
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 
@@ -54,10 +55,19 @@ const BlogDetail = () => {
         const load = async () => {
             try {
                 setLoading(true);
+
+                // Load blog data
                 const res = await fetch(`${API}/blogs/${id}`);
                 if (!res.ok) throw new Error('Failed to load blog');
                 const data = await res.json();
                 if (mounted) setBlog(data);
+
+                // Load blog sections
+                const sectionsRes = await fetch(`${API}/blogsections/blog/${id}`);
+                if (sectionsRes.ok) {
+                    const sectionsData = await sectionsRes.json();
+                    if (mounted) setBlogSections(sectionsData);
+                }
             } catch (e) {
                 if (mounted) setError(t('loadError'));
             } finally {
@@ -80,10 +90,10 @@ const BlogDetail = () => {
                 let mapped = (Array.isArray(list) ? list : []).map((b) => ({
                     id: b.id,
                     image: b.mainImageUrl || b.detailImg1Url || b.detailImg2Url || b.detailImg3Url || b.detailImg4Url || '/assets/equipment1.png',
-                    alt: b.title1 || b.title2 || 'Blog',
+                    alt: pickByLanguage(language || 'az', b.title1En, b.title1Ru, b.title1) || 'Blog',
                     number: String(b.id).padStart(2, '0'),
-                    title: b.title2 || b.title1 || '',
-                    description: b.desc2 || b.desc1 || ''
+                    title: pickByLanguage(language || 'az', b.title1En, b.title1Ru, b.title1) || '',
+                    description: pickByLanguage(language || 'az', b.desc1En, b.desc1Ru, b.desc1) || ''
                 }));
                 if (mapped.length === 1) mapped = [mapped[0], mapped[0], mapped[0]];
                 if (mapped.length === 2) mapped = [mapped[0], mapped[1], mapped[0]];
@@ -92,7 +102,7 @@ const BlogDetail = () => {
         };
         loadAll();
         return () => { mounted = false; };
-    }, []);
+    }, [language]);
 
     return (
         <div className="blog-detail-page" >
@@ -114,24 +124,32 @@ const BlogDetail = () => {
                             <div className="blog-detail-right">
                                 <div className="blog-images-layout">
                                     {/* Image 1 - Left */}
-                                    <div className="blog-image-oval blog-image-1">
-                                        <img src={resolveUrl(blog.detailImg1Url) || '/assets/blog-detail1.png'} alt="Blog Image 1" />
-                                    </div>
+                                    {blog.detailImg1Url && (
+                                        <div className="blog-image-oval blog-image-1">
+                                            <img src={resolveUrl(blog.detailImg1Url)} alt="Blog Image 1" />
+                                        </div>
+                                    )}
 
                                     {/* Images 2 & 3 - Middle (stacked) */}
                                     <div className="blog-images-middle">
-                                        <div className="blog-image-oval blog-image-2">
-                                            <img src={resolveUrl(blog.detailImg2Url) || '/assets/blog-detail2.png'} alt="Blog Image 2" />
-                                        </div>
-                                        <div className="blog-image-oval blog-image-3">
-                                            <img src={resolveUrl(blog.detailImg3Url) || '/assets/blog-detail3.png'} alt="Blog Image 3" />
-                                        </div>
+                                        {blog.detailImg2Url && (
+                                            <div className="blog-image-oval blog-image-2">
+                                                <img src={resolveUrl(blog.detailImg2Url)} alt="Blog Image 2" />
+                                            </div>
+                                        )}
+                                        {blog.detailImg3Url && (
+                                            <div className="blog-image-oval blog-image-3">
+                                                <img src={resolveUrl(blog.detailImg3Url)} alt="Blog Image 3" />
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Image 4 - Right */}
-                                    <div className="blog-image-oval blog-image-4">
-                                        <img src={resolveUrl(blog.detailImg4Url) || '/assets/blog-detail4.png'} alt="Blog Image 4" />
-                                    </div>
+                                    {blog.detailImg4Url && (
+                                        <div className="blog-image-oval blog-image-4">
+                                            <img src={resolveUrl(blog.detailImg4Url)} alt="Blog Image 4" />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -168,7 +186,9 @@ const BlogDetail = () => {
                                     return (
                                         <div key={idx} className="blog-feature-item">
                                             <div className="blog-feature-icon">
-                                                <img src="/assets/blog-icon.svg" alt={t('feature')} />
+                                                <div className="blog-feature-icon-placeholder">
+                                                    <span>✓</span>
+                                                </div>
                                             </div>
                                             <div className="blog-feature-content">
                                                 <h3>{text}</h3>
@@ -182,17 +202,22 @@ const BlogDetail = () => {
                     </div>
                 )}
 
-                {/* Third Section - Title 3 and Description 3 */}
-                {!!blog && (
+                {/* Dynamic Blog Sections */}
+                {!!blog && blogSections.length > 0 && (
                     <div className="row mt-5">
                         <div className="col-12">
-                            <div className="blog-third-section">
-                                <h2 className="blog-detail-title-3">{pickByLanguage(language || 'az', blog.title3En, blog.title3Ru, blog.title3)}</h2>
-                                <p className="blog-detail-desc-3">{pickByLanguage(language || 'az', blog.desc3En, blog.desc3Ru, blog.desc3)}</p>
-                            </div>
+                            {blogSections.map((section, index) => (
+                                <div key={section.id} className="blog-dynamic-section" style={{ marginBottom: '2rem' }}>
+                                    <h2 className="blog-detail-title-3">{pickByLanguage(language || 'az', section.titleEn, section.titleRu, section.title)}</h2>
+                                    {section.description && (
+                                        <p className="blog-detail-desc-3">{pickByLanguage(language || 'az', section.descriptionEn, section.descriptionRu, section.description)}</p>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 )}
+
 
                 {/* Blog Detail Slider (generic, from API) */}
                 {sliderBlogs.length > 0 && (

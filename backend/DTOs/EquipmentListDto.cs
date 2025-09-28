@@ -9,6 +9,7 @@ namespace WebOnlyAPI.DTOs
         public string? Version { get; set; }
         public string? Core { get; set; }
         public string? ImageUrl { get; set; }
+        public bool IsMain { get; set; }
         public List<string> CategoryNames { get; set; } = new List<string>();
         public List<string> TagNames { get; set; } = new List<string>();
     }

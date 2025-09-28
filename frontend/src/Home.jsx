@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 import './Home.css';
 import prevIcon from '/assets/prev.png';
@@ -6,7 +7,7 @@ import nextIcon from '/assets/next.png';
 import logoIcon from '/assets/logo-icon.png';
 import logoText from '/assets/logo-text.png';
 
-function CircularProgress({ currentIndex, totalSlides, slides, language }) {
+function CircularProgress({ currentIndex, totalSlides, slides, language, onSliderClick }) {
     // Get responsive dimensions from CSS
     const [dimensions, setDimensions] = useState({ width: 400, height: 320 });
 
@@ -95,7 +96,7 @@ function CircularProgress({ currentIndex, totalSlides, slides, language }) {
                             key={slide.id}
                             x={x}
                             y={y}
-                            className={`slider-name ${isActive ? 'active' : ''}`}
+                            className={`slider-name ${isActive ? 'active' : ''} ${slide.productId ? 'clickable' : ''}`}
                             textAnchor="middle"
                             dominantBaseline="middle"
                             style={{
@@ -104,8 +105,10 @@ function CircularProgress({ currentIndex, totalSlides, slides, language }) {
                                 fill: isActive ? '#17DBFC' : '#ffffff',
                                 transform: `rotate(${angle * 180 / Math.PI + 90}deg) scale(${isActive ? (isLargeScreen ? 1.5 : (isSmall ? 1.15 : 1.35)) : 1})`,
                                 transformOrigin: `${x}px ${y}px`,
-                                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+                                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                                cursor: slide.productId ? 'pointer' : 'default'
                             }}
+                            onClick={() => slide.productId && onSliderClick && onSliderClick(slide)}
                         >
                             {(() => {
                                 const az = (slide.name || '').trim();
@@ -125,6 +128,7 @@ function CircularProgress({ currentIndex, totalSlides, slides, language }) {
 
 export default function Home() {
     const scrollerRef = useRef(null);
+    const navigate = useNavigate();
     const { language } = useLanguage();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
@@ -132,21 +136,29 @@ export default function Home() {
     const [imageWidth, setImageWidth] = useState(window.innerWidth / 3);
     const [slides, setSlides] = useState([]);
 
+    // Handle slider click to navigate to product
+    const handleSliderClick = (slide) => {
+        if (slide.productId) {
+            navigate(`/product/${slide.productId}`);
+        }
+    };
+
     // Fetch sliders from API
     useEffect(() => {
         const fetchSliders = async () => {
             try {
-                const response = await fetch('https://softech-api.webonly.io/api/sliders');
+                const response = await fetch('http://localhost:5098/api/sliders');
                 if (response.ok) {
                     const data = await response.json();
                     console.log('API Response:', data);
                     // Transform API data to match frontend expectations
                     const transformedSlides = data.map(slide => ({
                         id: slide.id,
-                        img: slide.imageUrl ? `https://softech-api.webonly.io${slide.imageUrl}` : '/assets/slider1.png',
+                        img: slide.imageUrl ? `http://localhost:5098${slide.imageUrl}` : '/assets/slider1.png',
                         name: slide.name || 'Default',
                         nameEn: slide.nameEn || 'Default',
-                        nameRu: slide.nameRu || 'По умолчанию'
+                        nameRu: slide.nameRu || 'По умолчанию',
+                        productId: slide.productId || null
                     }));
                     console.log('Transformed Slides:', transformedSlides);
                     setSlides(transformedSlides);
@@ -205,16 +217,21 @@ export default function Home() {
     // Update transform for smooth scrolling
     useEffect(() => {
         if (scrollerRef.current && slides.length > 0) {
-            const gapWidth = 20; // 20px gap between images
-            const totalItemWidth = imageWidth + gapWidth;
+            // Check if we're on 393x852 screen size
+            const is393x852 = window.innerWidth === 393 && window.innerHeight === 852;
+            const gapWidth = is393x852 ? 0 : 20; // No gap for 393x852, 20px for others
+            const slideWidth = is393x852 ? window.innerWidth : imageWidth; // Full width for 393x852
+            const totalItemWidth = slideWidth + gapWidth;
 
             // Debug logging
             console.log('Slider Debug:', {
                 currentIndex,
                 imageWidth,
+                slideWidth,
                 totalItemWidth,
                 slidesLength: slides.length,
-                viewportWidth: window.innerWidth
+                viewportWidth: window.innerWidth,
+                is393x852
             });
 
             // Let's try a different approach
@@ -231,7 +248,7 @@ export default function Home() {
             const activeSlidePosition = middleCopyStart + (currentIndex * totalItemWidth);
 
             // Calculate how much we need to move the scroller to center the active slide
-            const slideCenter = activeSlidePosition + (imageWidth / 2);
+            const slideCenter = activeSlidePosition + (slideWidth / 2);
             const scrollPosition = slideCenter - viewportCenter;
 
             console.log('Viewport center:', viewportCenter);
@@ -288,9 +305,9 @@ export default function Home() {
 
                 <div className="image-scroller-wrapper">
                     <div className="image-scroller-container">
-                        <div ref={scrollerRef} className="image-scroller" style={{ width: `${slides.length * (imageWidth + 20)}px` }}>
+                        <div ref={scrollerRef} className="image-scroller" style={{ width: `${slides.length * ((window.innerWidth === 393 && window.innerHeight === 852) ? window.innerWidth : imageWidth + 20)}px` }}>
                             {[...slides, ...slides, ...slides].map((slide, index) => (
-                                <div key={`${index}-${slide.id}`} className="image-slide" style={{ width: `${imageWidth}px`, backgroundImage: `url('${slide.img}')` }} />
+                                <div key={`${index}-${slide.id}`} className="image-slide" style={{ width: `${(window.innerWidth === 393 && window.innerHeight === 852) ? window.innerWidth : imageWidth}px`, backgroundImage: `url('${slide.img}')` }} />
                             ))}
                         </div>
                     </div>
@@ -307,7 +324,7 @@ export default function Home() {
                 <button className="slider-nav-btn slider-prev-btn" onClick={prevSlide} disabled={isTransitioning}>
                     <img src={prevIcon} alt="Previous" className="slider-nav-icon" />
                 </button>
-                <CircularProgress currentIndex={currentIndex} totalSlides={slides.length} slides={slides} language={language} />
+                <CircularProgress currentIndex={currentIndex} totalSlides={slides.length} slides={slides} language={language} onSliderClick={handleSliderClick} />
                 <button className="slider-nav-btn slider-next-btn" onClick={nextSlide} disabled={isTransitioning}>
                     <img src={nextIcon} alt="Next" className="slider-nav-icon" />
                 </button>

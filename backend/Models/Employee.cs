@@ -12,6 +12,12 @@ namespace WebOnlyAPI.Models
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 
+        [StringLength(100)]
+        public string? NameEn { get; set; }
+
+        [StringLength(100)]
+        public string? NameRu { get; set; }
+
         [Required]
         [StringLength(100)]
         public string Position { get; set; } = string.Empty;

@@ -12,17 +12,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add CORS
-// builder.Services.AddCors(options =>
-// {
-//     options.AddPolicy("AllowAll",
-//         builder =>
-//         {
-//             builder.WithOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:3000")
-//                    .AllowAnyMethod()
-//                    .AllowAnyHeader()
-//                    .AllowCredentials();
-//         });
-// });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:3000")
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowCredentials();
+        });
+});
 
 // Add DbContext - SQLite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -46,6 +46,7 @@ builder.Services.AddScoped<DataSeederService>();
 builder.Services.AddScoped<IVisitorAnalyticsService, VisitorAnalyticsService>();
 builder.Services.AddScoped<DataTransferService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<IBlogSectionService, BlogSectionService>();
 
 var app = builder.Build();
 
@@ -61,7 +62,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-// app.UseCors("AllowAll");
+app.UseCors("AllowAll");
 app.UseStaticFiles();
 
 app.MapControllers();
@@ -136,6 +137,8 @@ using (var scope = app.Services.CreateScope())
     try { await db.Database.ExecuteSqlRawAsync("ALTER TABLE Equipment ADD COLUMN CoreRu TEXT"); } catch { }
     try { await db.Database.ExecuteSqlRawAsync("ALTER TABLE Equipment ADD COLUMN DescriptionEn TEXT"); } catch { }
     try { await db.Database.ExecuteSqlRawAsync("ALTER TABLE Equipment ADD COLUMN DescriptionRu TEXT"); } catch { }
+    // Add IsMain column to Equipment
+    try { await db.Database.ExecuteSqlRawAsync("ALTER TABLE Equipment ADD COLUMN IsMain INTEGER NOT NULL DEFAULT 0"); } catch { }
     // Services multilingual columns
     try { await db.Database.ExecuteSqlRawAsync("ALTER TABLE Services ADD COLUMN NameEn TEXT"); } catch { }
     try { await db.Database.ExecuteSqlRawAsync("ALTER TABLE Services ADD COLUMN NameRu TEXT"); } catch { }
@@ -145,6 +148,27 @@ using (var scope = app.Services.CreateScope())
     try { await db.Database.ExecuteSqlRawAsync("ALTER TABLE Services ADD COLUMN DescriptionRu TEXT"); } catch { }
     try { await db.Database.ExecuteSqlRawAsync("ALTER TABLE Services ADD COLUMN SubtextEn TEXT"); } catch { }
     try { await db.Database.ExecuteSqlRawAsync("ALTER TABLE Services ADD COLUMN SubtextRu TEXT"); } catch { }
+
+    // Create BlogSections table if it doesn't exist
+    try 
+    { 
+        await db.Database.ExecuteSqlRawAsync(@"
+            CREATE TABLE IF NOT EXISTS BlogSections (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                BlogId INTEGER NOT NULL,
+                Title TEXT NOT NULL,
+                TitleEn TEXT,
+                TitleRu TEXT,
+                Description TEXT,
+                DescriptionEn TEXT,
+                DescriptionRu TEXT,
+                OrderIndex INTEGER NOT NULL,
+                CreatedAt TEXT NOT NULL,
+                UpdatedAt TEXT,
+                FOREIGN KEY (BlogId) REFERENCES Blogs(Id) ON DELETE CASCADE
+            )"); 
+    } 
+    catch { }
 }
 
 await app.RunAsync();

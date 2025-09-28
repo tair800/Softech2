@@ -17,12 +17,6 @@ namespace WebOnlyAPI.DTOs
         public string? Desc2En { get; set; }
         public string? Desc2Ru { get; set; }
         public string? Features { get; set; } // JSON array string
-        public string? Title3 { get; set; }
-        public string? Desc3 { get; set; }
-        public string? Title3En { get; set; }
-        public string? Title3Ru { get; set; }
-        public string? Desc3En { get; set; }
-        public string? Desc3Ru { get; set; }
         public string? MainImageUrl { get; set; }
         public string? DetailImg1Url { get; set; }
         public string? DetailImg2Url { get; set; }
@@ -46,12 +40,6 @@ namespace WebOnlyAPI.DTOs
         public string? Desc2En { get; set; }
         public string? Desc2Ru { get; set; }
         public string? Features { get; set; } // JSON array string
-        public string? Title3 { get; set; }
-        public string? Desc3 { get; set; }
-        public string? Title3En { get; set; }
-        public string? Title3Ru { get; set; }
-        public string? Desc3En { get; set; }
-        public string? Desc3Ru { get; set; }
         public string? MainImageUrl { get; set; }
         public string? DetailImg1Url { get; set; }
         public string? DetailImg2Url { get; set; }
@@ -76,12 +64,6 @@ namespace WebOnlyAPI.DTOs
         public string? Desc2En { get; set; }
         public string? Desc2Ru { get; set; }
         public string? Features { get; set; }
-        public string? Title3 { get; set; }
-        public string? Desc3 { get; set; }
-        public string? Title3En { get; set; }
-        public string? Title3Ru { get; set; }
-        public string? Desc3En { get; set; }
-        public string? Desc3Ru { get; set; }
         public string? MainImageUrl { get; set; }
         public string? DetailImg1Url { get; set; }
         public string? DetailImg2Url { get; set; }

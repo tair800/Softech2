@@ -76,6 +76,14 @@
     z-index: 1000;
     width: 100px;
     height: 300px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.scroller-wrapper.visible {
+    opacity: 1;
+    visibility: visible;
 }
 
 .main-right {

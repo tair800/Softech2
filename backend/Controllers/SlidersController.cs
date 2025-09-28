@@ -54,6 +54,7 @@ namespace WebOnlyAPI.Controllers
             existing.NameEn = slider.NameEn;
             existing.NameRu = slider.NameRu;
             existing.ImageUrl = slider.ImageUrl;
+            existing.ProductId = slider.ProductId;
             existing.OrderIndex = slider.OrderIndex;
             existing.IsActive = slider.IsActive;
             existing.UpdatedAt = DateTime.UtcNow;

@@ -1507,10 +1507,25 @@
   }
 }
 
+/* 1280x832 Resolution Specific Styles */
+@media (min-width: 1280px) and (max-width: 1280px) and (min-height: 832px) and (max-height: 832px) {
+  .page-title-container.page-title-about {
+    top: 12% !important;
+  }
+}
+
 /* 1280px screens */
 @media (min-width: 1280px) and (max-width: 1919px) {
   .about-description-text {
     font-size: 14px;
     line-height: 1.7;
+  }
+}
+
+/* 393x852 Resolution Specific Styles */
+@media (min-width: 393px) and (max-width: 393px) and (min-height: 852px) and (max-height: 852px) {
+  .page-title-container.page-title-about .page-title {
+    font-size: 11px !important;
+    margin-left: 1px;
   }
 }

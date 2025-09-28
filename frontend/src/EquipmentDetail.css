@@ -11,6 +11,15 @@
     overflow: visible;
 }
 
+.equipment-detail-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    text-align: center;
+}
+
 /* Circle Background Elements */
 .equipment-detail-circle-background-1 {
     position: absolute;

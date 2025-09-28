@@ -24,6 +24,7 @@ function Equipment() {
     const [lastScrollTime, setLastScrollTime] = useState(0);
 
     const [equipmentList, setEquipmentList] = useState([]);
+    const [mainEquipmentList, setMainEquipmentList] = useState([]);
     const [filteredEquipment, setFilteredEquipment] = useState([]);
     const [currentFilters, setCurrentFilters] = useState({
         categories: [],
@@ -33,7 +34,25 @@ function Equipment() {
         search: ''
     });
     const [isSearching, setIsSearching] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalEquipment, setTotalEquipment] = useState(0);
     const { language, setLanguage } = useLanguage();
+
+    // Dynamic items per page based on screen size
+    const getItemsPerPage = () => {
+        console.log(`Screen size: ${window.innerWidth}x${window.innerHeight}`);
+        if (window.innerWidth === 1920 && window.innerHeight === 1080) {
+            return 8; // 8 equipment per page for 1920x1080
+        }
+        if (window.innerWidth === 1280 && window.innerHeight === 832) {
+            return 4; // 4 equipment per page for 1280x832
+        }
+        if (window.innerWidth >= 1024) {
+            return 6; // 6 equipment per page for desktop screens (1024px+)
+        }
+        return 4; // 4 equipment per page for mobile/tablet screens
+    };
     const timeoutRef = useRef(null);
     const lastScrollYRef = useRef(0);
 
@@ -41,12 +60,12 @@ function Equipment() {
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
 
-    const currentItem = equipmentList[currentIndex] || {};
+    const currentItem = mainEquipmentList[currentIndex] || {};
     const hasMultipleImages = false;
     const currentImage = resolveUrl(currentItem.imageUrl);
 
@@ -67,6 +86,7 @@ function Equipment() {
             });
         };
         setCurrentFilters(filters);
+        setCurrentPage(1); // Reset to first page when filters change
         setIsSearching(true);
 
 
@@ -96,7 +116,7 @@ function Equipment() {
 
             // If there's a search term, use API search
             if (filters.search && filters.search.trim() !== '') {
-                const searchUrl = `https://softech-api.webonly.io/api/equipment/search?q=${encodeURIComponent(filters.search.trim())}`;
+                const searchUrl = `http://localhost:5098/api/equipment/search?q=${encodeURIComponent(filters.search.trim())}`;
 
 
                 const response = await fetch(searchUrl);
@@ -182,6 +202,16 @@ function Equipment() {
         } catch { }
     }, [language]);
 
+    // Handle pagination when currentPage or filteredEquipment change
+    useEffect(() => {
+        if (filteredEquipment.length > 0) {
+            const itemsPerPage = getItemsPerPage();
+            setTotalEquipment(filteredEquipment.length);
+            setTotalPages(Math.ceil(filteredEquipment.length / itemsPerPage));
+            console.log(`Total equipment: ${filteredEquipment.length}, Total pages: ${Math.ceil(filteredEquipment.length / itemsPerPage)}, Items per page: ${itemsPerPage}`);
+        }
+    }, [filteredEquipment]);
+
     const startSlide = (direction) => {
         if (isSliding) return;
         setSlideDirection(direction);
@@ -189,11 +219,11 @@ function Equipment() {
 
         timeoutRef.current = setTimeout(() => {
             setCurrentIndex((prev) => {
-                if (!equipmentList.length) return 0;
+                if (!mainEquipmentList.length) return 0;
                 if (direction === 'left') {
-                    return prev === equipmentList.length - 1 ? 0 : prev + 1;
+                    return prev === mainEquipmentList.length - 1 ? 0 : prev + 1;
                 } else {
-                    return prev === 0 ? equipmentList.length - 1 : prev - 1;
+                    return prev === 0 ? mainEquipmentList.length - 1 : prev - 1;
                 }
             });
             setSlideDirection(null);
@@ -240,7 +270,7 @@ function Equipment() {
 
         const fetchEquipment = async () => {
             try {
-                const res = await fetch(`https://softech-api.webonly.io/api/equipment/full`);
+                const res = await fetch(`http://localhost:5098/api/equipment/full`);
                 if (!res.ok) throw new Error('Failed to load equipment');
                 const data = await res.json();
 
@@ -255,6 +285,30 @@ function Equipment() {
         };
 
         fetchEquipment();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    // Fetch main equipment for slider
+    useEffect(() => {
+        let isMounted = true;
+        const fetchMainEquipment = async () => {
+            try {
+                const res = await fetch(`http://localhost:5098/api/equipment/main`);
+                if (!res.ok) throw new Error('Failed to load main equipment');
+                const data = await res.json();
+
+                if (isMounted) {
+                    setMainEquipmentList(data);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        };
+
+        fetchMainEquipment();
 
         return () => {
             isMounted = false;
@@ -287,6 +341,81 @@ function Equipment() {
 
     const handleEquipmentCardClick = (equipmentId) => {
         navigate(`/equipment/${equipmentId}`);
+    };
+
+    // Translation function for pagination
+    const tPagination = (key) => {
+        const dict = {
+            previous: {
+                az: '‹',
+                en: '‹',
+                ru: '‹'
+            },
+            next: {
+                az: '›',
+                en: '›',
+                ru: '›'
+            },
+            page: {
+                az: 'Səhifə',
+                en: 'Page',
+                ru: 'Страница'
+            },
+            of: {
+                az: 'dən',
+                en: 'of',
+                ru: 'из'
+            }
+        };
+        return (dict[key] && (dict[key][language] || dict[key].az)) || key;
+    };
+
+    // Pagination handlers
+    const handlePrevious = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const handleNext = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const handlePageClick = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    // Generate page numbers for pagination
+    const getPageNumbers = () => {
+        const pages = [];
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(i);
+        }
+        return pages;
+    };
+
+    // Get paginated equipment
+    const getPaginatedEquipment = () => {
+        const itemsPerPage = getItemsPerPage();
+        console.log(`Getting paginated equipment - Items per page: ${itemsPerPage}, Total equipment: ${totalEquipment}, Current page: ${currentPage}`);
+        if (totalEquipment <= 8) {
+            return filteredEquipment; // Show all if 8 or fewer
+        }
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedItems = filteredEquipment.slice(startIndex, endIndex);
+        console.log(`Paginated items: ${paginatedItems.length} items (${startIndex} to ${endIndex})`);
+        return paginatedItems;
     };
 
     return (
@@ -424,13 +553,48 @@ function Equipment() {
                                 </div>
                             ) : (
                                 <div className="equipment-cards-grid">
-                                    {(window.innerWidth <= 768 ? filteredEquipment.slice(0, 6) : filteredEquipment).map(equipment => (
+                                    {getPaginatedEquipment().map(equipment => (
                                         <EquipmentCard
                                             key={equipment.id}
                                             equipment={equipment}
                                             onMoreClick={handleEquipmentCardClick}
                                         />
                                     ))}
+                                </div>
+                            )}
+
+                            {/* Pagination Component */}
+                            {totalEquipment > 8 && (
+                                <div className="equipment-pagination">
+                                    <div className="pagination-controls">
+                                        <button
+                                            className="pagination-btn pagination-prev"
+                                            onClick={handlePrevious}
+                                            disabled={currentPage === 1}
+                                        >
+                                            <span>{tPagination('previous')}</span>
+                                        </button>
+
+                                        <div className="pagination-numbers">
+                                            {getPageNumbers().map((pageNumber) => (
+                                                <button
+                                                    key={pageNumber}
+                                                    className={`pagination-number ${pageNumber === currentPage ? 'active' : ''}`}
+                                                    onClick={() => handlePageClick(pageNumber)}
+                                                >
+                                                    {pageNumber}
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        <button
+                                            className="pagination-btn pagination-next"
+                                            onClick={handleNext}
+                                            disabled={currentPage === totalPages}
+                                        >
+                                            <span>{tPagination('next')}</span>
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>

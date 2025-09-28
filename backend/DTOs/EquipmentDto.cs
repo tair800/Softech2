@@ -20,6 +20,7 @@ namespace WebOnlyAPI.DTOs
         public string? DescriptionRu { get; set; }
         [StringLength(500)]
         public string? ImageUrl { get; set; }
+        public bool IsMain { get; set; } = false;
         public List<int> CategoryIds { get; set; } = new List<int>();
         public List<int> TagIds { get; set; } = new List<int>();
         public List<CreateEquipmentFeatureDto> Features { get; set; } = new List<CreateEquipmentFeatureDto>();
@@ -43,6 +44,7 @@ namespace WebOnlyAPI.DTOs
         public string? DescriptionRu { get; set; }
         [StringLength(500)]
         public string? ImageUrl { get; set; }
+        public bool IsMain { get; set; } = false;
         public List<int> CategoryIds { get; set; } = new List<int>();
         public List<int> TagIds { get; set; } = new List<int>();
         public List<CreateEquipmentFeatureDto> Features { get; set; } = new List<CreateEquipmentFeatureDto>();
@@ -59,6 +61,7 @@ namespace WebOnlyAPI.DTOs
         public string? DescriptionEn { get; set; }
         public string? DescriptionRu { get; set; }
         public string? ImageUrl { get; set; }
+        public bool IsMain { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public List<EquipmentFeatureDto> Features { get; set; } = new List<EquipmentFeatureDto>();

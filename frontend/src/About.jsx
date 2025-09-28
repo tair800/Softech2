@@ -35,7 +35,7 @@ function About() {
     const resolveUrl = (url) => {
         if (!url) return '';
         if (url.startsWith('/assets/')) return url; // Static assets don't need API base URL
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 
@@ -45,9 +45,9 @@ function About() {
         const fetchAll = async () => {
             try {
                 const [empRes, refRes, aboutLogoRes] = await Promise.all([
-                    fetch(`https://softech-api.webonly.io/api/employees?language=${language}`),
-                    fetch('https://softech-api.webonly.io/api/references'),
-                    fetch(`https://softech-api.webonly.io/api/AboutLogo?language=${language}`)
+                    fetch(`http://localhost:5098/api/employees?language=${language}`),
+                    fetch('http://localhost:5098/api/references'),
+                    fetch(`http://localhost:5098/api/AboutLogo?language=${language}`)
                 ]);
                 if (empRes.ok) {
                     const employees = await empRes.json();

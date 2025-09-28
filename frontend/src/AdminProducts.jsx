@@ -3,7 +3,7 @@ import './AdminProducts.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 export default function AdminProducts() {
     const [products, setProducts] = useState([]);
@@ -63,7 +63,7 @@ export default function AdminProducts() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 
@@ -1250,33 +1250,7 @@ export default function AdminProducts() {
                                     <input id="new-product-section1-image" type="file" accept="image/*" style={{ display: 'none' }} onChange={async (e) => {
                                         const f = e.target.files?.[0] || null;
                                         if (f) {
-                                            try {
-                                                // Upload the image to the server
-                                                const formData = new FormData();
-                                                formData.append('image', f);
-
-                                                const response = await fetch(`${API}/upload/image`, {
-                                                    method: 'POST',
-                                                    body: formData
-                                                });
-
-                                                if (response.ok) {
-                                                    const result = await response.json();
-                                                    let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
-                                                    // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
-                                                    }
-                                                    setNewProduct({ ...newProduct, section1Image: imageUrl });
-                                                } else {
-                                                    // Fallback to blob URL if upload fails
-                                                    setNewProduct({ ...newProduct, section1Image: URL.createObjectURL(f) });
-                                                }
-                                            } catch (error) {
-                                                console.error('Error uploading product image:', error);
-                                                // Fallback to blob URL if upload fails
-                                                setNewProduct({ ...newProduct, section1Image: URL.createObjectURL(f) });
-                                            }
+                                            setNewProduct({ ...newProduct, section1Image: URL.createObjectURL(f) });
                                         }
                                     }} />
                                 </div>
@@ -1318,33 +1292,7 @@ export default function AdminProducts() {
                                     <input id="new-product-section2-image" type="file" accept="image/*" style={{ display: 'none' }} onChange={async (e) => {
                                         const f = e.target.files?.[0] || null;
                                         if (f) {
-                                            try {
-                                                // Upload the image to the server
-                                                const formData = new FormData();
-                                                formData.append('image', f);
-
-                                                const response = await fetch(`${API}/upload/image`, {
-                                                    method: 'POST',
-                                                    body: formData
-                                                });
-
-                                                if (response.ok) {
-                                                    const result = await response.json();
-                                                    let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
-                                                    // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
-                                                    }
-                                                    setNewProduct({ ...newProduct, section2Image: imageUrl });
-                                                } else {
-                                                    // Fallback to blob URL if upload fails
-                                                    setNewProduct({ ...newProduct, section2Image: URL.createObjectURL(f) });
-                                                }
-                                            } catch (error) {
-                                                console.error('Error uploading product image:', error);
-                                                // Fallback to blob URL if upload fails
-                                                setNewProduct({ ...newProduct, section2Image: URL.createObjectURL(f) });
-                                            }
+                                            setNewProduct({ ...newProduct, section2Image: URL.createObjectURL(f) });
                                         }
                                     }} />
                                 </div>
@@ -1386,33 +1334,7 @@ export default function AdminProducts() {
                                     <input id="new-product-section3-image" type="file" accept="image/*" style={{ display: 'none' }} onChange={async (e) => {
                                         const f = e.target.files?.[0] || null;
                                         if (f) {
-                                            try {
-                                                // Upload the image to the server
-                                                const formData = new FormData();
-                                                formData.append('image', f);
-
-                                                const response = await fetch(`${API}/upload/image`, {
-                                                    method: 'POST',
-                                                    body: formData
-                                                });
-
-                                                if (response.ok) {
-                                                    const result = await response.json();
-                                                    let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
-                                                    // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
-                                                    }
-                                                    setNewProduct({ ...newProduct, section3Image: imageUrl });
-                                                } else {
-                                                    // Fallback to blob URL if upload fails
-                                                    setNewProduct({ ...newProduct, section3Image: URL.createObjectURL(f) });
-                                                }
-                                            } catch (error) {
-                                                console.error('Error uploading product image:', error);
-                                                // Fallback to blob URL if upload fails
-                                                setNewProduct({ ...newProduct, section3Image: URL.createObjectURL(f) });
-                                            }
+                                            setNewProduct({ ...newProduct, section3Image: URL.createObjectURL(f) });
                                         }
                                     }} />
                                 </div>
@@ -1440,33 +1362,7 @@ export default function AdminProducts() {
                                         const f = e.target.files?.[0] || null;
                                         setNewImageFile(f);
                                         if (f) {
-                                            try {
-                                                // Upload the image to the server
-                                                const formData = new FormData();
-                                                formData.append('image', f);
-
-                                                const response = await fetch(`${API}/upload/image`, {
-                                                    method: 'POST',
-                                                    body: formData
-                                                });
-
-                                                if (response.ok) {
-                                                    const result = await response.json();
-                                                    let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
-                                                    // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
-                                                    }
-                                                    setNewImagePreview(imageUrl);
-                                                } else {
-                                                    // Fallback to blob URL if upload fails
-                                                    setNewImagePreview(URL.createObjectURL(f));
-                                                }
-                                            } catch (error) {
-                                                console.error('Error uploading product image:', error);
-                                                // Fallback to blob URL if upload fails
-                                                setNewImagePreview(URL.createObjectURL(f));
-                                            }
+                                            setNewImagePreview(URL.createObjectURL(f));
                                         } else {
                                             setNewImagePreview('');
                                         }
@@ -1498,33 +1394,7 @@ export default function AdminProducts() {
                                         const f = e.target.files?.[0] || null;
                                         setNewIconFile(f);
                                         if (f) {
-                                            try {
-                                                // Upload the image to the server
-                                                const formData = new FormData();
-                                                formData.append('image', f);
-
-                                                const response = await fetch(`${API}/upload/image`, {
-                                                    method: 'POST',
-                                                    body: formData
-                                                });
-
-                                                if (response.ok) {
-                                                    const result = await response.json();
-                                                    let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
-                                                    // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
-                                                    }
-                                                    setNewIconPreview(imageUrl);
-                                                } else {
-                                                    // Fallback to blob URL if upload fails
-                                                    setNewIconPreview(URL.createObjectURL(f));
-                                                }
-                                            } catch (error) {
-                                                console.error('Error uploading product icon:', error);
-                                                // Fallback to blob URL if upload fails
-                                                setNewIconPreview(URL.createObjectURL(f));
-                                            }
+                                            setNewIconPreview(URL.createObjectURL(f));
                                         } else {
                                             setNewIconPreview('');
                                         }

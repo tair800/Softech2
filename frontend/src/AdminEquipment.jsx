@@ -3,7 +3,7 @@ import './AdminEquipment.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 export default function AdminEquipment() {
     const [equipments, setEquipments] = useState([]);
@@ -28,6 +28,7 @@ export default function AdminEquipment() {
         description: '',
         imageUrl: '',
         imageFile: null,
+        isMain: false,
         categoryIds: [],
         tagIds: [],
         features: [],
@@ -39,7 +40,7 @@ export default function AdminEquipment() {
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -51,6 +52,7 @@ export default function AdminEquipment() {
         description: '',
         imageUrl: '',
         imageFile: null,
+        isMain: false,
         categoryIds: [],
         tagIds: [],
         features: [],
@@ -384,6 +386,7 @@ export default function AdminEquipment() {
                             descriptionEn: form.descriptionEn,
                             descriptionRu: form.descriptionRu,
                             imageUrl: '',
+                            isMain: form.isMain,
                             categoryIds: form.categoryIds,
                             tagIds: form.tagIds,
                             features: form.features,
@@ -421,6 +424,7 @@ export default function AdminEquipment() {
                             descriptionEn: form.descriptionEn,
                             descriptionRu: form.descriptionRu,
                             imageUrl: finalImageUrl,
+                            isMain: form.isMain,
                             categoryIds: form.categoryIds,
                             tagIds: form.tagIds,
                             features: (form.features || []).filter(f => f.feature && f.feature.trim() !== ''),
@@ -484,6 +488,7 @@ export default function AdminEquipment() {
                     descriptionEn: form.descriptionEn,
                     descriptionRu: form.descriptionRu,
                     imageUrl: form.imageUrl,
+                    isMain: form.isMain,
                     categoryIds: form.categoryIds,
                     tagIds: form.tagIds,
                     features: (form.features || []).filter(f => f.feature && f.feature.trim() !== ''),
@@ -617,22 +622,29 @@ export default function AdminEquipment() {
                 }));
 
             // Send everything in one update call
+            const requestBody = {
+                name: item.name || '',
+                version: item.version || '',
+                core: item.core || '',
+                description: item.description || '',
+                descriptionEn: item.descriptionEn || '',
+                descriptionRu: item.descriptionRu || '',
+                imageUrl: item.imageUrl || '',
+                isMain: item.isMain || false,
+                categoryIds: categoryIds,
+                tagIds: tagIds,
+                features: features,
+                specifications: specifications
+            };
+
+            console.log('Sending PUT request to:', `${API}/equipment/${id}`);
+            console.log('Request body:', requestBody);
+            console.log('isMain value being sent:', requestBody.isMain);
+
             const res = await fetch(`${API}/equipment/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: item.name || '',
-                    version: item.version || '',
-                    core: item.core || '',
-                    description: item.description || '',
-                    descriptionEn: item.descriptionEn || '',
-                    descriptionRu: item.descriptionRu || '',
-                    imageUrl: item.imageUrl || '',
-                    categoryIds: categoryIds,
-                    tagIds: tagIds,
-                    features: features,
-                    specifications: specifications
-                })
+                body: JSON.stringify(requestBody)
             });
 
 
@@ -789,7 +801,18 @@ export default function AdminEquipment() {
             {currentEquipments.map((e, idx) => (
                 <div key={e.id} className="admin-about-card p-3 mb-4">
                     <div className="d-flex justify-content-between align-items-center mb-3">
-                        <div className="slide-indicator">Slide {startIndex + idx + 1}</div>
+                        <div className="d-flex align-items-center gap-2">
+                            <div className="slide-indicator">Slide {startIndex + idx + 1}</div>
+                            {e.isMain ? (
+                                <span className="badge bg-success">
+                                    Slider
+                                </span>
+                            ) : (
+                                <span className="badge bg-secondary">
+                                    Normal
+                                </span>
+                            )}
+                        </div>
                         <div className="top-actions d-flex gap-2">
                             <button className="btn btn-outline-light" onClick={() => remove(e.id)} disabled={submitting} aria-label="Delete">
                                 {submitting ? 'Silinir...' : 'Sil'}
@@ -824,6 +847,33 @@ export default function AdminEquipment() {
                                     <textarea className="form-control" rows={4} placeholder="Description (default)" value={e.description || ''} onChange={(ev) => setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, description: ev.target.value } : x))} />
                                     <textarea className="form-control" rows={3} placeholder="Description (EN)" value={e.descriptionEn || ''} onChange={(ev) => setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, descriptionEn: ev.target.value } : x))} />
                                     <textarea className="form-control" rows={3} placeholder="Description (RU)" value={e.descriptionRu || ''} onChange={(ev) => setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, descriptionRu: ev.target.value } : x))} />
+                                </div>
+                            </div>
+                            <div className="form-group row g-3 align-items-center">
+                                <label className="col-sm-3 col-form-label">Slider</label>
+                                <div className="col-sm-9">
+                                    <button
+                                        className={`badge ${e.isMain ? 'bg-success' : 'bg-secondary'} border-0`}
+                                        style={{ cursor: 'pointer', padding: '8px 12px' }}
+                                        onClick={async () => {
+                                            console.log('Button clicked for equipment:', e.id, 'Current isMain:', e.isMain);
+                                            // Update local state first
+                                            setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, isMain: !x.isMain } : x));
+
+                                            // Then save to database immediately
+                                            setTimeout(async () => {
+                                                console.log('Attempting to save equipment:', e.id);
+                                                try {
+                                                    await submitFormForId(e.id);
+                                                    console.log('Save successful for equipment:', e.id);
+                                                } catch (error) {
+                                                    console.error('Save failed for equipment:', e.id, error);
+                                                }
+                                            }, 100);
+                                        }}
+                                    >
+                                        {e.isMain ? 'Aktiv' : 'Normal'}
+                                    </button>
                                 </div>
                             </div>
                             <div className="form-group row g-3 align-items-start">
@@ -1258,8 +1308,8 @@ export default function AdminEquipment() {
                                                     const result = await response.json();
                                                     let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                     // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                                                    if (imageUrl.startsWith('http://localhost:5098')) {
+                                                        imageUrl = imageUrl.replace('http://localhost:5098', '');
                                                     }
                                                     setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, imageUrl, imageFile: file } : x));
                                                 } else {
@@ -1327,7 +1377,19 @@ export default function AdminEquipment() {
                             </div>
                             <div className="form-group mb-3 mt-3"><label className="form-label">Təsvir *</label><textarea className="form-control" rows={4} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
 
-
+                            {/* IsMain Button */}
+                            <div className="form-group mb-3">
+                                <label className="form-label">Slider Status</label>
+                                <div>
+                                    <button
+                                        className={`badge ${form.isMain ? 'bg-success' : 'bg-secondary'} border-0`}
+                                        style={{ cursor: 'pointer', padding: '8px 12px' }}
+                                        onClick={() => setForm({ ...form, isMain: !form.isMain })}
+                                    >
+                                        {form.isMain ? 'Aktiv' : 'Normal'}
+                                    </button>
+                                </div>
+                            </div>
 
                             {/* Categories Selection */}
                             <div className="form-group mb-3">
@@ -1412,8 +1474,8 @@ export default function AdminEquipment() {
                                                         const result = await response.json();
                                                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                         // Convert full URL to relative path if needed
-                                                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                                                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                                                        if (imageUrl.startsWith('http://localhost:5098')) {
+                                                            imageUrl = imageUrl.replace('http://localhost:5098', '');
                                                         }
                                                         setForm({ ...form, imageUrl, imageFile: file });
                                                     } else {
