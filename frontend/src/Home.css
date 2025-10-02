@@ -138,6 +138,13 @@ body {
     background-size: cover;
     margin: 0;
     padding: 0;
+    transition: all 0.3s ease;
+}
+
+.image-slide.clickable:hover {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+    box-shadow: 0 8px 25px rgba(25, 230, 255, 0.3);
 }
 
 /* Bottom Ellipse */
@@ -219,8 +226,8 @@ body {
 }
 
 .circle-logo-icon {
-    width: 350px;
-    height: 90px;
+    width: 280px;
+    height: 72px;
     object-fit: contain;
 
     /* Crop bottom 25% to hide "technology" text */
@@ -455,8 +462,8 @@ body {
     }
 
     .circle-logo-icon {
-        width: 480px;
-        height: 125px;
+        width: 384px;
+        height: 100px;
     }
 
     .slider-name {
@@ -509,8 +516,8 @@ body {
     }
 
     .circle-logo-icon {
-        width: 450px;
-        height: 120px;
+        width: 360px;
+        height: 96px;
     }
 }
 
@@ -528,8 +535,8 @@ body {
     }
 
     .circle-logo-icon {
-        width: 550px;
-        height: 140px;
+        width: 440px;
+        height: 112px;
     }
 }
 
@@ -547,8 +554,8 @@ body {
     }
 
     .circle-logo-icon {
-        width: 650px;
-        height: 160px;
+        width: 520px;
+        height: 128px;
     }
 }
 

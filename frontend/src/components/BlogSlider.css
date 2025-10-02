@@ -488,6 +488,18 @@
     left: 100%;
 }
 
+/* Ellipsis styling */
+.blog-slider-ellipsis {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+}
+
 .blog-slider-nav-btn:hover {
     background: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.4);
@@ -522,6 +534,31 @@
     border-color: #3b5ce6;
     transform: translateY(-3px) scale(1.05);
     box-shadow: 0 8px 25px rgba(70, 126, 254, 0.4);
+}
+
+/* Layout adjustments for fewer cards */
+.blog-slider-cards:has(.blog-slider-card:nth-child(1):last-child) {
+    justify-content: center;
+}
+
+.blog-slider-cards:has(.blog-slider-card:nth-child(2):last-child) {
+    justify-content: center;
+    gap: 40px;
+}
+
+/* When only one card is visible, center it and make it larger */
+.blog-slider-cards:has(.blog-slider-card:nth-child(1):last-child) .blog-slider-card-big {
+    flex: 0 0 60%;
+    max-width: 600px;
+}
+
+/* When only two cards are visible, adjust their sizes */
+.blog-slider-cards:has(.blog-slider-card:nth-child(2):last-child) .blog-slider-card-big {
+    flex: 0 0 50%;
+}
+
+.blog-slider-cards:has(.blog-slider-card:nth-child(2):last-child) .blog-slider-card-small {
+    flex: 0 0 35%;
 }
 
 /* Responsive Design */

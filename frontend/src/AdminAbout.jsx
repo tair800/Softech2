@@ -2,12 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import Swal from 'sweetalert2';
 import './AdminAbout.css';
 
-const API = 'http://localhost:5098/api';
+const API = 'https://softech-api.webonly.io/api';
 
 export default function AdminAbout() {
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/employee.png';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -264,6 +264,8 @@ export default function AdminAbout() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: updatedData.name,
+                    nameEn: updatedData.nameEn || null,
+                    nameRu: updatedData.nameRu || null,
                     position: updatedData.position,
                     positionEn: updatedData.positionEn || null,
                     positionRu: updatedData.positionRu || null,
@@ -723,8 +725,8 @@ export default function AdminAbout() {
                         const result = await response.json();
                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                         // Convert full URL to relative path if needed
-                        if (imageUrl.startsWith('http://localhost:5098')) {
-                            imageUrl = imageUrl.replace('http://localhost:5098', '');
+                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                         }
                         handleMainContentChange('imageUrl', imageUrl);
                     } else {
@@ -775,8 +777,8 @@ export default function AdminAbout() {
                         const result = await response.json();
                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                         // Convert full URL to relative path if needed
-                        if (imageUrl.startsWith('http://localhost:5098')) {
-                            imageUrl = imageUrl.replace('http://localhost:5098', '');
+                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                         }
                         const updatedDirector = { ...director, imageUrl };
                         setDirector(updatedDirector);
@@ -826,8 +828,8 @@ export default function AdminAbout() {
                         const result = await response.json();
                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                         // Convert full URL to relative path if needed
-                        if (imageUrl.startsWith('http://localhost:5098')) {
-                            imageUrl = imageUrl.replace('http://localhost:5098', '');
+                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                         }
                         const updatedEmployees = employees.map(emp =>
                             emp.id === employeeId ? { ...emp, imageUrl } : emp
@@ -887,8 +889,8 @@ export default function AdminAbout() {
                             const result = await response.json();
                             let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                             // Convert full URL to relative path if needed
-                            if (imageUrl.startsWith('http://localhost:5098')) {
-                                imageUrl = imageUrl.replace('http://localhost:5098', '');
+                            if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                                imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                             }
 
                             newImages.push({
@@ -971,8 +973,8 @@ export default function AdminAbout() {
                         const result = await response.json();
                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                         // Convert full URL to relative path if needed
-                        if (imageUrl.startsWith('http://localhost:5098')) {
-                            imageUrl = imageUrl.replace('http://localhost:5098', '');
+                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
+                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
                         }
                         setNewEmployee({ ...newEmployee, imageUrl: imageUrl });
                     } else {
@@ -1240,6 +1242,36 @@ export default function AdminAbout() {
                                                     placeholder="Əli Məmmədov"
                                                     value={director.name || ''}
                                                     onChange={(e) => handleDirectorChange('name', e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-12">
+                                        <div className="form-group row g-3 align-items-start">
+                                            <label className="col-sm-3 col-form-label">Heading (EN)</label>
+                                            <div className="col-sm-9">
+                                                <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder="Director name in English"
+                                                    value={director.nameEn || ''}
+                                                    onChange={(e) => handleDirectorChange('nameEn', e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-12">
+                                        <div className="form-group row g-3 align-items-start">
+                                            <label className="col-sm-3 col-form-label">Heading (RU)</label>
+                                            <div className="col-sm-9">
+                                                <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder="Имя директора на русском"
+                                                    value={director.nameRu || ''}
+                                                    onChange={(e) => handleDirectorChange('nameRu', e.target.value)}
                                                 />
                                             </div>
                                         </div>

@@ -38,7 +38,7 @@ function ProductDetail() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         return url;
     };
 
@@ -46,7 +46,7 @@ function ProductDetail() {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const res = await fetch(`http://localhost:5098/api/products/${id}?language=${language}`);
+                const res = await fetch(`https://softech-api.webonly.io/api/products/${id}?language=${language}`);
                 if (!res.ok) throw new Error('Failed to load product');
                 const data = await res.json();
 
@@ -230,6 +230,69 @@ function ProductDetail() {
         window.scrollTo(0, 0);
         setCurrentSection(0);
     }, []);
+
+    // Handle manual scroll to update scroller position
+    useEffect(() => {
+        const handleScroll = () => {
+            // Only update when sections are visible
+            if (!showSections || sections.length <= 1) return;
+
+            // Get all section elements
+            const allSections = [mainSectionRef.current, ...Object.values(sectionRefs.current)].filter(Boolean);
+
+            let activeSectionIndex = 0;
+            let maxVisibility = 0;
+
+            // Find which section has the most visibility
+            allSections.forEach((section, index) => {
+                if (section) {
+                    const rect = section.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+
+                    // Calculate visibility ratio
+                    const visibleTop = Math.max(0, rect.top);
+                    const visibleBottom = Math.min(windowHeight, rect.bottom);
+                    const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+                    const visibilityRatio = visibleHeight / rect.height;
+
+                    // Update active section if this one is more visible
+                    if (visibilityRatio > maxVisibility) {
+                        maxVisibility = visibilityRatio;
+                        activeSectionIndex = index;
+                    }
+                }
+            });
+
+            // Update current section and scroller position if changed
+            if (activeSectionIndex !== currentSection) {
+                setCurrentSection(activeSectionIndex);
+
+                // Update scroller position
+                const maxSections = sections.length - 1;
+                const trackHeight = sections.length * 60;
+                const maxPosition = trackHeight - 60;
+                const newPosition = maxSections > 0 ? (activeSectionIndex / maxSections) * maxPosition : 0;
+                setScrollPosition(newPosition);
+            }
+        };
+
+        // Add scroll event listener with throttling
+        let scrollTimeout;
+        const throttledHandleScroll = () => {
+            if (scrollTimeout) return;
+            scrollTimeout = setTimeout(() => {
+                handleScroll();
+                scrollTimeout = null;
+            }, 50); // Throttle to 50ms
+        };
+
+        window.addEventListener('scroll', throttledHandleScroll, { passive: true });
+
+        return () => {
+            window.removeEventListener('scroll', throttledHandleScroll);
+            if (scrollTimeout) clearTimeout(scrollTimeout);
+        };
+    }, [showSections, sections.length, currentSection]);
 
     // Intersection Observer to detect which section is in view
     useEffect(() => {

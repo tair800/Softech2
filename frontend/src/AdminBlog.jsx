@@ -3,7 +3,7 @@ import './AdminBlog.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'http://localhost:5098/api';
+const API = 'https://softech-api.webonly.io/api';
 
 export default function AdminBlog() {
     const [blogs, setBlogs] = useState([]);
@@ -22,6 +22,7 @@ export default function AdminBlog() {
         detailImg3Url: '',
         detailImg4Url: ''
     });
+    const [newBlogFeatures, setNewBlogFeatures] = useState([]);
     const [newMainFile, setNewMainFile] = useState(null);
     const [newMainPreview, setNewMainPreview] = useState('');
     const [newDetailFiles, setNewDetailFiles] = useState({ 1: null, 2: null, 3: null, 4: null });
@@ -34,7 +35,7 @@ export default function AdminBlog() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         return url;
     };
 
@@ -129,6 +130,50 @@ export default function AdminBlog() {
             const updated = autoReorder(items.filter((_, idx) => idx !== featureIndex));
             return { ...b, _features: updated, features: serializeFeatures(updated) };
         }));
+    };
+
+    // New blog feature management functions
+    const addNewBlogFeature = () => {
+        if (newBlogFeatures.some(f => !f.feature || !f.feature.trim())) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Diqqət!',
+                text: 'Boş sətir var, əvvəlcə doldurun və ya silin.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
+        }
+        if (newBlogFeatures.length >= 3) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Limit!',
+                text: 'Maksimum 3 xüsusiyyət əlavə edə bilərsiniz.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
+        }
+        const next = autoReorder([...newBlogFeatures, { id: `${Date.now()}_${Math.random().toString(36).slice(2)}`, feature: '', featureEn: '', featureRu: '', orderIndex: 0 }]);
+        setNewBlogFeatures(next);
+    };
+
+    const updateNewBlogFeature = (featureIndex, field, value) => {
+        const updated = newBlogFeatures.map((f, idx) => idx === featureIndex ? { ...f, [field]: value } : f);
+        setNewBlogFeatures(updated);
+    };
+
+    const removeNewBlogFeature = (featureIndex) => {
+        const updated = autoReorder(newBlogFeatures.filter((_, idx) => idx !== featureIndex));
+        setNewBlogFeatures(updated);
+    };
+
+    const reorderNewBlogFeatures = (fromIndex, toIndex) => {
+        const copy = [...newBlogFeatures];
+        const [moved] = copy.splice(fromIndex, 1);
+        copy.splice(toIndex, 0, moved);
+        const next = autoReorder(copy);
+        setNewBlogFeatures(next);
     };
 
     const loadBlogs = async () => {
@@ -243,6 +288,7 @@ export default function AdminBlog() {
     const closeCreate = () => {
         setShowModal(false);
         setNewBlog({ title1: '', desc1: '', title1En: '', title1Ru: '', desc1En: '', desc1Ru: '', title2: '', desc2: '', title2En: '', title2Ru: '', desc2En: '', desc2Ru: '', features: '', mainImageUrl: '', detailImg1Url: '', detailImg2Url: '', detailImg3Url: '', detailImg4Url: '' });
+        setNewBlogFeatures([]);
         setNewMainFile(null);
         setNewMainPreview('');
         setNewDetailFiles({ 1: null, 2: null, 3: null, 4: null });
@@ -334,6 +380,17 @@ export default function AdminBlog() {
 
     const createBlog = async () => {
         if (!newBlog.title1 || !newBlog.title1.trim()) { Swal.fire('Xəta!', 'Title1 məcburidir', 'error'); return; }
+
+        // Features validation: max 3 and no empty items
+        if (newBlogFeatures.length > 3) {
+            Swal.fire({ icon: 'warning', title: 'Limit!', text: 'Maksimum 3 xüsusiyyət saxlana bilər.', showConfirmButton: false, timer: 1500 });
+            return;
+        }
+        if (newBlogFeatures.some(f => !f.feature || !f.feature.trim())) {
+            Swal.fire({ icon: 'warning', title: 'Diqqət!', text: 'Boş xüsusiyyət sətirləri var. Zəhmət olmasa doldurun və ya silin!', showConfirmButton: false, timer: 1500 });
+            return;
+        }
+
         try {
             const res = await fetch(`${API}/blogs`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
@@ -341,7 +398,7 @@ export default function AdminBlog() {
                     title1En: newBlog.title1En || '', title1Ru: newBlog.title1Ru || '', desc1En: newBlog.desc1En || '', desc1Ru: newBlog.desc1Ru || '',
                     title2: newBlog.title2 || '', desc2: newBlog.desc2 || '',
                     title2En: newBlog.title2En || '', title2Ru: newBlog.title2Ru || '', desc2En: newBlog.desc2En || '', desc2Ru: newBlog.desc2Ru || '',
-                    features: newBlog.features || '',
+                    features: serializeFeatures(newBlogFeatures),
                     mainImageUrl: newBlog.mainImageUrl || '',
                     detailImg1Url: newBlog.detailImg1Url || '',
                     detailImg2Url: newBlog.detailImg2Url || '',
@@ -381,7 +438,7 @@ export default function AdminBlog() {
                         desc2: created.desc2 || newBlog.desc2 || '',
                         title1En: created.title1En || newBlog.title1En || '', title1Ru: created.title1Ru || newBlog.title1Ru || '', desc1En: created.desc1En || newBlog.desc1En || '', desc1Ru: created.desc1Ru || newBlog.desc1Ru || '',
                         title2En: created.title2En || newBlog.title2En || '', title2Ru: created.title2Ru || newBlog.title2Ru || '', desc2En: created.desc2En || newBlog.desc2En || '', desc2Ru: created.desc2Ru || newBlog.desc2Ru || '',
-                        features: created.features || newBlog.features || '',
+                        features: created.features || serializeFeatures(newBlogFeatures) || '',
                         mainImageUrl: updatedPayload.mainImageUrl || created.mainImageUrl || '',
                         detailImg1Url: updatedPayload.detailImg1Url || created.detailImg1Url || '',
                         detailImg2Url: updatedPayload.detailImg2Url || created.detailImg2Url || '',
@@ -645,11 +702,31 @@ export default function AdminBlog() {
                                 <label className="form-label">Desc 2 (RU)</label>
                                 <textarea className="form-control" rows="3" value={newBlog.desc2Ru} onChange={(e) => setNewBlog({ ...newBlog, desc2Ru: e.target.value })} />
                             </div>
-                            {/* Create modal features section */}
-                            <div className="form-group mb-3">
-                                <label className="form-label">Features (JSON)</label>
-                                <textarea className="form-control" rows="3" placeholder='[ { "feature": "item" } ]' value={newBlog.features} onChange={(e) => setNewBlog({ ...newBlog, features: e.target.value })} />
-                                <small className="form-text text-muted">Admin equipment-style editor is available after creation on the card.</small>
+                            {/* Create modal features section - same UX as admin cards */}
+                            <div className="form-group mb-3 features-section">
+                                <label className="form-label">Features</label>
+                                <div className="d-flex justify-content-between align-items-center mb-2">
+                                    <span>Blog Features</span>
+                                    <button type="button" className="btn btn-sm btn-outline-primary" onClick={addNewBlogFeature} disabled={newBlogFeatures.length >= 3}>+ Add Feature</button>
+                                </div>
+                                <div className="alert alert-info alert-sm mb-3" style={{ fontSize: '12px', padding: '8px 12px' }}>
+                                    <strong>💡 Avtomatik Sıralama:</strong> Xüsusiyyətlər avtomatik olaraq ardıcıl nömrələnir. Yenidən sıralamaq üçün ↑↓ istifadə edin.
+                                </div>
+                                {newBlogFeatures.map((f, featureIndex) => (
+                                    <div key={f.id || featureIndex} className="d-flex flex-column gap-2 mb-3 feature-item w-100">
+                                        <div className="d-flex align-items-center gap-2">
+                                            <span className="badge bg-primary" style={{ minWidth: '30px', textAlign: 'center' }}>#{f.orderIndex + 1}</span>
+                                            <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => reorderNewBlogFeatures(featureIndex, Math.max(0, featureIndex - 1))} disabled={featureIndex === 0} title="Move Up">↑</button>
+                                            <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => reorderNewBlogFeatures(featureIndex, Math.min(newBlogFeatures.length - 1, featureIndex + 1))} disabled={featureIndex === newBlogFeatures.length - 1} title="Move Down">↓</button>
+                                            <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => removeNewBlogFeature(featureIndex)} title="Remove Feature">×</button>
+                                        </div>
+                                        <div className="d-flex flex-column gap-2">
+                                            <input className="form-control" placeholder="Feature (AZ)" value={f.feature || ''} onChange={(ev) => updateNewBlogFeature(featureIndex, 'feature', ev.target.value)} />
+                                            <input className="form-control" placeholder="Feature (EN)" value={f.featureEn || ''} onChange={(ev) => updateNewBlogFeature(featureIndex, 'featureEn', ev.target.value)} />
+                                            <input className="form-control" placeholder="Feature (RU)" value={f.featureRu || ''} onChange={(ev) => updateNewBlogFeature(featureIndex, 'featureRu', ev.target.value)} />
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
 
                             {/* Image pickers */}

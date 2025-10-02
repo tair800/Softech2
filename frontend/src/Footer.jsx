@@ -50,15 +50,16 @@ function Footer() {
         return (dict[key] && (dict[key][language] || dict[key].az)) || key;
     };
 
+    // Product items with their corresponding IDs for linking
     const productItems = [
-        lt('tradeWarehouse'),
-        lt('market'),
-        lt('restaurantModule'),
-        lt('textileModule'),
-        lt('creditPawn'),
-        lt('mobileSales'),
-        lt('pharmacyModule'),
-        lt('manufacturingModule')
+        { name: lt('tradeWarehouse'), id: 1 },
+        { name: lt('market'), id: 2 },
+        { name: lt('restaurantModule'), id: 3 },
+        { name: lt('textileModule'), id: 4 },
+        { name: lt('creditPawn'), id: 5 },
+        { name: lt('mobileSales'), id: 6 },
+        { name: lt('pharmacyModule'), id: 7 },
+        { name: lt('manufacturingModule'), id: 8 }
     ];
     return (
         <footer className="footer">
@@ -86,8 +87,12 @@ function Footer() {
                     <div className="footer-col footer-col-center">
                         <h3 className="footer-title">{t('products')}</h3>
                         <ul className="footer-links">
-                            {productItems.map((label, idx) => (
-                                <li key={idx}>{label}</li>
+                            {productItems.map((product, idx) => (
+                                <li key={idx}>
+                                    <Link to={`/product/${product.id}`} className="footer-product-link">
+                                        {product.name}
+                                    </Link>
+                                </li>
                             ))}
                         </ul>
                     </div>

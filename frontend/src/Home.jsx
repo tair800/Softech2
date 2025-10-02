@@ -445,26 +445,26 @@ export default function Home() {
               ref={scrollerRef}
               className="image-scroller"
               style={{
-                width: `${
-                  slides.length *
+                width: `${slides.length *
                   (window.innerWidth === 393 && window.innerHeight === 852
                     ? window.innerWidth
                     : imageWidth + 20)
-                }px`,
+                  }px`,
               }}
             >
               {[...slides, ...slides, ...slides].map((slide, index) => (
                 <div
                   key={`${index}-${slide.id}`}
-                  className="image-slide"
+                  className={`image-slide ${slide.productId ? 'clickable' : ''}`}
                   style={{
-                    width: `${
-                      window.innerWidth === 393 && window.innerHeight === 852
+                    width: `${window.innerWidth === 393 && window.innerHeight === 852
                         ? window.innerWidth
                         : imageWidth
-                    }px`,
+                      }px`,
                     backgroundImage: `url('${slide.img}')`,
+                    cursor: slide.productId ? 'pointer' : 'default',
                   }}
+                  onClick={() => slide.productId && handleSliderClick(slide)}
                 />
               ))}
             </div>

@@ -52,7 +52,7 @@ function Header() {
                     <li><Link to="/products" className={location.pathname === "/products" || location.pathname.startsWith("/product/") ? "active" : ""}>{t('products', language)}</Link></li>
                     <li><Link to="/services" className={location.pathname === "/services" || location.pathname.startsWith("/services/") ? "active" : ""}>{t('services', language)}</Link></li>
                     <li><Link to="/equipment" className={location.pathname === "/equipment" || location.pathname.startsWith("/equipment/") ? "active" : ""}>{t('equipment', language)}</Link></li>
-                    <li><Link to="/blog" className={location.pathname === "/blog" ? "active" : ""}>{t('blog', language)}</Link></li>
+                    <li><Link to="/blog" className={location.pathname === "/blog" || location.pathname.startsWith("/blog/") ? "active" : ""}>{t('blog', language)}</Link></li>
                     <li><Link to="/contact" className={location.pathname === "/contact" ? "active" : ""}>{t('contact', language)}</Link></li>
                 </ul>
                 <div className="navbar-right">

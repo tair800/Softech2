@@ -51,13 +51,13 @@ const BlogSlider = ({
         if (!text || text.length <= maxLength) return text;
         return text.substring(0, maxLength) + '...';
     };
-    const [currentIndex, setCurrentIndex] = useState(1); // Start with middle card (index 1)
+    const [currentIndex, setCurrentIndex] = useState(0); // Start with first card (index 0)
     const [isAnimating, setIsAnimating] = useState(false);
     const [slideDirection, setSlideDirection] = useState('');
     const navigate = useNavigate();
 
     const goToSlide = (index) => {
-        if (index === currentIndex || isAnimating) return;
+        if (index === currentIndex || isAnimating || index < 0 || index >= blogData.length) return;
 
         setIsAnimating(true);
 
@@ -83,6 +83,33 @@ const BlogSlider = ({
 
     const getVisibleCards = () => {
         const totalCards = blogData.length;
+
+        // Handle edge cases for 1 and 2 cards
+        if (totalCards === 1) {
+            return {
+                left: null,
+                middle: blogData[0],
+                right: null
+            };
+        }
+
+        if (totalCards === 2) {
+            if (currentIndex === 0) {
+                return {
+                    left: null,
+                    middle: blogData[0],
+                    right: blogData[1]
+                };
+            } else {
+                return {
+                    left: blogData[0],
+                    middle: blogData[1],
+                    right: null
+                };
+            }
+        }
+
+        // Handle 3+ cards (original logic)
         let leftIndex, middleIndex, rightIndex;
 
         if (currentIndex === 0) {
@@ -111,52 +138,137 @@ const BlogSlider = ({
 
     const visibleCards = getVisibleCards();
 
+    // Smart pagination logic - limit visible buttons
+    const getPaginationButtons = () => {
+        const totalPages = blogData.length;
+        const maxVisibleButtons = 5; // Maximum number of buttons to show
+        const currentPage = currentIndex + 1;
+
+        if (totalPages <= maxVisibleButtons) {
+            // Show all buttons if total is less than or equal to max
+            return blogData.map((blog, index) => ({
+                type: 'button',
+                index: index,
+                number: blog.number,
+                isActive: index === currentIndex
+            }));
+        }
+
+        // Smart pagination for many blogs
+        const buttons = [];
+        const halfVisible = Math.floor(maxVisibleButtons / 2);
+
+        // Always show first button
+        buttons.push({
+            type: 'button',
+            index: 0,
+            number: blogData[0].number,
+            isActive: currentIndex === 0
+        });
+
+        // Calculate start and end positions
+        let startPos = Math.max(1, currentPage - halfVisible);
+        let endPos = Math.min(totalPages - 1, currentPage + halfVisible);
+
+        // Adjust if we're near the beginning
+        if (currentPage <= halfVisible) {
+            endPos = Math.min(totalPages - 1, maxVisibleButtons - 1);
+        }
+
+        // Adjust if we're near the end
+        if (currentPage >= totalPages - halfVisible) {
+            startPos = Math.max(1, totalPages - maxVisibleButtons + 1);
+        }
+
+        // Add ellipsis after first button if needed
+        if (startPos > 1) {
+            buttons.push({
+                type: 'ellipsis',
+                text: '...'
+            });
+        }
+
+        // Add middle buttons
+        for (let i = startPos; i < endPos; i++) {
+            if (i !== 0 && i !== totalPages - 1) { // Skip first and last (already handled)
+                buttons.push({
+                    type: 'button',
+                    index: i,
+                    number: blogData[i].number,
+                    isActive: i === currentIndex
+                });
+            }
+        }
+
+        // Add ellipsis before last button if needed
+        if (endPos < totalPages - 1) {
+            buttons.push({
+                type: 'ellipsis',
+                text: '...'
+            });
+        }
+
+        // Always show last button (if not already shown)
+        if (totalPages > 1) {
+            buttons.push({
+                type: 'button',
+                index: totalPages - 1,
+                number: blogData[totalPages - 1].number,
+                isActive: currentIndex === totalPages - 1
+            });
+        }
+
+        return buttons;
+    };
+
     return (
         <div className="blog-slider-container">
             {/* Slider Cards */}
             <div className="blog-slider-cards">
-                {/* Left Card */}
-                <div
-                    className={`blog-slider-card blog-slider-card-small ${slideDirection === 'left' ? 'slide-left' :
-                        slideDirection === 'right' ? 'slide-right' : ''
-                        }`}
-                    onClick={() => navigate(`/blog/${visibleCards.left.id}`)}
-                    role="button"
-                    style={{ cursor: 'pointer' }}
-                >
-                    <div className="blog-image-card">
-                        <img
-                            key={`left-${visibleCards.left.id}`}
-                            src={visibleCards.left.image}
-                            alt={visibleCards.left.alt}
-                            onError={(e) => { e.currentTarget.src = "/assets/equipment1.png"; }}
-                            className={`blog-image ${slideDirection === 'left' ? 'image-slide-out-left' :
-                                slideDirection === 'right' ? 'image-slide-in-left' : ''
-                                }`}
-                        />
-                    </div>
-                    <div className="blog-caption">
-                        <div className="blog-caption-inner">
-                            <div className="row g-2 align-items-stretch">
-                                <div className="col-4 col-md-3">
-                                    <div className="cap-number-box">
-                                        <span className="cap-number">{visibleCards.left.number}</span>
+                {/* Left Card - Only render if exists */}
+                {visibleCards.left && (
+                    <div
+                        className={`blog-slider-card blog-slider-card-small ${slideDirection === 'left' ? 'slide-left' :
+                            slideDirection === 'right' ? 'slide-right' : ''
+                            }`}
+                        onClick={() => navigate(`/blog/${visibleCards.left.id}`)}
+                        role="button"
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <div className="blog-image-card">
+                            <img
+                                key={`left-${visibleCards.left.id}`}
+                                src={visibleCards.left.image}
+                                alt={visibleCards.left.alt}
+                                onError={(e) => { e.currentTarget.src = "/assets/equipment1.png"; }}
+                                className={`blog-image ${slideDirection === 'left' ? 'image-slide-out-left' :
+                                    slideDirection === 'right' ? 'image-slide-in-left' : ''
+                                    }`}
+                            />
+                        </div>
+                        <div className="blog-caption">
+                            <div className="blog-caption-inner">
+                                <div className="row g-2 align-items-stretch">
+                                    <div className="col-4 col-md-3">
+                                        <div className="cap-number-box">
+                                            <span className="cap-number">{visibleCards.left.number}</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="col-8 col-md-9">
-                                    <div className="cap-title-box">
-                                        <h2>{visibleCards.left.title}</h2>
+                                    <div className="col-8 col-md-9">
+                                        <div className="cap-title-box">
+                                            <h2>{visibleCards.left.title}</h2>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="col-12">
-                                    <div className="cap-desc-box">
-                                        <p>{truncateDescription(visibleCards.left.description)}</p>
+                                    <div className="col-12">
+                                        <div className="cap-desc-box">
+                                            <p>{truncateDescription(visibleCards.left.description)}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
 
                 {/* Middle Card (Big) */}
                 <div
@@ -205,62 +317,72 @@ const BlogSlider = ({
                     </div>
                 </div>
 
-                {/* Right Card */}
-                <div
-                    className={`blog-slider-card blog-slider-card-small ${slideDirection === 'left' ? 'slide-left' :
-                        slideDirection === 'right' ? 'slide-right' : ''
-                        }`}
-                    onClick={() => navigate(`/blog/${visibleCards.right.id}`)}
-                    role="button"
-                    style={{ cursor: 'pointer' }}
-                >
-                    <div className="blog-image-card">
-                        <img
-                            key={`right-${visibleCards.right.id}`}
-                            src={visibleCards.right.image}
-                            alt={visibleCards.right.alt}
-                            onError={(e) => { e.currentTarget.src = "/assets/equipment1.png"; }}
-                            className={`blog-image ${slideDirection === 'left' ? 'image-slide-in-right' :
-                                slideDirection === 'right' ? 'image-slide-out-right' : ''
-                                }`}
-                        />
-                    </div>
-                    <div className="blog-caption">
-                        <div className="blog-caption-inner">
-                            <div className="row g-2 align-items-stretch">
-                                <div className="col-4 col-md-3">
-                                    <div className="cap-number-box">
-                                        <span className="cap-number">{visibleCards.right.number}</span>
+                {/* Right Card - Only render if exists */}
+                {visibleCards.right && (
+                    <div
+                        className={`blog-slider-card blog-slider-card-small ${slideDirection === 'left' ? 'slide-left' :
+                            slideDirection === 'right' ? 'slide-right' : ''
+                            }`}
+                        onClick={() => navigate(`/blog/${visibleCards.right.id}`)}
+                        role="button"
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <div className="blog-image-card">
+                            <img
+                                key={`right-${visibleCards.right.id}`}
+                                src={visibleCards.right.image}
+                                alt={visibleCards.right.alt}
+                                onError={(e) => { e.currentTarget.src = "/assets/equipment1.png"; }}
+                                className={`blog-image ${slideDirection === 'left' ? 'image-slide-in-right' :
+                                    slideDirection === 'right' ? 'image-slide-out-right' : ''
+                                    }`}
+                            />
+                        </div>
+                        <div className="blog-caption">
+                            <div className="blog-caption-inner">
+                                <div className="row g-2 align-items-stretch">
+                                    <div className="col-4 col-md-3">
+                                        <div className="cap-number-box">
+                                            <span className="cap-number">{visibleCards.right.number}</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="col-8 col-md-9">
-                                    <div className="cap-title-box">
-                                        <h2>{visibleCards.right.title}</h2>
+                                    <div className="col-8 col-md-9">
+                                        <div className="cap-title-box">
+                                            <h2>{visibleCards.right.title}</h2>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="col-12">
-                                    <div className="cap-desc-box">
-                                        <p>{truncateDescription(visibleCards.right.description)}</p>
+                                    <div className="col-12">
+                                        <div className="cap-desc-box">
+                                            <p>{truncateDescription(visibleCards.right.description)}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
 
-            {/* Navigation Buttons */}
-            <div className="blog-slider-navigation">
-                {blogData.map((blog, index) => (
-                    <button
-                        key={blog.id}
-                        className={`blog-slider-nav-btn ${index === currentIndex ? 'active' : ''}`}
-                        onClick={() => goToSlide(index)}
-                    >
-                        {blog.number}
-                    </button>
-                ))}
-            </div>
+            {/* Navigation Buttons - Only show if more than 1 card */}
+            {blogData.length > 1 && (
+                <div className="blog-slider-navigation">
+                    {getPaginationButtons().map((item, index) => (
+                        item.type === 'button' ? (
+                            <button
+                                key={`btn-${item.index}`}
+                                className={`blog-slider-nav-btn ${item.isActive ? 'active' : ''}`}
+                                onClick={() => goToSlide(item.index)}
+                            >
+                                {item.number}
+                            </button>
+                        ) : (
+                            <span key={`ellipsis-${index}`} className="blog-slider-ellipsis">
+                                {item.text}
+                            </span>
+                        )
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

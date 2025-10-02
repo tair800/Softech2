@@ -23,11 +23,11 @@ const BlogDetail = () => {
         return (dict[key] && (dict[key][language] || dict[key].az)) || key;
     };
 
-    const API = 'http://localhost:5098/api';
+    const API = 'https://softech-api.webonly.io/api';
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         return url;
     };
 
@@ -87,16 +87,14 @@ const BlogDetail = () => {
                 if (!res.ok) return;
                 const list = await res.json();
                 if (!mounted) return;
-                let mapped = (Array.isArray(list) ? list : []).map((b) => ({
+                let mapped = (Array.isArray(list) ? list : []).map((b, index) => ({
                     id: b.id,
                     image: b.mainImageUrl || b.detailImg1Url || b.detailImg2Url || b.detailImg3Url || b.detailImg4Url || '/assets/equipment1.png',
                     alt: pickByLanguage(language || 'az', b.title1En, b.title1Ru, b.title1) || 'Blog',
-                    number: String(b.id).padStart(2, '0'),
+                    number: String(index + 1).padStart(2, '0'),
                     title: pickByLanguage(language || 'az', b.title1En, b.title1Ru, b.title1) || '',
                     description: pickByLanguage(language || 'az', b.desc1En, b.desc1Ru, b.desc1) || ''
                 }));
-                if (mapped.length === 1) mapped = [mapped[0], mapped[0], mapped[0]];
-                if (mapped.length === 2) mapped = [mapped[0], mapped[1], mapped[0]];
                 setSliderBlogs(mapped);
             } catch { }
         };

@@ -5,7 +5,7 @@ import LazySpline from './components/LazySpline.jsx';
 import BlogSlider from './components/BlogSlider.jsx';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 
-const API = 'http://localhost:5098/api';
+const API = 'https://softech-api.webonly.io/api';
 
 function Blog() {
     const [blogs, setBlogs] = useState([]);
@@ -35,7 +35,7 @@ function Blog() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         return url;
     };
 

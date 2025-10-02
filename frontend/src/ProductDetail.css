@@ -591,6 +591,19 @@
 
 /* Responsive Design */
 /* Comprehensive Responsive Design */
+/* MacBook 13" and similar screens */
+@media (min-width: 1201px) and (max-width: 1440px) {
+    .first-content-container {
+        margin-left: 8rem;
+        max-width: 500px;
+    }
+
+    .second-content-container {
+        margin-left: 8rem;
+        max-width: 500px;
+    }
+}
+
 @media (max-width: 1200px) {
     .product-detail-container {
         padding: 0;
@@ -1856,6 +1869,13 @@
 @media (min-width: 376px) and (max-width: 425px) {
     .product-detail-container {
         margin-bottom: 60px;
+    }
+
+    .first-more-text p,
+    .third-more-text p {
+        font-size: 0.7rem !important;
+        line-height: 1.5 !important;
+        width: 330px;
     }
 
     .main-section,
