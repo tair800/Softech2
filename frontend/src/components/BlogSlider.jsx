@@ -141,7 +141,7 @@ const BlogSlider = ({
     // Smart pagination logic - limit visible buttons
     const getPaginationButtons = () => {
         const totalPages = blogData.length;
-        const maxVisibleButtons = 5; // Maximum number of buttons to show
+        const maxVisibleButtons = 5; // Maximum number of buttons to show (first + 3 middle + last)
         const currentPage = currentIndex + 1;
 
         if (totalPages <= maxVisibleButtons) {
@@ -156,7 +156,7 @@ const BlogSlider = ({
 
         // Smart pagination for many blogs
         const buttons = [];
-        const halfVisible = Math.floor(maxVisibleButtons / 2);
+        const middleButtonsCount = 3; // Show exactly 3 middle buttons
 
         // Always show first button
         buttons.push({
@@ -166,18 +166,31 @@ const BlogSlider = ({
             isActive: currentIndex === 0
         });
 
-        // Calculate start and end positions
-        let startPos = Math.max(1, currentPage - halfVisible);
-        let endPos = Math.min(totalPages - 1, currentPage + halfVisible);
+        // Calculate start and end positions for middle buttons
+        let startPos, endPos;
 
-        // Adjust if we're near the beginning
-        if (currentPage <= halfVisible) {
-            endPos = Math.min(totalPages - 1, maxVisibleButtons - 1);
-        }
+        if (currentPage <= 2) {
+            // Near the beginning: show pages 1, 2, 3
+            startPos = 1;
+            endPos = Math.min(totalPages - 1, 3);
+        } else if (currentPage >= totalPages - 1) {
+            // Near the end: show last 3 pages
+            startPos = Math.max(1, totalPages - 3);
+            endPos = totalPages - 1;
+        } else {
+            // In the middle: center around current page
+            const halfMiddle = Math.floor(middleButtonsCount / 2);
+            startPos = Math.max(1, currentPage - halfMiddle);
+            endPos = Math.min(totalPages - 1, currentPage + halfMiddle);
 
-        // Adjust if we're near the end
-        if (currentPage >= totalPages - halfVisible) {
-            startPos = Math.max(1, totalPages - maxVisibleButtons + 1);
+            // Adjust to ensure we show exactly 3 middle buttons when possible
+            if (endPos - startPos + 1 < middleButtonsCount) {
+                if (startPos === 1) {
+                    endPos = Math.min(totalPages - 1, middleButtonsCount);
+                } else {
+                    startPos = Math.max(1, totalPages - middleButtonsCount);
+                }
+            }
         }
 
         // Add ellipsis after first button if needed
@@ -188,8 +201,8 @@ const BlogSlider = ({
             });
         }
 
-        // Add middle buttons
-        for (let i = startPos; i < endPos; i++) {
+        // Add middle buttons (exactly 3)
+        for (let i = startPos; i <= endPos; i++) {
             if (i !== 0 && i !== totalPages - 1) { // Skip first and last (already handled)
                 buttons.push({
                     type: 'button',
