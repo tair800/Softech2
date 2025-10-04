@@ -14,9 +14,9 @@ function Footer() {
     const t = (key) => {
         const dict = {
             desc: {
-                az: 'Şirkət yeni standartlarla proqram təminatı satışı və servisi həyata keçirən proqramlaşdırma şirkətidir.',
-                en: 'The company is a software firm providing software sales and service with new standards.',
-                ru: 'Компания — это фирма по разработке ПО, предоставляющая продажу и сервис программного обеспечения по новым стандартам.'
+                az: 'SOFTECH şirkəti yeni standartlarla proqram təminatı satışı və servisi həyata keçirən proqramlaşdırma şirkətidir.',
+                en: 'SOFTECH is a software company that implements software sales and service with new standards.',
+                ru: 'SOFTECH это компания по разработке ПО, которая осуществляет продажу и сервис программного обеспечения по новым стандартам.'
             },
             madeby: {
                 az: 'Veb-sayt Webonly tərəfindən hazırlanıb.',

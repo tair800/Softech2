@@ -564,30 +564,99 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .blog-slider-cards {
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row;
+        gap: 0;
+        justify-content: center;
+        overflow: hidden;
     }
 
-    .blog-slider-card-small,
+    /* Hide side cards on mobile - show only center card */
+    .blog-slider-card-small {
+        display: none !important;
+    }
+
     .blog-slider-card-big {
-        flex: 1;
+        flex: 0 0 100%;
+        max-width: 100%;
+        transform: scale(1) translateY(0px);
+        opacity: 1;
+        z-index: 2;
+        filter: blur(0px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
     .blog-image-card {
-        height: 260px;
+        height: 220px;
     }
 
     .blog-image-card.tall {
-        height: 340px;
+        height: 280px;
     }
 
     .blog-slider-navigation {
-        gap: 10px;
+        gap: 8px;
+        margin-top: 20px;
     }
 
     .blog-slider-nav-btn {
-        padding: 8px 16px;
-        font-size: 14px;
-        min-width: 40px;
+        padding: 6px 12px;
+        font-size: 12px;
+        min-width: 35px;
+    }
+}
+
+/* Smaller mobile screens */
+@media (max-width: 480px) {
+    .blog-slider-card-big {
+        flex: 0 0 95%;
+        max-width: 95%;
+        margin: 0 auto;
+    }
+
+    .blog-image-card {
+        height: 200px;
+    }
+
+    .blog-image-card.tall {
+        height: 260px;
+    }
+
+    .blog-slider-navigation {
+        gap: 6px;
+        margin-top: 15px;
+    }
+
+    .blog-slider-nav-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+        min-width: 30px;
+    }
+}
+
+/* iPhone 12 Pro specific styles */
+@media (min-width: 390px) and (max-width: 390px) and (min-height: 844px) and (max-height: 844px) {
+    .blog-slider-card-big {
+        flex: 0 0 92%;
+        max-width: 92%;
+        margin: 0 auto;
+    }
+
+    .blog-image-card {
+        height: 250px;
+    }
+
+    .blog-image-card.tall {
+        height: 320px;
+    }
+
+    .blog-slider-navigation {
+        gap: 5px;
+        margin-top: 15px;
+    }
+
+    .blog-slider-nav-btn {
+        padding: 4px 8px;
+        font-size: 10px;
+        min-width: 28px;
     }
 }

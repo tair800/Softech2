@@ -321,6 +321,37 @@
     border-color: #19e6ff;
 }
 
+.sm-phone {
+    margin-top: 2rem;
+}
+
+.sm-phone-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--sm-accent, #19e6ff);
+}
+
+.sm-phone-number {
+    display: inline-block;
+    background: #0f222b;
+    color: #cfe9ef;
+    border: 1px solid #1f3a45;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.sm-phone-number:hover {
+    color: #fff;
+    border-color: #19e6ff;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
 @media (max-width: 640px) {
     .sm-panel-item {
         font-size: 1.6rem;

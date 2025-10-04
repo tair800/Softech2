@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "./contexts/LanguageContext.jsx";
 import "./Home.css";
+import "./components/PageTitle.css";
 import prevIcon from "/assets/prev.png";
 import nextIcon from "/assets/next.png";
 import logoIcon from "/assets/logo-icon.png";
 import logoText from "/assets/logo-text.png";
 
 function CircularProgress({ currentIndex, totalSlides, slides, language, onSliderClick }) {
-  const [dimensions, setDimensions] = React.useState({ width: 400, height: 320 });
+  const [dimensions, setDimensions] = React.useState({ width: 640, height: 400 });
 
   React.useEffect(() => {
     const update = () => {
@@ -41,14 +42,14 @@ function CircularProgress({ currentIndex, totalSlides, slides, language, onSlide
 
   // >>> Daha böyük başlanğıc ölçülər
   const baseFontRaw =
-    isLarge ? Math.max(22, base * 0.055) : Math.max(12, base * (isSmall ? 0.032 : 0.042));
+    isLarge ? Math.max(18, base * 0.045) : Math.max(10, base * (isSmall ? 0.028 : 0.035));
 
-  // Qövsdə “balacalaşma” hissini kompensasiya üçün güclü boost
-  const curveBoost = 1.35;          // əvvəlki 1.18-dən böyük
-  const activeExtraBoost = 1.15;     // aktiv label üçün əlavə
+  // Qövsdə "balacalaşma" hissini kompensasiya üçün güclü boost
+  const curveBoost = 1.2;          // reduced from 1.35
+  const activeExtraBoost = 1.1;     // reduced from 1.15
 
   const desiredBaseFont = baseFontRaw * curveBoost;
-  const maxScale = isLarge ? 1.65 : isSmall ? 1.25 : 1.45;
+  const maxScale = isLarge ? 1.4 : isSmall ? 1.15 : 1.3;  // reduced scales
   const desiredActiveFont = desiredBaseFont * maxScale * activeExtraBoost;
 
   // Mətni dairədən bir az da uzaqlaşdır (böyümə üçün yer açılsın)
@@ -184,7 +185,11 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [direction, setDirection] = useState("next");
-  const [imageWidth, setImageWidth] = useState(window.innerWidth / 3);
+  const [imageWidth, setImageWidth] = useState(() => {
+    // Check if we're on iPhone 12 Pro (390x844) - show only one image
+    const isIPhone12Pro = window.innerWidth === 390 && window.innerHeight === 844;
+    return isIPhone12Pro ? window.innerWidth : window.innerWidth / 3;
+  });
   const [slides, setSlides] = useState([]);
 
   // Handle slider click to navigate to product
@@ -321,7 +326,9 @@ export default function Home() {
   // Update image width on window resize
   useEffect(() => {
     const handleResize = () => {
-      setImageWidth(window.innerWidth / 3);
+      // Check if we're on iPhone 12 Pro (390x844) - show only one image
+      const isIPhone12Pro = window.innerWidth === 390 && window.innerHeight === 844;
+      setImageWidth(isIPhone12Pro ? window.innerWidth : window.innerWidth / 3);
     };
 
     window.addEventListener("resize", handleResize);
@@ -343,10 +350,12 @@ export default function Home() {
   // Update transform for smooth scrolling
   useEffect(() => {
     if (scrollerRef.current && slides.length > 0) {
-      // Check if we're on 393x852 screen size
+      // Check if we're on 393x852 or iPhone 12 Pro (390x844) screen size
       const is393x852 = window.innerWidth === 393 && window.innerHeight === 852;
-      const gapWidth = is393x852 ? 0 : 20; // No gap for 393x852, 20px for others
-      const slideWidth = is393x852 ? window.innerWidth : imageWidth; // Full width for 393x852
+      const isIPhone12Pro = window.innerWidth === 390 && window.innerHeight === 844;
+      const isSingleImageMode = is393x852 || isIPhone12Pro;
+      const gapWidth = isSingleImageMode ? 0 : 20; // No gap for single image mode, 20px for others
+      const slideWidth = isSingleImageMode ? window.innerWidth : imageWidth; // Full width for single image mode
       const totalItemWidth = slideWidth + gapWidth;
 
       // Debug logging
@@ -358,6 +367,8 @@ export default function Home() {
         slidesLength: slides.length,
         viewportWidth: window.innerWidth,
         is393x852,
+        isIPhone12Pro,
+        isSingleImageMode,
       });
 
       // Let's try a different approach
@@ -418,6 +429,8 @@ export default function Home() {
       <div className="circle-background-left"></div>
       <div className="circle-background-right"></div>
 
+
+
       {/* Logo text positioned absolutely */}
       <div className="home-logo-text">
         <img
@@ -446,7 +459,8 @@ export default function Home() {
               className="image-scroller"
               style={{
                 width: `${slides.length *
-                  (window.innerWidth === 393 && window.innerHeight === 852
+                  ((window.innerWidth === 393 && window.innerHeight === 852) ||
+                    (window.innerWidth === 390 && window.innerHeight === 844)
                     ? window.innerWidth
                     : imageWidth + 20)
                   }px`,
@@ -457,9 +471,10 @@ export default function Home() {
                   key={`${index}-${slide.id}`}
                   className={`image-slide ${slide.productId ? 'clickable' : ''}`}
                   style={{
-                    width: `${window.innerWidth === 393 && window.innerHeight === 852
-                        ? window.innerWidth
-                        : imageWidth
+                    width: `${(window.innerWidth === 393 && window.innerHeight === 852) ||
+                      (window.innerWidth === 390 && window.innerHeight === 844)
+                      ? window.innerWidth
+                      : imageWidth
                       }px`,
                     backgroundImage: `url('${slide.img}')`,
                     cursor: slide.productId ? 'pointer' : 'default',

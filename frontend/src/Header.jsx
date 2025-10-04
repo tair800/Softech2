@@ -5,6 +5,7 @@ import logoText from '/assets/logo-text.png';
 import globeImg from '/assets/globe.png';
 import dropdownIcon from '/assets/dropdown-icon.png';
 import logoWhite from '/assets/logo-white.png';
+import phoneIcon from '/assets/phone.svg';
 
 import './Header.css';
 import StaggeredMenu from './components/StaggeredMenu';
@@ -14,6 +15,7 @@ import { t } from './utils/i18n';
 function Header() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [phoneTooltipVisible, setPhoneTooltipVisible] = useState(false);
     const langRef = useRef(null);
     const location = useLocation();
     const { language, setLanguage } = useLanguage();
@@ -56,6 +58,18 @@ function Header() {
                     <li><Link to="/contact" className={location.pathname === "/contact" ? "active" : ""}>{t('contact', language)}</Link></li>
                 </ul>
                 <div className="navbar-right">
+                    <div
+                        className="phone-container desktop-only"
+                        onMouseEnter={() => setPhoneTooltipVisible(true)}
+                        onMouseLeave={() => setPhoneTooltipVisible(false)}
+                    >
+                        <a href="tel:+994552742303" className="phone-link">
+                            <img src={phoneIcon} alt="Phone" className="phone-icon" width="19.25" height="19.25" />
+                        </a>
+                        <div className={`phone-tooltip ${phoneTooltipVisible ? 'show' : ''}`}>
+                            +994 55 274 23 03
+                        </div>
+                    </div>
                     <div className="navbar-lang desktop-only" ref={langRef} tabIndex={0} onClick={() => setDropdownOpen((open) => !open)}>
                         <img src={globeImg} alt="Language Globe" className="lang-globe" width="19.25" height="19.25" />
                         <img src={dropdownIcon} alt="Dropdown Icon" className="dropdown-icon" width="21" height="21" />

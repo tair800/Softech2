@@ -810,3 +810,52 @@
         margin-top: -2rem;
     }
 }
+
+/* iPhone 12 Pro (390x844) Resolution Specific Styles */
+@media (min-width: 390px) and (max-width: 390px) and (min-height: 844px) and (max-height: 844px) {
+    .blog-detail-page {
+        margin-top: -29px;
+    }
+
+    /* Ensure blog slider shows only one card on iPhone 12 Pro */
+    .blog-slider-cards {
+        flex-direction: row !important;
+        gap: 0 !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+    }
+
+    .blog-slider-card-small {
+        display: none !important;
+    }
+
+    .blog-slider-card-big {
+        flex: 0 0 92% !important;
+        max-width: 92% !important;
+        margin: 0 auto !important;
+        transform: scale(1) translateY(0px) !important;
+        opacity: 1 !important;
+        z-index: 2 !important;
+        filter: blur(0px) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .blog-image-card {
+        height: 250px !important;
+    }
+
+    .blog-image-card.tall {
+        height: 320px !important;
+    }
+
+    .blog-slider-navigation {
+        gap: 5px !important;
+        margin-top: 15px !important;
+    }
+
+    .blog-slider-nav-btn {
+        padding: 4px 8px !important;
+        font-size: 10px !important;
+        min-width: 28px !important;
+    }
+}

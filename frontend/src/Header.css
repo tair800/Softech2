@@ -104,7 +104,7 @@
 .navbar-right {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 /* keep toggle aligned at far right */
@@ -360,6 +360,62 @@
     opacity: 1;
 }
 
+.phone-container {
+    position: relative;
+    display: inline-block;
+    margin-right: 3px !important;
+}
+
+.phone-link {
+    display: inline-block;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.phone-link:hover {
+    text-decoration: none;
+}
+
+.phone-icon {
+    width: 19.25px;
+    height: 19.25px;
+    object-fit: contain;
+    opacity: 1;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    filter: brightness(0) invert(1);
+    display: block;
+}
+
+.phone-icon:hover {
+    opacity: 0.8;
+}
+
+.phone-tooltip {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-100%);
+    background: #183b4a;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1000;
+    border: 1px solid #1f3a45;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.phone-tooltip.show {
+    opacity: 1;
+    visibility: visible;
+}
+
 .dropdown-icon {
     width: 21px;
     height: 21px;
@@ -607,5 +663,17 @@
     .logo-white {
         margin-top: 12px;
         width: 115px;
+    }
+}
+
+/* 393x852 Resolution Specific Styles */
+@media (min-width: 393px) and (max-width: 393px) and (min-height: 852px) and (max-height: 852px) {
+    .navbar-container {
+        height: 55px;
+        padding: 0.5rem 0.75rem;
+        border-radius: 12px;
+        width: 100vw;
+        box-sizing: border-box;
+        max-width: 100vw;
     }
 }

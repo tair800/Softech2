@@ -31,20 +31,28 @@
 
 /* Custom positioning for different pages */
 .page-title-container.page-title-about {
-    top: 13%;
+    top: 10%;
 }
 
 
 .page-title-container.page-title-services {
-    top: 23%;
+    top: 17.9%;
 }
 
 .page-title-container.page-title-equipment {
-    top: 10.8%;
+    top: 11%;
 }
 
 .page-title-container.page-title-contact {
-    top: 21.5%;
+    top: 18%;
+}
+
+.page-title-container.page-title-products {
+    top: 20.001%;
+}
+
+.page-title-container.page-title-blog {
+    top: 18.4% !important;
 }
 
 /* Responsive Design */
@@ -52,11 +60,19 @@
     .page-title {
         font-size: 1.5rem;
     }
+
+    .page-title-container h1 {
+        font-size: 3.5rem !important;
+    }
 }
 
 @media (max-width: 480px) {
     .page-title {
         font-size: 1.25rem;
+    }
+
+    .page-title-container h1 {
+        font-size: 2.8rem !important;
     }
 }
 
@@ -66,6 +82,10 @@
         font-size: 1.5rem !important;
         max-width: 90vw;
         min-width: 200px;
+    }
+
+    .page-title-container h1 {
+        font-size: 2.5rem !important;
     }
 
     /* About page */
@@ -84,11 +104,19 @@
     .page-title-container.page-title-equipment {
         top: 134px;
     }
+
+    .page-title-container h1 {
+        font-size: 2rem !important;
+    }
 }
 
 @media (min-width: 321px) and (max-width: 360px) {
     .page-title-container.page-title-equipment {
         top: 142px;
+    }
+
+    .page-title-container h1 {
+        font-size: 2.2rem !important;
     }
 }
 
@@ -96,11 +124,19 @@
     .page-title-container.page-title-equipment {
         top: 150px;
     }
+
+    .page-title-container h1 {
+        font-size: 2.3rem !important;
+    }
 }
 
 @media (min-width: 376px) and (max-width: 425px) {
     .page-title-container.page-title-equipment {
         top: 158px;
+    }
+
+    .page-title-container h1 {
+        font-size: 2.4rem !important;
     }
 }
 
@@ -108,11 +144,19 @@
     .page-title-container.page-title-equipment {
         top: 168px;
     }
+
+    .page-title-container h1 {
+        font-size: 2.6rem !important;
+    }
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
     .page-title-container.page-title-equipment {
         top: 180px;
+    }
+
+    .page-title-container h1 {
+        font-size: 3rem !important;
     }
 }
 
@@ -168,37 +212,183 @@
 }
 
 /* Large laptops - adjusted to not affect desktop displays */
-@media (min-width: 1367px) and (max-width: 1440px) {
-    .page-title-container.page-title-equipment {
-        top: 240px;
-    }
-}
+
 
 /* 1440x765 Resolution Specific Styles */
-@media (min-width: 1440px) and (max-width: 1440px) and (min-height: 765px) and (max-height: 765px) {
-    .page-title-container.page-title-equipment {
-        top: 15% !important;
-    }
-}
 
 /* 1440x765 Resolution Specific Styles */
-@media (min-width: 1440px) and (max-width: 1440px) and (min-height: 765px) and (max-height: 765px) {
-    .page-title-container.page-title-equipment {
-        top: 399px !important;
-    }
-}
+
 
 /* Desktop displays - ensure proper positioning */
 @media (min-width: 1601px) {
+    .page-title-container.page-title-about {
+        top: 10%;
+    }
+
+    .page-title-container.page-title-services {
+        top: 17.9%;
+    }
+
     .page-title-container.page-title-equipment {
-        top: 399px;
+        top: 11%;
+    }
+
+    .page-title-container.page-title-contact {
+        top: 18%;
+    }
+
+    .page-title-container.page-title-products {
+        top: 20.001%;
     }
 }
 
 /* 1280x832 Resolution Specific Styles */
 @media (min-width: 1280px) and (max-width: 1280px) and (min-height: 832px) and (max-height: 832px) {
+    .page-title-container.page-title-about {
+        top: 10% !important;
+    }
+
     .page-title-container.page-title-services {
-        top: 22.5% !important;
+        top: 17.9% !important;
+    }
+
+    .page-title-container.page-title-equipment {
+        top: 10.8% !important;
+    }
+
+    .page-title-container.page-title-contact {
+        top: 17.4% !important;
+    }
+
+    .page-title-container.page-title-products {
+        top: 19.2% !important;
+    }
+
+    .page-title-container.page-title-blog {
+        top: 17.1% !important;
+    }
+}
+
+/* 1920x1080 Resolution Specific Styles */
+@media (min-width: 1920px) and (max-width: 1920px) and (min-height: 1080px) and (max-height: 1080px) {
+    .page-title-container.page-title-about {
+        top: 10.5% !important;
+    }
+
+    .page-title-container.page-title-services {
+        top: 19% !important;
+    }
+
+    .page-title-container.page-title-equipment {
+        top: 12.1% !important;
+    }
+
+    .page-title-container.page-title-contact {
+        top: 21.2% !important;
+    }
+
+    .page-title-container.page-title-products {
+        top: 23.67% !important;
+    }
+}
+
+/* 2560x1440 Resolution Specific Styles */
+@media (min-width: 2560px) and (max-width: 2560px) and (min-height: 1440px) and (max-height: 1440px) {
+    .page-title-container.page-title-about {
+        top: 10% !important;
+    }
+
+    .page-title-container.page-title-services {
+        top: 17.9% !important;
+    }
+
+    .page-title-container.page-title-equipment {
+        top: 11% !important;
+    }
+
+    .page-title-container.page-title-contact {
+        top: 18% !important;
+    }
+
+    .page-title-container.page-title-products {
+        top: 20.001% !important;
+    }
+}
+
+/* 3440x1440 Ultra-wide Resolution Specific Styles */
+@media (min-width: 3440px) and (max-width: 3440px) and (min-height: 1440px) and (max-height: 1440px) {
+    .page-title-container.page-title-about {
+        top: 10% !important;
+    }
+
+    .page-title-container.page-title-services {
+        top: 17.9% !important;
+    }
+
+    .page-title-container.page-title-equipment {
+        top: 11% !important;
+    }
+
+    .page-title-container.page-title-contact {
+        top: 18% !important;
+    }
+
+    .page-title-container.page-title-products {
+        top: 20.001% !important;
+    }
+}
+
+/* 393x852 Resolution Specific Styles */
+@media (min-width: 393px) and (max-width: 393px) and (min-height: 852px) and (max-height: 852px) {
+    .page-title-container.page-title-about {
+        top: 135px !important;
+    }
+
+    .page-title-container.page-title-services {
+        top: 135px !important;
+    }
+
+    .page-title-container.page-title-equipment {
+        top: 135px !important;
+    }
+
+    .page-title-container.page-title-contact {
+        top: 138px !important;
+    }
+
+    .page-title-container.page-title-products {
+        top: 135px !important;
+    }
+
+    .page-title-container.page-title-blog {
+        top: 160px !important;
+    }
+}
+
+/* iPhone 12 Pro (390x844) Resolution Specific Styles */
+@media (min-width: 390px) and (max-width: 390px) and (min-height: 844px) and (max-height: 844px) {
+    .page-title-container.page-title-about {
+        top: 144px !important;
+    }
+
+    .page-title-container.page-title-services {
+        top: 144px !important;
+    }
+
+    .page-title-container.page-title-equipment {
+        top: 144px !important;
+    }
+
+    .page-title-container.page-title-contact {
+        top: 138px !important;
+    }
+
+    .page-title-container.page-title-products {
+        top: 144px !important;
+    }
+
+    .page-title-container.page-title-blog {
+        top: 160px !important;
     }
 }
 

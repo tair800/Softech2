@@ -474,23 +474,30 @@ export const StaggeredMenu = ({
                                 className={language === 'az' ? 'active' : ''}
                                 onClick={() => setLanguage('az')}
                             >
-                                az
+                                AZ
                             </button>
                             <button
                                 type="button"
                                 className={language === 'en' ? 'active' : ''}
                                 onClick={() => setLanguage('en')}
                             >
-                                en
+                                EN
                             </button>
                             <button
                                 type="button"
                                 className={language === 'ru' ? 'active' : ''}
                                 onClick={() => setLanguage('ru')}
                             >
-                                rus
+                                RU
                             </button>
                         </div>
+                    </div>
+
+                    <div className="sm-phone" aria-label="Phone number">
+                        <h3 className="sm-phone-title">Phone</h3>
+                        <a href="tel:+994552742303" className="sm-phone-number">
+                            +994 55 274 23 03
+                        </a>
                     </div>
                 </div>
             </aside>

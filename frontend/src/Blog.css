@@ -32,22 +32,11 @@
 }
 
 /* Page title position override only for Blog page */
-.page-title-container.page-title-blog {
-    top: 36.6% !important;
-}
 
-/* Desktop override for Blog page title position */
-@media (min-width: 992px) {
-    .page-title-container.page-title-blog {
-        top: 22.6% !important;
-    }
-}
+
 
 /* Blog title mobile positioning and sizing */
 @media (max-width: 425px) {
-    .page-title-container.page-title-blog {
-        top: 195px !important;
-    }
 
     .blog-container .page-title {
         font-size: 1.5rem !important;
@@ -75,16 +64,19 @@
 }
 
 /* 1920x1080 Resolution Specific Styles */
-@media (min-width: 1920px) and (max-width: 1920px) and (min-height: 1080px) and (max-height: 1080px) {
-    .page-title-container.page-title-blog {
-        top: 24% !important;
-    }
-}
+
 
 /* 393x852 Resolution Specific Styles */
 @media (min-width: 393px) and (max-width: 393px) and (min-height: 852px) and (max-height: 852px) {
     .page-title-container.page-title-blog .page-title {
         font-size: 12px !important;
+    }
+}
+
+/* iPhone 12 Pro (390x844) Resolution Specific Styles */
+@media (min-width: 390px) and (max-width: 390px) and (min-height: 844px) and (max-height: 844px) {
+    .blog-spline {
+        margin-top: -2rem !important;
     }
 }
 

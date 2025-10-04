@@ -416,9 +416,7 @@
         margin-left: 10px;
     }
 
-    .services-rainbow {
-        margin-top: -6%;
-    }
+
 
     .card-section {
         margin-top: 10px;
@@ -478,19 +476,18 @@
         margin-left: 18px;
     }
 
-    .services-rainbow {
-        margin-top: -9%;
-    }
-
     .services-grid-3d {
         grid-template-columns: repeat(2, 1fr);
         gap: 2.5rem;
-        padding: 1.5rem 2rem;
+        padding: 2rem 1rem;
         margin-top: 10px;
         max-width: 450px;
         margin-left: auto;
         margin-right: auto;
     }
+
+
+
 
     .service-card-3d-wrapper {
         width: 100%;

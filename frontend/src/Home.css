@@ -201,8 +201,8 @@ body {
 /* Circular Progress Indicator */
 .circular-progress {
     position: relative;
-    width: 410px;
-    height: 410px;
+    width: 650px;
+    height: 650px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -226,8 +226,8 @@ body {
 }
 
 .circle-logo-icon {
-    width: 280px;
-    height: 72px;
+    width: 350px;
+    height: 90px;
     object-fit: contain;
 
     /* Crop bottom 25% to hide "technology" text */
@@ -262,8 +262,8 @@ body {
     border: none;
     outline: none;
     overflow: visible;
-    width: 400px;
-    height: 320px;
+    width: 640px;
+    height: 400px;
 }
 
 .progress-circle {
@@ -412,7 +412,7 @@ body {
 
     .circular-progress {
         position: relative;
-        width: 400px;
+        width: 620px;
         height: 320px;
         display: flex;
         align-items: center;
@@ -443,7 +443,7 @@ body {
 
     .circular-progress {
         position: relative;
-        width: 580px;
+        width: 900px;
         height: 460px;
         display: flex;
         align-items: center;
@@ -457,13 +457,13 @@ body {
     }
 
     .circular-progress svg {
-        width: 580px;
+        width: 890px;
         height: 460px;
     }
 
     .circle-logo-icon {
-        width: 384px;
-        height: 100px;
+        width: 480px;
+        height: 125px;
     }
 
     .slider-name {
@@ -496,7 +496,7 @@ body {
 /* Large screens (1920px and above) */
 @media (min-width: 1920px) {
     .circular-progress {
-        width: 580px;
+        width: 900px;
         height: 640px;
         top: 233px;
     }
@@ -505,57 +505,57 @@ body {
 /* Large screens (2560px and above) */
 @media (min-width: 2560px) {
     .circular-progress {
-        width: 500px;
+        width: 780px;
         height: 400px;
         top: 280px;
     }
 
     .circular-progress svg {
-        width: 500px;
+        width: 770px;
         height: 400px;
     }
 
     .circle-logo-icon {
-        width: 360px;
-        height: 96px;
+        width: 450px;
+        height: 120px;
     }
 }
 
 /* Ultra-wide screens (3440px and above) */
 @media (min-width: 3440px) {
     .circular-progress {
-        width: 600px;
+        width: 920px;
         height: 480px;
         top: 320px;
     }
 
     .circular-progress svg {
-        width: 600px;
+        width: 910px;
         height: 480px;
     }
 
     .circle-logo-icon {
-        width: 440px;
-        height: 112px;
+        width: 550px;
+        height: 140px;
     }
 }
 
 /* 4K screens (3840px and above) */
 @media (min-width: 3840px) {
     .circular-progress {
-        width: 700px;
+        width: 1070px;
         height: 560px;
         top: 380px;
     }
 
     .circular-progress svg {
-        width: 700px;
+        width: 1060px;
         height: 560px;
     }
 
     .circle-logo-icon {
-        width: 520px;
-        height: 128px;
+        width: 650px;
+        height: 160px;
     }
 }
 
@@ -658,21 +658,21 @@ body {
     }
 
     .slider-nav-btn {
-        width: 55px;
-        height: 55px;
-        min-width: 55px;
-        min-height: 55px;
-        max-width: 55px;
-        max-height: 55px;
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+        min-height: 45px;
+        max-width: 45px;
+        max-height: 45px;
     }
 
     .slider-nav-btn:hover:not(:disabled) {
-        width: 60px;
-        height: 60px;
-        min-width: 60px;
-        min-height: 60px;
-        max-width: 60px;
-        max-height: 60px;
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        min-height: 50px;
+        max-width: 50px;
+        max-height: 50px;
     }
 }
 
@@ -685,96 +685,6 @@ body {
 
     .circular-progress {
         top: 200px;
-    }
-
-    .slider-nav-btn {
-        width: 50px;
-        height: 50px;
-        min-width: 50px;
-        min-height: 50px;
-        max-width: 50px;
-        max-height: 50px;
-    }
-
-    .slider-nav-btn:hover:not(:disabled) {
-        width: 55px;
-        height: 55px;
-        min-width: 55px;
-        min-height: 55px;
-        max-width: 55px;
-        max-height: 55px;
-    }
-}
-
-@media (max-width: 480px) {
-
-    /* Very small mobile styles */
-    .circular-progress-container {
-        top: -14px;
-    }
-
-    .circular-progress {
-        top: 202px;
-    }
-
-    .slider-nav-btn {
-        width: 45px;
-        height: 45px;
-        min-width: 45px;
-        min-height: 45px;
-        max-width: 45px;
-        max-height: 45px;
-    }
-
-    .slider-nav-btn:hover:not(:disabled) {
-        width: 50px;
-        height: 50px;
-        min-width: 50px;
-        min-height: 50px;
-        max-width: 50px;
-        max-height: 50px;
-    }
-}
-
-@media (max-width: 425px) {
-
-    /* Mobile phone styles - 425px is fine as reference */
-    .circular-progress-container {
-        top: -14px;
-    }
-
-    .circular-progress {
-        top: 204px;
-    }
-
-    .slider-nav-btn {
-        width: 45px;
-        height: 45px;
-        min-width: 45px;
-        min-height: 45px;
-        max-width: 45px;
-        max-height: 45px;
-    }
-
-    .slider-nav-btn:hover:not(:disabled) {
-        width: 50px;
-        height: 50px;
-        min-width: 50px;
-        min-height: 50px;
-        max-width: 50px;
-        max-height: 50px;
-    }
-}
-
-@media (max-width: 360px) {
-
-    /* Extra small mobile styles */
-    .circular-progress-container {
-        top: -15px;
-    }
-
-    .circular-progress {
-        top: 210px;
     }
 
     .slider-nav-btn {
@@ -793,6 +703,235 @@ body {
         min-height: 45px;
         max-width: 45px;
         max-height: 45px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Very small mobile styles */
+    .circular-progress-container {
+        top: -14px;
+    }
+
+    .circular-progress {
+        top: 202px;
+    }
+
+    .slider-nav-btn {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        min-height: 38px;
+        max-width: 38px;
+        max-height: 38px;
+    }
+
+    .slider-nav-btn:hover:not(:disabled) {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        min-height: 42px;
+        max-width: 42px;
+        max-height: 42px;
+    }
+}
+
+@media (max-width: 425px) {
+
+    /* Mobile phone styles - 425px is fine as reference */
+    .circular-progress-container {
+        top: -14px;
+    }
+
+    .circular-progress {
+        top: 204px;
+        width: 320px;
+        height: 320px;
+    }
+
+    .circular-progress svg {
+        width: 310px;
+        height: 250px;
+    }
+
+    .circle-logo-icon {
+        width: 220px;
+        height: 56px;
+    }
+
+    .slider-name {
+        font-size: 10px;
+        font-weight: 500;
+    }
+
+    .slider-name:hover {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .slider-name.active {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .slider-name.active:hover {
+        font-size: 16px;
+    }
+
+    .slider-nav-btn {
+        width: 35px;
+        height: 35px;
+        min-width: 35px;
+        min-height: 35px;
+        max-width: 35px;
+        max-height: 35px;
+    }
+
+    .slider-nav-btn:hover:not(:disabled) {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        min-height: 38px;
+        max-width: 38px;
+        max-height: 38px;
+    }
+}
+
+/* 425px exact screen size */
+@media (min-width: 425px) and (max-width: 425px) {
+    .circular-progress {
+        width: 320px;
+        height: 320px;
+    }
+
+    .circular-progress svg {
+        width: 310px;
+        height: 250px;
+    }
+
+    .circle-logo-icon {
+        width: 220px;
+        height: 56px;
+    }
+
+    .slider-name {
+        font-size: 10px;
+        font-weight: 500;
+    }
+
+    .slider-name:hover {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .slider-name.active {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .slider-name.active:hover {
+        font-size: 16px;
+    }
+}
+
+/* iPhone 12 Pro (390x844) Specific Styles */
+@media (min-width: 390px) and (max-width: 390px) and (min-height: 844px) and (max-height: 844px) {
+    .circular-progress {
+        width: 330px;
+        height: 330px;
+        top: 90px;
+    }
+
+    .circular-progress svg {
+        width: 320px;
+        height: 260px;
+    }
+
+    .circle-logo-icon {
+        width: 230px;
+        height: 59px;
+    }
+
+    .slider-name {
+        font-size: 11px;
+        font-weight: 500;
+    }
+
+    .slider-name:hover {
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .slider-name.active {
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .slider-name.active:hover {
+        font-size: 17px;
+    }
+
+    .circular-progress-container {
+        top: -12px;
+    }
+
+    .slider-nav-btn {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        max-width: 40px;
+        max-height: 40px;
+    }
+
+    .slider-nav-btn:hover:not(:disabled) {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+        max-width: 44px;
+        max-height: 44px;
+    }
+
+    /* Single image display for iPhone 12 Pro */
+    .image-slide {
+        width: 100vw !important;
+        max-width: 100vw;
+        height: 50vh;
+    }
+
+    .image-scroller {
+        gap: 0px;
+    }
+}
+
+@media (max-width: 360px) {
+
+    /* Extra small mobile styles */
+    .circular-progress-container {
+        top: -15px;
+    }
+
+    .circular-progress {
+        top: 210px;
+    }
+
+    .slider-nav-btn {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        min-height: 32px;
+        max-width: 32px;
+        max-height: 32px;
+    }
+
+    .slider-nav-btn:hover:not(:disabled) {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        min-height: 36px;
+        max-width: 36px;
+        max-height: 36px;
     }
 }
 

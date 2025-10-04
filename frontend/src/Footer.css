@@ -158,7 +158,7 @@
 }
 
 .footer-title {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.2rem;
     transition: all 0.3s ease;
@@ -194,6 +194,7 @@
     text-decoration: none;
     transition: all 0.3s ease;
     display: block;
+    font-weight: 200;
 }
 
 .footer-product-link:hover {
@@ -209,6 +210,7 @@
     font-size: 0.9rem;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    font-weight: 100 !important;
 }
 
 .footer-contact li {
@@ -218,6 +220,7 @@
     gap: 0.7rem;
     transition: all 0.3s ease;
     cursor: pointer;
+    font-weight: 100 !important;
 }
 
 .footer-contact li:hover {
@@ -229,6 +232,7 @@
     color: inherit;
     text-decoration: none;
     transition: all 0.3s ease;
+    font-weight: 100 !important;
 }
 
 .footer-contact a:hover {
@@ -277,10 +281,14 @@
 
 .footer-madeby {
     font-size: 1rem;
+    position: relative;
+    z-index: 3;
 }
 
 .footer-copyright {
     font-size: 1rem;
+    position: relative;
+    z-index: 3;
 }
 
 .footer-meta-row {
@@ -290,6 +298,8 @@
     gap: 1rem;
     margin-top: -0.8rem;
     margin-left: 34px;
+    position: relative;
+    z-index: 3;
 }
 
 /* Desktop - put copyright on left */
@@ -356,7 +366,6 @@
     .footer-center-right-row {
         display: flex;
         justify-content: space-between;
-        gap: 1rem;
         width: 100%;
     }
 
@@ -455,7 +464,7 @@
     }
 
     .footer-title {
-        font-size: 0.9rem;
+        font-size: 1.1rem;
     }
 
     .footer-links,
@@ -501,11 +510,11 @@
 
 @media (max-width: 400px) {
     .footer-logo-white {
-        width: 30%;
+        width: 70%;
     }
 
     .footer-title {
-        font-size: 0.8rem;
+        font-size: 1.8rem;
     }
 
     .footer-links,
@@ -594,7 +603,7 @@
     }
 
     .footer-title {
-        font-size: 2rem;
+        font-size: 2.2rem;
         margin-bottom: 1.5rem;
     }
 
@@ -708,7 +717,7 @@
     }
 
     .footer-title {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
         margin-bottom: 1.8rem;
     }
 
@@ -788,7 +797,7 @@
     }
 
     .footer-bg-img {
-        bottom: -108px !important;
+        bottom: -113px !important;
     }
 
     .footer-copyright {
@@ -806,5 +815,16 @@
 
     .footer-center-right-row {
         margin-left: -13px !important;
+    }
+}
+
+/* iPhone 12 Pro (390x844) Resolution Specific Styles */
+@media (min-width: 390px) and (max-width: 390px) and (min-height: 844px) and (max-height: 844px) {
+    .footer-bg-img {
+        bottom: -123px !important;
+    }
+
+    .footer-contact a {
+        width: 120px;
     }
 }

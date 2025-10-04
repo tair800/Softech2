@@ -752,6 +752,15 @@
         min-height: 250px;
     }
 
+    /* Ensure second section shows text first on mobile */
+    .second-left {
+        order: 2;
+    }
+
+    .second-right {
+        order: 1;
+    }
+
     .main-right {
         padding: 1rem;
         height: auto;
@@ -799,6 +808,7 @@
     .scroller-container {
         width: 100%;
         height: 60px;
+        display: none;
     }
 
     .scroller-track {
@@ -886,6 +896,7 @@
 
     .scroller-container {
         height: 50px;
+        display: none;
     }
 
     .scroller-track {
@@ -968,6 +979,7 @@
 
     .scroller-container {
         height: 45px;
+        display: none;
     }
 
     .scroller-track {
@@ -1088,6 +1100,7 @@
         width: 80px !important;
         height: 200px !important;
         padding: 0.5rem !important;
+        display: none !important;
     }
 
     .scroller-track {
@@ -1208,6 +1221,7 @@
 
     .scroller-container {
         height: 40px !important;
+        display: none !important;
     }
 
     .scroller-track {
@@ -1327,6 +1341,7 @@
         width: 90px !important;
         height: 240px !important;
         padding: 0.75rem !important;
+        display: none !important;
     }
 
     .scroller-track {
@@ -1485,6 +1500,7 @@
         width: 85px !important;
         height: 220px !important;
         padding: 0.6rem !important;
+        display: none !important;
     }
 
     .scroller-track {
@@ -1644,6 +1660,7 @@
         width: 95px !important;
         height: 260px !important;
         padding: 0.85rem !important;
+        display: none !important;
     }
 
     .scroller-track {
@@ -1802,6 +1819,7 @@
         width: 100px !important;
         height: 280px !important;
         padding: 0.9rem !important;
+        display: none !important;
     }
 
     .scroller-track {
@@ -1967,6 +1985,7 @@
         width: 100px !important;
         height: 300px !important;
         padding: 1rem !important;
+        display: none !important;
     }
 
     .scroller-track {
@@ -2125,6 +2144,7 @@
         width: 100px !important;
         height: 320px !important;
         padding: 1.1rem !important;
+        display: none !important;
     }
 
     .scroller-track {
