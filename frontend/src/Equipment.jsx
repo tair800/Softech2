@@ -7,6 +7,7 @@ import FiltersComponent from './components/FiltersComponentNew.jsx';
 import EquipmentCard from './components/EquipmentCard';
 import MemoryCleanupButton from './components/MemoryCleanupButton';
 import PageTitle from './components/PageTitle';
+import LoadingAnimation from './components/LoadingAnimation';
 import { memoryManager } from './utils/memoryManager';
 import equipmentPrevIcon from '/assets/equipment-prev.svg';
 import equipmentNextIcon from '/assets/equipment-next.svg';
@@ -37,6 +38,7 @@ function Equipment() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [totalEquipment, setTotalEquipment] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
     const { language, setLanguage } = useLanguage();
 
     // Dynamic items per page based on screen size
@@ -265,50 +267,53 @@ function Equipment() {
         setTouchStartY(null);
     };
 
+    // Scroll to top when component mounts
     useEffect(() => {
-        let isMounted = true;
-
-        const fetchEquipment = async () => {
-            try {
-                const res = await fetch(`https://softech-api.webonly.io/api/equipment/full`);
-                if (!res.ok) throw new Error('Failed to load equipment');
-                const data = await res.json();
-
-                if (isMounted) {
-
-                    setEquipmentList(data);
-                    setFilteredEquipment(data);
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        };
-
-        fetchEquipment();
-
-        return () => {
-            isMounted = false;
-        };
+        window.scrollTo(0, 0);
     }, []);
 
-    // Fetch main equipment for slider
     useEffect(() => {
         let isMounted = true;
-        const fetchMainEquipment = async () => {
+
+        const fetchAllEquipment = async () => {
+            setIsLoading(true);
+            const startTime = Date.now();
+
             try {
-                const res = await fetch(`https://softech-api.webonly.io/api/equipment/main`);
-                if (!res.ok) throw new Error('Failed to load main equipment');
-                const data = await res.json();
+                const [equipmentRes, mainEquipmentRes] = await Promise.all([
+                    fetch(`https://softech-api.webonly.io/api/equipment/full`),
+                    fetch(`https://softech-api.webonly.io/api/equipment/main`)
+                ]);
 
                 if (isMounted) {
-                    setMainEquipmentList(data);
+                    if (equipmentRes.ok) {
+                        const equipmentData = await equipmentRes.json();
+                        setEquipmentList(equipmentData);
+                        setFilteredEquipment(equipmentData);
+                    }
+
+                    if (mainEquipmentRes.ok) {
+                        const mainEquipmentData = await mainEquipmentRes.json();
+                        setMainEquipmentList(mainEquipmentData);
+                    }
                 }
             } catch (e) {
                 console.error(e);
+            } finally {
+                if (isMounted) {
+                    // Ensure minimum loading time of 0.1 seconds
+                    const elapsedTime = Date.now() - startTime;
+                    const minLoadingTime = 100; // 0.1 seconds
+                    const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, remainingTime);
+                }
             }
         };
 
-        fetchMainEquipment();
+        fetchAllEquipment();
 
         return () => {
             isMounted = false;
@@ -619,6 +624,13 @@ function Equipment() {
                             <FiltersComponent onFilterChange={handleFilterChange} selectedLanguage={language} />
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* Loading Overlay */}
+            {isLoading && (
+                <div className="loading-overlay">
+                    <LoadingAnimation message={language === 'en' ? 'Loading Equipment...' : language === 'ru' ? 'Загрузка оборудования...' : 'Avadanlıq yüklənir...'} />
                 </div>
             )}
         </div>

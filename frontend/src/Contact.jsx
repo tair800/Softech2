@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 import Spline from '@splinetool/react-spline';
 import PageTitle from './components/PageTitle';
+import LoadingAnimation from './components/LoadingAnimation';
 import contactPhoneIcon from '/assets/contact-phone.svg';
 import contactLocationIcon from '/assets/contact-location.svg';
 import contactMailIcon from '/assets/contact-mail.svg';
@@ -17,6 +18,17 @@ function Contact() {
     });
     const [splineError, setSplineError] = useState(false);
     const [submitStatus, setSubmitStatus] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        // Simulate loading for Contact page
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 100);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleChange = (e) => {
         setFormData({
@@ -183,6 +195,13 @@ function Contact() {
                     title="Softech Location - 1 Ahmad Rajabli, Baku, Azerbaijan"
                 ></iframe>
             </div>
+
+            {/* Loading Overlay */}
+            {isLoading && (
+                <div className="loading-overlay">
+                    <LoadingAnimation message={language === 'en' ? 'Loading Contact...' : language === 'ru' ? 'Загрузка контактов...' : 'Əlaqə yüklənir...'} />
+                </div>
+            )}
         </div>
     );
 }

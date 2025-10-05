@@ -3,6 +3,7 @@ import './Blog.css';
 import PageTitle from './components/PageTitle';
 import LazySpline from './components/LazySpline.jsx';
 import BlogSlider from './components/BlogSlider.jsx';
+import LoadingAnimation from './components/LoadingAnimation';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 
 const API = 'https://softech-api.webonly.io/api';
@@ -12,6 +13,11 @@ function Blog() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { language } = useLanguage();
+
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const t = (key) => {
         const dict = {
@@ -42,8 +48,10 @@ function Blog() {
     useEffect(() => {
         let isMounted = true;
         const fetchBlogs = async () => {
+            setLoading(true);
+            const startTime = Date.now();
+
             try {
-                setLoading(true);
                 const res = await fetch(`${API}/blogs`);
                 if (!res.ok) throw new Error('Failed to load blogs');
                 const data = await res.json();
@@ -51,7 +59,16 @@ function Blog() {
             } catch (e) {
                 if (isMounted) setError(t('loadError'));
             } finally {
-                if (isMounted) setLoading(false);
+                if (isMounted) {
+                    // Ensure minimum loading time of 0.1 seconds
+                    const elapsedTime = Date.now() - startTime;
+                    const minLoadingTime = 100; // 0.1 seconds
+                    const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+                    setTimeout(() => {
+                        setLoading(false);
+                    }, remainingTime);
+                }
             }
         };
         fetchBlogs();
@@ -114,6 +131,13 @@ function Blog() {
                     )}
                 </div>
             </div>
+
+            {/* Loading Overlay */}
+            {loading && (
+                <div className="loading-overlay">
+                    <LoadingAnimation message={t('loading')} />
+                </div>
+            )}
         </div>
     );
 }

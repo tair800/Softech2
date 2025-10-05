@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import './BlogDetail.css';
 import BlogSlider from './components/BlogSlider.jsx';
 import AboutTeamHeader from './components/AboutTeamHeader.jsx';
+import LoadingAnimation from './components/LoadingAnimation';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 
 const BlogDetail = () => {
@@ -50,12 +51,18 @@ const BlogDetail = () => {
         } catch { return []; }
     }, [blog]);
 
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     useEffect(() => {
         let mounted = true;
         const load = async () => {
-            try {
-                setLoading(true);
+            setLoading(true);
+            const startTime = Date.now();
 
+            try {
                 // Load blog data
                 const res = await fetch(`${API}/blogs/${id}`);
                 if (!res.ok) throw new Error('Failed to load blog');
@@ -71,7 +78,16 @@ const BlogDetail = () => {
             } catch (e) {
                 if (mounted) setError(t('loadError'));
             } finally {
-                if (mounted) setLoading(false);
+                if (mounted) {
+                    // Ensure minimum loading time of 0.1 seconds
+                    const elapsedTime = Date.now() - startTime;
+                    const minLoadingTime = 100; // 0.1 seconds
+                    const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+                    setTimeout(() => {
+                        setLoading(false);
+                    }, remainingTime);
+                }
             }
         };
         if (id) load();
@@ -105,7 +121,6 @@ const BlogDetail = () => {
     return (
         <div className="blog-detail-page" >
             <div className="container">
-                {loading && <div className="text-center text-white-50">{t('loading')}</div>}
                 {(!loading && error) && <div className="text-center text-danger">{error}</div>}
                 {!!blog && (
                     <div className="row">
@@ -227,6 +242,13 @@ const BlogDetail = () => {
                     </>
                 )}
             </div>
+
+            {/* Loading Overlay */}
+            {loading && (
+                <div className="loading-overlay">
+                    <LoadingAnimation message={t('loading')} />
+                </div>
+            )}
         </div>
     );
 };

@@ -9,6 +9,27 @@
   overflow: visible;
 }
 
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #111214;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.loading-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
 /* Circle Background Elements */
 .contact-circle-background-left {
   position: absolute;
@@ -861,5 +882,3 @@
 }
 
 /* 1920x1080 Resolution Specific Styles */
-
-

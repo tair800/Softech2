@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLanguage } from './contexts/LanguageContext';
 import { useParams, useNavigate } from 'react-router-dom';
+import LoadingAnimation from './components/LoadingAnimation';
 import './ServiceDetail.css';
 
 const API = 'https://softech-api.webonly.io/api';
@@ -31,15 +32,17 @@ function ServiceDetail() {
         return vAz || vEn || vRu;
     };
 
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                if (!currentService?.id || allServices.length === 0) {
-                    setLoading(true);
-                } else {
-                    setRefetching(true);
-                }
+            setLoading(true);
+            const startTime = Date.now();
 
+            try {
                 // Fetch all services for sidebar navigation
                 const servicesRes = await fetch(`${API}/services?language=${language}`);
                 if (!servicesRes.ok) throw new Error('Failed to load services');
@@ -55,8 +58,15 @@ function ServiceDetail() {
                 console.error('Error fetching data:', e);
                 setError(e.message);
             } finally {
-                setLoading(false);
-                setRefetching(false);
+                // Ensure minimum loading time of 0.1 seconds
+                const elapsedTime = Date.now() - startTime;
+                const minLoadingTime = 100; // 0.1 seconds
+                const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+                setTimeout(() => {
+                    setLoading(false);
+                    setRefetching(false);
+                }, remainingTime);
             }
         };
 
@@ -67,18 +77,6 @@ function ServiceDetail() {
     // Stable navigate handler to avoid re-creating on language changes
     const handleNav = useCallback((targetId) => navigate(`/services/${targetId}`), [navigate]);
 
-    // Show loading state
-    if (loading) {
-        return (
-            <div className="service-detail-container">
-                <div className="service-detail-content">
-                    <div className="service-detail-center">
-                        <h2>Yüklənir...</h2>
-                    </div>
-                </div>
-            </div>
-        );
-    }
 
     // Show error state
     if (error || !currentService) {
@@ -235,6 +233,13 @@ function ServiceDetail() {
                     {refetching && <div className="service-detail-refetching-overlay" />}
                 </div>
             </div>
+
+            {/* Loading Overlay */}
+            {loading && (
+                <div className="loading-overlay">
+                    <LoadingAnimation message={language === 'en' ? 'Loading Service...' : language === 'ru' ? 'Загрузка услуги...' : 'Xidmət yüklənir...'} />
+                </div>
+            )}
         </div>
     );
 }

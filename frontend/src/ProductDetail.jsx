@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useLanguage } from './contexts/LanguageContext';
 import { useParams } from 'react-router-dom';
+import LoadingAnimation from './components/LoadingAnimation';
 // Fetch from API instead of static data
 import './ProductDetail.css';
 
@@ -42,9 +43,17 @@ function ProductDetail() {
         return url;
     };
 
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     // Fetch product detail (localized)
     useEffect(() => {
         const fetchProduct = async () => {
+            setLoading(true);
+            const startTime = Date.now();
+
             try {
                 const res = await fetch(`https://softech-api.webonly.io/api/products/${id}?language=${language}`);
                 if (!res.ok) throw new Error('Failed to load product');
@@ -88,11 +97,18 @@ function ProductDetail() {
                     ...data,
                     sections: sections
                 });
-                setLoading(false);
             } catch (e) {
                 console.error(e);
                 setError(e.message);
-                setLoading(false);
+            } finally {
+                // Ensure minimum loading time of 0.1 seconds
+                const elapsedTime = Date.now() - startTime;
+                const minLoadingTime = 100; // 0.1 seconds
+                const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+                setTimeout(() => {
+                    setLoading(false);
+                }, remainingTime);
             }
         };
         fetchProduct();
@@ -469,6 +485,13 @@ function ProductDetail() {
                     );
                 })}
             </div>
+
+            {/* Loading Overlay */}
+            {loading && (
+                <div className="loading-overlay">
+                    <LoadingAnimation message={language === 'en' ? 'Loading Product...' : language === 'ru' ? 'Загрузка продукта...' : 'Məhsul yüklənir...'} />
+                </div>
+            )}
         </div>
     );
 }

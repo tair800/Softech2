@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 // import { logos } from './data/logoData';
 import Spline from '@splinetool/react-spline';
 import PageTitle from './components/PageTitle';
+import LoadingAnimation from './components/LoadingAnimation';
 import phoneIcon from '/assets/phone.svg';
 import linkedinIcon from '/assets/linkedin.svg';
 import mailIcon from '/assets/mail.svg';
@@ -18,6 +19,7 @@ function About() {
     const [splineError, setSplineError] = useState(false);
     const [director, setDirector] = useState(null);
     const [aboutLogo, setAboutLogo] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const { language } = useLanguage();
     const [translated, setTranslated] = useState({
         title: 'Haqqımızda',
@@ -40,9 +42,17 @@ function About() {
     };
 
 
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     // Fetch data from API (localized by language)
     useEffect(() => {
         const fetchAll = async () => {
+            setIsLoading(true);
+            const startTime = Date.now();
+
             try {
                 const [empRes, refRes, aboutLogoRes] = await Promise.all([
                     fetch(`https://softech-api.webonly.io/api/employees?language=${language}`),
@@ -73,6 +83,15 @@ function About() {
                 }
             } catch (e) {
                 console.error(e);
+            } finally {
+                // Ensure minimum loading time of 0.1 seconds
+                const elapsedTime = Date.now() - startTime;
+                const minLoadingTime = 100; // 0.1 seconds
+                const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, remainingTime);
             }
         };
         fetchAll();
@@ -202,6 +221,13 @@ function About() {
                     </div>
                 </div>
             </div>
+
+            {/* Loading Overlay */}
+            {isLoading && (
+                <div className="loading-overlay">
+                    <LoadingAnimation message={t('loading', language) || "Loading..."} />
+                </div>
+            )}
         </div>
     );
 }

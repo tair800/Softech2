@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "./contexts/LanguageContext.jsx";
+import LoadingAnimation from "./components/LoadingAnimation";
 import "./Home.css";
 import "./components/PageTitle.css";
 import prevIcon from "/assets/prev.png";
@@ -191,6 +192,7 @@ export default function Home() {
     return isIPhone12Pro ? window.innerWidth : window.innerWidth / 3;
   });
   const [slides, setSlides] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Handle slider click to navigate to product
   const handleSliderClick = (slide) => {
@@ -199,9 +201,17 @@ export default function Home() {
     }
   };
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Fetch sliders from API
   useEffect(() => {
     const fetchSliders = async () => {
+      setIsLoading(true);
+      const startTime = Date.now();
+
       try {
         const response = await fetch(
           "https://softech-api.webonly.io/api/sliders"
@@ -317,6 +327,15 @@ export default function Home() {
             nameRu: "Профессиональный",
           },
         ]);
+      } finally {
+        // Ensure minimum loading time of 0.1 seconds
+        const elapsedTime = Date.now() - startTime;
+        const minLoadingTime = 100; // 0.1 seconds
+        const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+        setTimeout(() => {
+          setIsLoading(false);
+        }, remainingTime);
       }
     };
 
@@ -521,6 +540,13 @@ export default function Home() {
           <img src={nextIcon} alt="Next" className="slider-nav-icon" />
         </button>
       </div>
+
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="loading-overlay">
+          <LoadingAnimation message={language === 'en' ? 'Loading Home...' : language === 'ru' ? 'Загрузка главной...' : 'Ana səhifə yüklənir...'} />
+        </div>
+      )}
     </div>
   );
 }

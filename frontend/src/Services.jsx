@@ -3,6 +3,7 @@ import { useLanguage } from './contexts/LanguageContext';
 import ServiceCard3D from './components/ServiceCard3D';
 import Spline from '@splinetool/react-spline';
 import PageTitle from './components/PageTitle';
+import LoadingAnimation from './components/LoadingAnimation';
 import './Services.css';
 import { t } from './utils/i18n';
 
@@ -14,34 +15,42 @@ function Services() {
     const [splineError, setSplineError] = useState(false);
     const { language } = useLanguage();
 
+    // Scroll to top when component mounts
     useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
+    useEffect(() => {
+        const fetchServices = async () => {
+            setLoading(true);
+            const startTime = Date.now();
+
+            try {
+                const response = await fetch(`https://softech-api.webonly.io/api/services?language=${language}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setServices(data);
+            } catch (err) {
+                console.error('Error fetching services:', err);
+                setError(err.message);
+            } finally {
+                // Ensure minimum loading time of 0.1 seconds
+                const elapsedTime = Date.now() - startTime;
+                const minLoadingTime = 100; // 0.1 seconds
+                const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+                setTimeout(() => {
+                    setLoading(false);
+                }, remainingTime);
+            }
+        };
+
         fetchServices();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [language]);
-
-    const fetchServices = async () => {
-        try {
-            if (services.length === 0) {
-                setLoading(true);
-            } else {
-                setRefetching(true);
-            }
-            const response = await fetch(`https://softech-api.webonly.io/api/services?language=${language}`);
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            setServices(data);
-        } catch (err) {
-            console.error('Error fetching services:', err);
-            setError(err.message);
-        } finally {
-            setLoading(false);
-            setRefetching(false);
-        }
-    };
 
     // Keep Spline instance stable across re-renders (e.g., language change)
     const memoizedSpline = useMemo(() => (
@@ -51,15 +60,6 @@ function Services() {
         />
     ), []);
 
-    if (loading) {
-        return (
-            <div className="services-container">
-                <div className="services-center">
-                    <div>Loading services...</div>
-                </div>
-            </div>
-        );
-    }
 
     if (error) {
         return (
@@ -100,6 +100,13 @@ function Services() {
                     <div className="services-refetching-overlay" />
                 )}
             </div>
+
+            {/* Loading Overlay */}
+            {loading && (
+                <div className="loading-overlay">
+                    <LoadingAnimation message={language === 'en' ? 'Loading Services...' : language === 'ru' ? 'Загрузка услуг...' : 'Xidmətlər yüklənir...'} />
+                </div>
+            )}
         </div>
     );
 }

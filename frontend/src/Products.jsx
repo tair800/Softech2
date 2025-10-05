@@ -3,6 +3,7 @@ import { useLanguage } from './contexts/LanguageContext';
 import ProductCard3D from './components/ProductCard3D';
 import Spline from '@splinetool/react-spline';
 import PageTitle from './components/PageTitle';
+import LoadingAnimation from './components/LoadingAnimation';
 import { t } from './utils/i18n';
 import './Products.css';
 
@@ -18,12 +19,18 @@ function Products() {
     const { language } = useLanguage();
     const itemsPerPage = 4; // 4 products per page
 
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     // Fetch all products once when language changes
     useEffect(() => {
         const fetchAllProducts = async () => {
-            try {
-                setLoading(true);
+            setLoading(true);
+            const startTime = Date.now();
 
+            try {
                 const API = 'https://softech-api.webonly.io/api';
                 const res = await fetch(`${API}/products?language=${language}`);
                 if (!res.ok) throw new Error('Failed to load products');
@@ -54,7 +61,14 @@ function Products() {
             } catch (e) {
                 setError(e.message);
             } finally {
-                setLoading(false);
+                // Ensure minimum loading time of 0.1 seconds
+                const elapsedTime = Date.now() - startTime;
+                const minLoadingTime = 100; // 0.1 seconds
+                const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+                setTimeout(() => {
+                    setLoading(false);
+                }, remainingTime);
             }
         };
         fetchAllProducts();
@@ -174,7 +188,6 @@ function Products() {
             </div>
 
             {error && <div className="products-center"><div>Error: {error}</div></div>}
-            {loading && <div className="products-center"><div>Loading...</div></div>}
             <div className="products-grid-3d">
                 {productsState.map((product) => (
                     <div key={product.id} className="product-card-3d-wrapper">
@@ -216,6 +229,13 @@ function Products() {
                             <span>{tPagination('next')}</span>
                         </button>
                     </div>
+                </div>
+            )}
+
+            {/* Loading Overlay */}
+            {loading && (
+                <div className="loading-overlay">
+                    <LoadingAnimation message={language === 'en' ? 'Loading Products...' : language === 'ru' ? 'Загрузка продуктов...' : 'Məhsullar yüklənir...'} />
                 </div>
             )}
         </div>
