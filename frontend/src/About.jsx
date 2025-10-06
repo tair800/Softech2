@@ -20,6 +20,7 @@ function About() {
     const [director, setDirector] = useState(null);
     const [aboutLogo, setAboutLogo] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [splineLoaded, setSplineLoaded] = useState(false);
     const { language } = useLanguage();
     const [translated, setTranslated] = useState({
         title: 'Haqqımızda',
@@ -41,10 +42,29 @@ function About() {
         return url;
     };
 
+    // Handle Spline load completion
+    const handleSplineLoad = () => {
+        setSplineLoaded(true);
+        // Only set sessionStorage if Spline actually loaded successfully
+        if (!splineError) {
+            sessionStorage.setItem("splineLoaded", "true");
+        }
+        setIsLoading(false);
+    };
+
 
     // Scroll to top when component mounts
     useEffect(() => {
         window.scrollTo(0, 0);
+    }, []);
+
+    // Check if Spline has already been loaded in this session
+    useEffect(() => {
+        const alreadyLoaded = sessionStorage.getItem("splineLoaded");
+        if (alreadyLoaded) {
+            setSplineLoaded(true);
+            setIsLoading(false);
+        }
     }, []);
 
     // Fetch data from API (localized by language)
@@ -148,8 +168,12 @@ function About() {
                 {!splineError ? (
                     <Spline
                         scene="https://prod.spline.design/mP2TljaQ-tsNIzZt/scene.splinecode"
+                        onLoad={handleSplineLoad}
                         onError={(error) => {
                             setSplineError(true);
+                            setSplineLoaded(false);
+                            // Clear sessionStorage if Spline fails to load
+                            sessionStorage.removeItem("splineLoaded");
                         }}
                     />
                 ) : (

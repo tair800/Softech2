@@ -7,6 +7,8 @@
     position: relative;
     overflow: visible;
     margin-bottom: 60px;
+    padding-top: 80px;
+    /* Add top padding to prevent content from going under header */
 }
 
 /* Loading Overlay */
@@ -73,11 +75,14 @@
 .main-section {
     min-height: 80vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    /* Change from center to flex-start to prevent content from being centered vertically */
     justify-content: center;
     position: relative;
     overflow: hidden;
     width: 100%;
+    padding-top: 2rem;
+    /* Add some top padding for better spacing */
 }
 
 .main-left {
@@ -85,7 +90,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 80vh;
+    min-height: 80vh;
+    /* Change from height to min-height to allow expansion */
     position: relative;
 }
 
@@ -112,13 +118,15 @@
     padding: 3rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    /* Change from center to flex-start */
     align-items: flex-start;
-    height: 80vh;
+    min-height: 80vh;
+    /* Change from height to min-height to allow expansion */
 }
 
 .first-section {
-    min-height: 80vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -153,7 +161,7 @@
 }
 
 .second-section {
-    min-height: 80vh;
+    min-height: 102vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -363,8 +371,10 @@
     background-clip: text;
     -webkit-background-clip: text;
     font-family: 'MadaniArabic-Regular', system-ui, -apple-system, sans-serif;
-    height: 116px;
-    line-height: 0;
+    height: auto;
+    /* Change from fixed 116px to auto to allow full text display */
+    line-height: 1.5;
+    /* Change from 0 to 1.5 for proper text display */
     margin-left: 0;
     margin-top: 0;
     font-style: normal;
@@ -374,11 +384,22 @@
     font-size: 18px;
     text-align: left;
     width: 501px;
+    word-wrap: break-word;
+    /* Allow text to wrap properly */
+    overflow-wrap: break-word;
+    /* Additional word wrapping support */
 }
 
 .first-more-text p {
     display: block;
-    line-height: normal;
+    line-height: 1.5;
+    /* Set proper line height for readability */
+    margin: 0;
+    /* Remove default margins */
+    word-wrap: break-word;
+    /* Allow text to wrap */
+    overflow-wrap: break-word;
+    /* Additional word wrapping support */
 }
 
 .page-number-01 {
@@ -505,7 +526,7 @@
     font-size: 16px;
     text-align: left;
     line-height: 1.6;
-    max-width: 81%;
+    max-width: 92%;
     position: relative;
     z-index: 1;
 }
@@ -628,6 +649,8 @@
 @media (max-width: 1200px) {
     .product-detail-container {
         padding: 0;
+        padding-top: 80px;
+        /* Maintain top padding on smaller screens */
     }
 
     .main-section,
@@ -641,12 +664,14 @@
     .first-left,
     .second-left,
     .third-left {
-        height: 70vh;
+        min-height: 70vh;
+        /* Change from height to min-height */
     }
 
     .main-right {
         padding: 2rem;
-        height: 70vh;
+        min-height: 70vh;
+        /* Change from height to min-height */
     }
 
     .product-detail-title {
@@ -691,6 +716,10 @@
 }
 
 @media (max-width: 900px) {
+    .product-detail-container {
+        padding-top: 80px;
+        /* Maintain top padding */
+    }
 
     .main-section,
     .first-section,
@@ -703,12 +732,14 @@
     .first-left,
     .second-left,
     .third-left {
-        height: 60vh;
+        min-height: 60vh;
+        /* Change from height to min-height */
     }
 
     .main-right {
         padding: 1.5rem;
-        height: 60vh;
+        min-height: 60vh;
+        /* Change from height to min-height */
     }
 
     .product-detail-title {
@@ -753,6 +784,10 @@
 }
 
 @media (max-width: 768px) {
+    .product-detail-container {
+        padding-top: 80px;
+        /* Maintain top padding on mobile */
+    }
 
     .main-section,
     .first-section,
@@ -862,6 +897,10 @@
 }
 
 @media (max-width: 600px) {
+    .product-detail-container {
+        padding-top: 80px;
+        /* Maintain top padding */
+    }
 
     .main-section,
     .first-section,
@@ -945,6 +984,10 @@
 }
 
 @media (max-width: 480px) {
+    .product-detail-container {
+        padding-top: 80px;
+        /* Maintain top padding */
+    }
 
     .main-section,
     .first-section,
@@ -1030,6 +1073,8 @@
 @media (max-width: 320px) {
     .product-detail-container {
         margin-bottom: 40px;
+        padding-top: 80px !important;
+        /* Maintain top padding */
     }
 
     .main-section,
@@ -1046,7 +1091,8 @@
     .third-left {
         min-height: 160px !important;
         padding: 0.5rem !important;
-        margin-top: 7rem !important;
+        margin-top: 0 !important;
+        /* Remove the margin-top that was pushing content down */
     }
 
     .main-right {
@@ -1187,6 +1233,10 @@
 }
 
 @media (min-width: 321px) and (max-width: 360px) {
+    .product-detail-container {
+        padding-top: 80px !important;
+        /* Maintain top padding */
+    }
 
     .main-section,
     .first-section,
@@ -1272,6 +1322,8 @@
 @media (min-width: 361px) and (max-width: 375px) {
     .product-detail-container {
         margin-bottom: 50px;
+        padding-top: 80px !important;
+        /* Maintain top padding */
     }
 
     .main-section,
@@ -1431,6 +1483,8 @@
 @media (min-width: 321px) and (max-width: 360px) {
     .product-detail-container {
         margin-bottom: 45px;
+        padding-top: 80px !important;
+        /* Maintain top padding */
     }
 
     .main-section,
@@ -1590,6 +1644,8 @@
 @media (min-width: 361px) and (max-width: 390px) {
     .product-detail-container {
         margin-bottom: 52px;
+        padding-top: 80px !important;
+        /* Maintain top padding */
     }
 
     .main-section,
@@ -1598,7 +1654,8 @@
     .third-section {
         padding: 0.85rem 0.6rem !important;
         min-height: auto !important;
-        margin-top: 8rem !important;
+        margin-top: 0 !important;
+        /* Remove margin-top */
     }
 
     .main-left,
@@ -1750,6 +1807,8 @@
 @media (min-width: 391px) and (max-width: 414px) {
     .product-detail-container {
         margin-bottom: 55px;
+        padding-top: 80px !important;
+        /* Maintain top padding */
     }
 
     .main-section,
@@ -1908,6 +1967,8 @@
 @media (min-width: 376px) and (max-width: 425px) {
     .product-detail-container {
         margin-bottom: 60px;
+        padding-top: 80px !important;
+        /* Maintain top padding */
     }
 
     .first-more-text p,
@@ -1923,7 +1984,8 @@
     .third-section {
         padding: 1rem 0.75rem !important;
         min-height: auto !important;
-        margin-top: 9rem !important;
+        margin-top: 0 !important;
+        /* Remove margin-top */
     }
 
     .main-left,
@@ -2075,6 +2137,8 @@
 @media (min-width: 426px) and (max-width: 480px) {
     .product-detail-container {
         margin-bottom: 65px;
+        padding-top: 80px !important;
+        /* Maintain top padding */
     }
 
     .main-section,

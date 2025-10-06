@@ -10,6 +10,7 @@ const messages = {
         contact: 'Əlaqə',
         team: 'Kollektiv',
         references: 'Referanslar',
+        phone: 'Telefon',
     },
     en: {
         home: 'Home',
@@ -22,6 +23,7 @@ const messages = {
         contact: 'Contact',
         team: 'Team',
         references: 'References',
+        phone: 'Phone',
     },
     ru: {
         home: 'Главная',
@@ -34,6 +36,7 @@ const messages = {
         contact: 'Контакты',
         team: 'Коллектив',
         references: 'Референсы',
+        phone: 'Телефон',
     },
 };
 

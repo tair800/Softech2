@@ -41,6 +41,15 @@ export const StaggeredMenu = ({
     const itemEntranceTweenRef = useRef(null);
     const { language, setLanguage } = useLanguage();
 
+    // Translation function
+    const t = (key) => {
+        const dict = {
+            language: { az: 'Dil', en: 'Language', ru: 'Язык' },
+            phone: { az: 'Telefon', en: 'Phone', ru: 'Мобильный ' }
+        };
+        return (dict[key] && (dict[key][language] || dict[key].en)) || key;
+    };
+
     // Update text lines based on language
     useLayoutEffect(() => {
         const symbols = {
@@ -467,7 +476,7 @@ export const StaggeredMenu = ({
                     )}
 
                     <div className="sm-lang" aria-label="Language selector">
-                        <h3 className="sm-lang-title">Language</h3>
+                        <h3 className="sm-lang-title">{t('language')}</h3>
                         <div className="sm-lang-options">
                             <button
                                 type="button"
@@ -494,7 +503,7 @@ export const StaggeredMenu = ({
                     </div>
 
                     <div className="sm-phone" aria-label="Phone number">
-                        <h3 className="sm-phone-title">Phone</h3>
+                        <h3 className="sm-phone-title">{t('phone')}</h3>
                         <a href="tel:+994552742303" className="sm-phone-number">
                             +994 55 274 23 03
                         </a>

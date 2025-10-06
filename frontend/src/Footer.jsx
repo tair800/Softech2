@@ -52,14 +52,14 @@ function Footer() {
 
     // Product items with their corresponding IDs for linking
     const productItems = [
-        { name: lt('tradeWarehouse'), id: 1 },
-        { name: lt('market'), id: 2 },
-        { name: lt('restaurantModule'), id: 3 },
-        { name: lt('textileModule'), id: 4 },
-        { name: lt('creditPawn'), id: 5 },
-        { name: lt('mobileSales'), id: 6 },
-        { name: lt('pharmacyModule'), id: 7 },
-        { name: lt('manufacturingModule'), id: 8 }
+        { name: lt('tradeWarehouse'), id: 5 },      // Ticarət və Anbar → product ID 5
+        { name: lt('market'), id: 1 },              // Market → product ID 1
+        { name: lt('restaurantModule'), id: 7 },    // Restoran idarəetmə modulu → product ID 7
+        { name: lt('textileModule'), id: 2 },       // Tekstil Modulu → product ID 2
+        { name: lt('creditPawn'), id: 6 },          // Kredit və Lombard → product ID 6
+        { name: lt('mobileSales'), id: 3 },         // Mobil Satış → product ID 3
+        { name: lt('pharmacyModule'), id: 4 },      // Aptek → product ID 4
+        { name: lt('manufacturingModule'), id: 8 }  // İstehsal idarəetmə → product ID 8
     ];
     return (
         <footer className="footer">

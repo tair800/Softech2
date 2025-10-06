@@ -13,6 +13,7 @@ function Products() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [splineError, setSplineError] = useState(false);
+    const [splineLoaded, setSplineLoaded] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [totalProducts, setTotalProducts] = useState(0);
@@ -23,6 +24,23 @@ function Products() {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
+    // Check if Spline has already been loaded in this session
+    useEffect(() => {
+        const alreadyLoaded = sessionStorage.getItem("splineLoaded");
+        if (alreadyLoaded) {
+            setSplineLoaded(true);
+        }
+    }, []);
+
+    // Handle Spline load completion
+    const handleSplineLoad = () => {
+        setSplineLoaded(true);
+        // Only set sessionStorage if Spline actually loaded successfully
+        if (!splineError) {
+            sessionStorage.setItem("splineLoaded", "true");
+        }
+    };
 
     // Fetch all products once when language changes
     useEffect(() => {
@@ -164,8 +182,12 @@ function Products() {
                     {!splineError ? (
                         <Spline
                             scene="https://prod.spline.design/mP2TljaQ-tsNIzZt/scene.splinecode"
+                            onLoad={handleSplineLoad}
                             onError={(error) => {
                                 setSplineError(true);
+                                setSplineLoaded(false);
+                                // Clear sessionStorage if Spline fails to load
+                                sessionStorage.removeItem("splineLoaded");
                             }}
                         />
                     ) : (

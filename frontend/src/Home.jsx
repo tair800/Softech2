@@ -369,51 +369,53 @@ export default function Home() {
   // Update transform for smooth scrolling
   useEffect(() => {
     if (scrollerRef.current && slides.length > 0) {
-      // Check if we're on 393x852 or iPhone 12 Pro (390x844) screen size
+      // Check if we're on mobile (768px and below) for single image mode
+      const isMobile = window.innerWidth <= 768;
       const is393x852 = window.innerWidth === 393 && window.innerHeight === 852;
       const isIPhone12Pro = window.innerWidth === 390 && window.innerHeight === 844;
-      const isSingleImageMode = is393x852 || isIPhone12Pro;
-      const gapWidth = isSingleImageMode ? 0 : 20; // No gap for single image mode, 20px for others
-      const slideWidth = isSingleImageMode ? window.innerWidth : imageWidth; // Full width for single image mode
-      const totalItemWidth = slideWidth + gapWidth;
+      const isSingleImageMode = isMobile || is393x852 || isIPhone12Pro;
 
-      // Debug logging
-      console.log("Slider Debug:", {
-        currentIndex,
-        imageWidth,
-        slideWidth,
-        totalItemWidth,
-        slidesLength: slides.length,
-        viewportWidth: window.innerWidth,
-        is393x852,
-        isIPhone12Pro,
-        isSingleImageMode,
-      });
+      if (isSingleImageMode) {
+        // For mobile single image mode: simple positioning
+        const slideWidth = window.innerWidth;
+        const scrollPosition = currentIndex * slideWidth;
+        scrollerRef.current.style.transform = `translateX(-${scrollPosition}px)`;
 
-      // Let's try a different approach
-      // We want the active slide to appear in the center of the viewport
-      // The viewport width is window.innerWidth
-      // Each slide should take 1/3 of the viewport width
-      // We need to position the scroller so that the active slide is centered
+        console.log("Mobile Single Image Mode:", {
+          currentIndex,
+          slideWidth,
+          scrollPosition,
+          viewportWidth: window.innerWidth
+        });
+      } else {
+        // For desktop multi-image mode: center the active slide
+        const gapWidth = 20;
+        const slideWidth = imageWidth;
+        const totalItemWidth = slideWidth + gapWidth;
 
-      // Calculate the center position of the viewport
-      const viewportCenter = window.innerWidth / 2;
+        // Calculate the center position of the viewport
+        const viewportCenter = window.innerWidth / 2;
 
-      // Calculate the position of the active slide in the middle copy
-      const middleCopyStart = slides.length * totalItemWidth;
-      const activeSlidePosition =
-        middleCopyStart + currentIndex * totalItemWidth;
+        // Calculate the position of the active slide in the middle copy
+        const middleCopyStart = slides.length * totalItemWidth;
+        const activeSlidePosition = middleCopyStart + currentIndex * totalItemWidth;
 
-      // Calculate how much we need to move the scroller to center the active slide
-      const slideCenter = activeSlidePosition + slideWidth / 2;
-      const scrollPosition = slideCenter - viewportCenter;
+        // Calculate how much we need to move the scroller to center the active slide
+        const slideCenter = activeSlidePosition + slideWidth / 2;
+        const scrollPosition = slideCenter - viewportCenter;
 
-      console.log("Viewport center:", viewportCenter);
-      console.log("Active slide position:", activeSlidePosition);
-      console.log("Slide center:", slideCenter);
-      console.log("Scroll position:", scrollPosition);
+        scrollerRef.current.style.transform = `translateX(-${scrollPosition}px)`;
 
-      scrollerRef.current.style.transform = `translateX(-${scrollPosition}px)`;
+        console.log("Desktop Multi-Image Mode:", {
+          currentIndex,
+          slideWidth,
+          totalItemWidth,
+          viewportCenter,
+          activeSlidePosition,
+          slideCenter,
+          scrollPosition
+        });
+      }
     }
   }, [currentIndex, imageWidth, slides.length]);
 
@@ -477,9 +479,8 @@ export default function Home() {
               ref={scrollerRef}
               className="image-scroller"
               style={{
-                width: `${slides.length *
-                  ((window.innerWidth === 393 && window.innerHeight === 852) ||
-                    (window.innerWidth === 390 && window.innerHeight === 844)
+                width: `${slides.length * 3 *
+                  (window.innerWidth <= 768
                     ? window.innerWidth
                     : imageWidth + 20)
                   }px`,
@@ -490,8 +491,7 @@ export default function Home() {
                   key={`${index}-${slide.id}`}
                   className={`image-slide ${slide.productId ? 'clickable' : ''}`}
                   style={{
-                    width: `${(window.innerWidth === 393 && window.innerHeight === 852) ||
-                      (window.innerWidth === 390 && window.innerHeight === 844)
+                    width: `${window.innerWidth <= 768
                       ? window.innerWidth
                       : imageWidth
                       }px`,

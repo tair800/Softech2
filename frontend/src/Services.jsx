@@ -13,12 +13,30 @@ function Services() {
     const [refetching, setRefetching] = useState(false);
     const [error, setError] = useState(null);
     const [splineError, setSplineError] = useState(false);
+    const [splineLoaded, setSplineLoaded] = useState(false);
     const { language } = useLanguage();
 
     // Scroll to top when component mounts
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
+    // Check if Spline has already been loaded in this session
+    useEffect(() => {
+        const alreadyLoaded = sessionStorage.getItem("splineLoaded");
+        if (alreadyLoaded) {
+            setSplineLoaded(true);
+        }
+    }, []);
+
+    // Handle Spline load completion
+    const handleSplineLoad = () => {
+        setSplineLoaded(true);
+        // Only set sessionStorage if Spline actually loaded successfully
+        if (!splineError) {
+            sessionStorage.setItem("splineLoaded", "true");
+        }
+    };
 
     useEffect(() => {
         const fetchServices = async () => {
@@ -56,7 +74,13 @@ function Services() {
     const memoizedSpline = useMemo(() => (
         <Spline
             scene="https://prod.spline.design/mP2TljaQ-tsNIzZt/scene.splinecode"
-            onError={() => setSplineError(true)}
+            onLoad={handleSplineLoad}
+            onError={() => {
+                setSplineError(true);
+                setSplineLoaded(false);
+                // Clear sessionStorage if Spline fails to load
+                sessionStorage.removeItem("splineLoaded");
+            }}
         />
     ), []);
 

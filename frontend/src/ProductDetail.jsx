@@ -128,18 +128,16 @@ function ProductDetail() {
 
     const scrollToSection = (sectionIndex) => {
         setCurrentSection(sectionIndex);
-        let targetRef;
 
         if (sectionIndex === 0) {
-            // Start - scroll to main section
-            targetRef = mainSectionRef.current;
+            // Start - scroll to the very top of the page
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
             // Scroll to dynamic section
-            targetRef = sectionRefs.current[sectionIndex - 1];
-        }
-
-        if (targetRef) {
-            targetRef.scrollIntoView({ behavior: 'smooth' });
+            const targetRef = sectionRefs.current[sectionIndex - 1];
+            if (targetRef) {
+                targetRef.scrollIntoView({ behavior: 'smooth' });
+            }
         }
     };
 
@@ -179,10 +177,12 @@ function ProductDetail() {
         if (scrollerWrapper) {
             scrollerWrapper.classList.remove('visible');
         }
-        // Scroll back to main section
+        // Scroll back to the very top of the page
         setTimeout(() => {
             setShowSections(false);
-            scrollToSection(0);
+            setCurrentSection(0);
+            // Scroll to the very top of the page
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 300);
     };
 

@@ -6,7 +6,16 @@ const LazySpline = ({ scene, fallbackImage, className, style }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [splineError, setSplineError] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [splineLoaded, setSplineLoaded] = useState(false);
     const containerRef = useRef(null);
+
+    // Check if Spline has already been loaded in this session
+    useEffect(() => {
+        const alreadyLoaded = sessionStorage.getItem("splineLoaded");
+        if (alreadyLoaded) {
+            setSplineLoaded(true);
+        }
+    }, []);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -30,6 +39,16 @@ const LazySpline = ({ scene, fallbackImage, className, style }) => {
             observer.disconnect();
         };
     }, []);
+
+    // Handle Spline load completion
+    const handleSplineLoad = () => {
+        setSplineLoaded(true);
+        setIsLoaded(true);
+        // Only set sessionStorage if Spline actually loaded successfully
+        if (!splineError) {
+            sessionStorage.setItem("splineLoaded", "true");
+        }
+    };
 
     // Cleanup function for memory management
     useEffect(() => {
@@ -75,8 +94,13 @@ const LazySpline = ({ scene, fallbackImage, className, style }) => {
                 >
                     <Spline
                         scene={scene}
-                        onError={() => setSplineError(true)}
-                        onLoad={() => setIsLoaded(true)}
+                        onError={() => {
+                            setSplineError(true);
+                            setSplineLoaded(false);
+                            // Clear sessionStorage if Spline fails to load
+                            sessionStorage.removeItem("splineLoaded");
+                        }}
+                        onLoad={handleSplineLoad}
                     />
                 </ErrorBoundary>
             )}

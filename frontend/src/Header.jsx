@@ -64,7 +64,7 @@ function Header() {
                         onMouseLeave={() => setPhoneTooltipVisible(false)}
                     >
                         <a href="tel:+994552742303" className="phone-link">
-                            <img src={phoneIcon} alt="Phone" className="phone-icon" width="19.25" height="19.25" />
+                            <img src={phoneIcon} alt={t('phone', language)} className="phone-icon" width="19.25" height="19.25" />
                         </a>
                         <div className={`phone-tooltip ${phoneTooltipVisible ? 'show' : ''}`}>
                             +994 55 274 23 03

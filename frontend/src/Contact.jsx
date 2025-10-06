@@ -19,16 +19,31 @@ function Contact() {
     const [splineError, setSplineError] = useState(false);
     const [submitStatus, setSubmitStatus] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [splineLoaded, setSplineLoaded] = useState(false);
 
     // Scroll to top when component mounts
     useEffect(() => {
         window.scrollTo(0, 0);
-        // Simulate loading for Contact page
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-        }, 100);
-        return () => clearTimeout(timer);
     }, []);
+
+    // Check if Spline has already been loaded in this session
+    useEffect(() => {
+        const alreadyLoaded = sessionStorage.getItem("splineLoaded");
+        if (alreadyLoaded) {
+            setSplineLoaded(true);
+            setIsLoading(false);
+        }
+    }, []);
+
+    // Handle Spline load completion
+    const handleSplineLoad = () => {
+        setSplineLoaded(true);
+        // Only set sessionStorage if Spline actually loaded successfully
+        if (!splineError) {
+            sessionStorage.setItem("splineLoaded", "true");
+        }
+        setIsLoading(false);
+    };
 
     const handleChange = (e) => {
         setFormData({
@@ -72,14 +87,14 @@ function Contact() {
             locationFull: { az: 'Bakı, Azərbaycan', en: 'Baku, Azerbaijan', ru: 'Баку, Азербайджан' },
             yourInfo: { az: 'Sizin məlumatlarınız', en: 'Your information', ru: 'Ваша информация' },
             nameLabel: { az: 'Adınız', en: 'Your name', ru: 'Ваше имя' },
-            namePh: { az: 'Sənin adın', en: 'Your name', ru: 'Ваше имя' },
+            namePh: { az: 'Sizin adınız', en: 'Your name', ru: 'Ваше имя' },
             emailLabel: { az: 'Elektron poçt', en: 'Email', ru: 'Электронная почта' },
-            emailPh: { az: 'Sənin elektron poçtun', en: 'Your email', ru: 'Ваш email' },
+            emailPh: { az: 'Sizin elektron poçtunuz', en: 'Your email', ru: 'Ваш email' },
             subjectLabel: { az: 'Mövzu', en: 'Subject', ru: 'Тема' },
             subjectPh: { az: 'Mesajın mövzusu', en: 'Message subject', ru: 'Тема сообщения' },
             messageLabel: { az: 'Şərh / Sual', en: 'Comment / Question', ru: 'Комментарий / Вопрос' },
-            messagePh: { az: 'Mesajın', en: 'Your message', ru: 'Ваше сообщение' },
-            send: { az: 'Göndər', en: 'Send', ru: 'Отправить' }
+            messagePh: { az: 'Mesajınız ', en: 'Your message', ru: 'Ваше сообщение' },
+            send: { az: 'Göndərin', en: 'Send', ru: 'Отправить' }
         };
         return (dict[key] && (dict[key][language] || dict[key].az)) || key;
     };
@@ -95,8 +110,12 @@ function Contact() {
                     {!splineError ? (
                         <Spline
                             scene="https://prod.spline.design/mP2TljaQ-tsNIzZt/scene.splinecode"
+                            onLoad={handleSplineLoad}
                             onError={(error) => {
                                 setSplineError(true);
+                                setSplineLoaded(false);
+                                // Clear sessionStorage if Spline fails to load
+                                sessionStorage.removeItem("splineLoaded");
                             }}
                         />
                     ) : (
