@@ -7,3 +7,6 @@
 # Build output folders
 bin/
 obj/
+
+# Ignore frontend dependencies
+**/node_modules/
