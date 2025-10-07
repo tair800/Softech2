@@ -593,6 +593,34 @@
         height: 280px;
     }
 
+    /* When only one card exists, make it bigger on mobile */
+    .blog-slider-cards:has(.blog-slider-card:nth-child(1):last-child) .blog-slider-card-big {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .blog-slider-cards:has(.blog-slider-card:nth-child(1):last-child) .blog-image-card {
+        height: 280px;
+    }
+
+    .blog-slider-cards:has(.blog-slider-card:nth-child(1):last-child) .blog-image-card.tall {
+        height: 400px;
+    }
+
+    /* When only two cards exist, make them bigger on mobile */
+    .blog-slider-cards:has(.blog-slider-card:nth-child(2):last-child) .blog-slider-card-big {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .blog-slider-cards:has(.blog-slider-card:nth-child(2):last-child) .blog-image-card {
+        height: 280px;
+    }
+
+    .blog-slider-cards:has(.blog-slider-card:nth-child(2):last-child) .blog-image-card.tall {
+        height: 400px;
+    }
+
     .blog-slider-navigation {
         gap: 8px;
         margin-top: 20px;
@@ -621,6 +649,34 @@
         height: 260px;
     }
 
+    /* When only one card exists, make it bigger on smaller mobile */
+    .blog-slider-cards:has(.blog-slider-card:nth-child(1):last-child) .blog-slider-card-big {
+        flex: 0 0 95%;
+        max-width: 95%;
+    }
+
+    .blog-slider-cards:has(.blog-slider-card:nth-child(1):last-child) .blog-image-card {
+        height: 250px;
+    }
+
+    .blog-slider-cards:has(.blog-slider-card:nth-child(1):last-child) .blog-image-card.tall {
+        height: 360px;
+    }
+
+    /* When only two cards exist, make them bigger on smaller mobile */
+    .blog-slider-cards:has(.blog-slider-card:nth-child(2):last-child) .blog-slider-card-big {
+        flex: 0 0 95%;
+        max-width: 95%;
+    }
+
+    .blog-slider-cards:has(.blog-slider-card:nth-child(2):last-child) .blog-image-card {
+        height: 250px;
+    }
+
+    .blog-slider-cards:has(.blog-slider-card:nth-child(2):last-child) .blog-image-card.tall {
+        height: 360px;
+    }
+
     .blog-slider-navigation {
         gap: 6px;
         margin-top: 15px;
@@ -647,6 +703,34 @@
 
     .blog-image-card.tall {
         height: 320px;
+    }
+
+    /* When only one card exists, make it bigger on iPhone 12 Pro */
+    .blog-slider-cards:has(.blog-slider-card:nth-child(1):last-child) .blog-slider-card-big {
+        flex: 0 0 92%;
+        max-width: 92%;
+    }
+
+    .blog-slider-cards:has(.blog-slider-card:nth-child(1):last-child) .blog-image-card {
+        height: 280px;
+    }
+
+    .blog-slider-cards:has(.blog-slider-card:nth-child(1):last-child) .blog-image-card.tall {
+        height: 380px;
+    }
+
+    /* When only two cards exist, make them bigger on iPhone 12 Pro */
+    .blog-slider-cards:has(.blog-slider-card:nth-child(2):last-child) .blog-slider-card-big {
+        flex: 0 0 92%;
+        max-width: 92%;
+    }
+
+    .blog-slider-cards:has(.blog-slider-card:nth-child(2):last-child) .blog-image-card {
+        height: 280px;
+    }
+
+    .blog-slider-cards:has(.blog-slider-card:nth-child(2):last-child) .blog-image-card.tall {
+        height: 380px;
     }
 
     .blog-slider-navigation {
