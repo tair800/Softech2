@@ -16,6 +16,11 @@ function EquipmentDetail() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [similarCurrentPage, setSimilarCurrentPage] = useState(0);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [filteredSimilarEquipment, setFilteredSimilarEquipment] = useState([]);
+    const [categoryStartIndex, setCategoryStartIndex] = useState(0);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
@@ -34,6 +39,24 @@ function EquipmentDetail() {
         // default 'en'
         return valueEn || valueRu || valueFallback;
     };
+
+    // Handle window resize for responsive category display
+    useEffect(() => {
+        const handleResize = () => {
+            const mobile = window.innerWidth <= 768;
+            setIsMobile(mobile);
+
+            // Reset category index if needed when switching between mobile/desktop
+            const categoriesPerPage = mobile ? 3 : 6;
+            const maxIndex = Math.max(0, categories.length - categoriesPerPage);
+            if (categoryStartIndex > maxIndex) {
+                setCategoryStartIndex(maxIndex);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [categories.length, categoryStartIndex]);
 
     // Fetch equipment detail (data is language-agnostic; we transform at render time)
     useEffect(() => {
@@ -54,19 +77,47 @@ function EquipmentDetail() {
         fetchEquipment();
     }, [id]);
 
-    // Fetch similar equipment
+    // Fetch similar equipment and categories
     useEffect(() => {
         const fetchSimilarEquipment = async () => {
             try {
-                const res = await fetch(`${API}/equipment`);
-                if (!res.ok) throw new Error('Failed to load similar equipment');
-                const data = await res.json();
+                const [equipmentRes, categoriesRes] = await Promise.all([
+                    fetch(`${API}/equipment/full`), // Use /full endpoint to get equipment with categories
+                    fetch(`${API}/equipment/categories`)
+                ]);
 
-                // Filter out current equipment only
-                const filtered = data.filter(item => item.id !== parseInt(id));
+                if (!equipmentRes.ok) throw new Error('Failed to load similar equipment');
+                if (!categoriesRes.ok) throw new Error('Failed to load categories');
 
-                // Use all available equipment (no artificial limit)
+                const equipmentData = await equipmentRes.json();
+                const categoriesData = await categoriesRes.json();
+
+                // Include current equipment in similar equipment list
+                const filtered = equipmentData;
+
+                // Debug: Log equipment structure
+                console.log('Equipment data structure:', filtered[0]);
+                console.log('All equipment data:', filtered);
+                console.log('Categories data:', categoriesData);
+
+                // Check if any equipment has categories
+                const equipmentWithCategories = filtered.filter(item => item.categories || item.categoryId);
+                console.log('Equipment with categories:', equipmentWithCategories);
+
+                // Use all categories
                 setSimilarEquipment(filtered);
+                setFilteredSimilarEquipment(filtered);
+                setCategories(categoriesData);
+
+                // Set active category based on current equipment
+                if (equipment && equipment.categories && equipment.categories.length > 0) {
+                    setSelectedCategory(equipment.categories[0].id);
+                    // Filter to show equipment from the same category as current equipment
+                    const sameCategoryEquipment = filtered.filter(item =>
+                        item.categories && item.categories.some(cat => cat.id === equipment.categories[0].id)
+                    );
+                    setFilteredSimilarEquipment(sameCategoryEquipment);
+                }
             } catch (e) {
                 console.error('Error loading similar equipment:', e);
             }
@@ -86,8 +137,62 @@ function EquipmentDetail() {
         setSimilarCurrentPage(Math.max(0, Math.min(currentPageIndex, totalSimilarPages - 1)));
     };
 
+    // Handle category filter
+    const handleCategoryFilter = (categoryId) => {
+        if (selectedCategory === categoryId) {
+            // If same category clicked, show all
+            setSelectedCategory(null);
+            setFilteredSimilarEquipment(similarEquipment);
+        } else {
+            // Filter by selected category
+            setSelectedCategory(categoryId);
+            const filtered = similarEquipment.filter(item => {
+                // Check if equipment has categories and if any category matches
+                if (item.categories && Array.isArray(item.categories)) {
+                    return item.categories.some(cat => cat.id === categoryId);
+                }
+                // Fallback: check if equipment has categoryId field directly
+                if (item.categoryId) {
+                    return item.categoryId === categoryId;
+                }
+                return false;
+            });
+
+            // Also include current equipment if it belongs to the selected category
+            const currentEquipmentMatches = equipment && equipment.categories &&
+                equipment.categories.some(cat => cat.id === categoryId);
+
+            if (currentEquipmentMatches) {
+                filtered.unshift(equipment); // Add current equipment at the beginning
+            }
+
+            setFilteredSimilarEquipment(filtered);
+            console.log(`Filtering by category ${categoryId}:`, filtered);
+        }
+        setSimilarCurrentPage(0); // Reset to first page
+    };
+
+    // Handle category pagination - move one category at a time
+    const handleCategoryPrevious = () => {
+        setCategoryStartIndex(prev => Math.max(0, prev - 1));
+    };
+
+    const handleCategoryNext = () => {
+        const categoriesPerPage = isMobile ? 3 : 6;
+        const maxIndex = Math.max(0, categories.length - categoriesPerPage);
+        setCategoryStartIndex(prev => Math.min(maxIndex, prev + 1));
+    };
+
+    // Get visible categories - responsive based on screen size
+    const getVisibleCategories = () => {
+        const categoriesPerPage = isMobile ? 3 : 6;
+        return categories.slice(categoryStartIndex, categoryStartIndex + categoriesPerPage);
+    };
+
+    const visibleCategories = getVisibleCategories();
+
     // Calculate total pages for similar equipment (5 cards per page)
-    const totalSimilarPages = Math.ceil(similarEquipment.length / 5);
+    const totalSimilarPages = Math.ceil(filteredSimilarEquipment.length / 5);
 
     // Handle dot click navigation
     const handleDotClick = (pageIndex) => {
@@ -357,8 +462,12 @@ function EquipmentDetail() {
 
             <div className="similar-equipment-scroller">
                 <div className="similar-equipment-cards" onScroll={handleSimilarScroll}>
-                    {similarEquipment.map((item, index) => (
-                        <SimilarEquipmentCard key={item.id} equipment={item} />
+                    {filteredSimilarEquipment.map((item, index) => (
+                        <SimilarEquipmentCard
+                            key={item.id}
+                            equipment={item}
+                            isActive={item.id === parseInt(id)}
+                        />
                     ))}
                 </div>
 
@@ -374,6 +483,76 @@ function EquipmentDetail() {
                         ))}
                     </div>
                 )}
+            </div>
+
+            {/* Category Filter */}
+            <div className="equipment-category-filter">
+                <div className="category-filter-container">
+                    <div className="category-filter-slider">
+                        {visibleCategories.map((category) => {
+                            const categoryName = pickByLanguage(language || 'az', category.nameEn, category.nameRu, category.name);
+                            return (
+                                <button
+                                    key={category.id}
+                                    className={`category-filter-btn ${selectedCategory === category.id ? 'active' : ''}`}
+                                    onClick={() => handleCategoryFilter(category.id)}
+                                >
+                                    {categoryName}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* Arrow Navigation */}
+                <div className="category-nav-container">
+                    <button
+                        className="category-nav-arrow category-nav-arrow-left"
+                        onClick={handleCategoryPrevious}
+                        disabled={categoryStartIndex === 0}
+                        style={{ opacity: categoryStartIndex === 0 ? 0.3 : 1 }}
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </button>
+
+                    <button
+                        className="category-nav-arrow category-nav-arrow-right"
+                        onClick={handleCategoryNext}
+                        disabled={(() => {
+                            const categoriesPerPage = isMobile ? 3 : 6;
+                            return categoryStartIndex >= categories.length - categoriesPerPage;
+                        })()}
+                        style={{
+                            opacity: (() => {
+                                const categoriesPerPage = isMobile ? 3 : 6;
+                                return categoryStartIndex >= categories.length - categoriesPerPage ? 0.3 : 1;
+                            })()
+                        }}
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            {/* Back to Equipment Button */}
+            <div className="equipment-back-button-container">
+                <button
+                    className="equipment-back-btn"
+                    onClick={() => navigate('/equipment')}
+                >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span className="back-btn-text">
+                        {language === 'en' ? 'Back to Equipment' :
+                            language === 'ru' ? 'Назад к оборудованию' :
+                                'Avadanlıqlara qayıt'}
+                    </span>
+                </button>
             </div>
         </div>
     );

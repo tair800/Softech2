@@ -15,6 +15,27 @@
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
+.similar-equipment-card.active {
+    background: linear-gradient(135deg, #17DBFC 0%, #467EFE 100%);
+    transform: translateY(-8px);
+}
+
+.similar-equipment-card.active .similar-equipment-name {
+    color: white;
+}
+
+.similar-equipment-card.active .similar-version-name {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.similar-equipment-card.active .similar-blue-border-div {
+    border: 3px solid rgba(255, 255, 255, 0.8);
+}
+
+.similar-equipment-card.active:hover {
+    transform: translateY(-8px);
+}
+
 .similar-blue-border-div {
     border: 2px solid rgba(70, 126, 254, 1);
     position: absolute;

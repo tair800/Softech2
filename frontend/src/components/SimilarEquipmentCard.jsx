@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SimilarEquipmentCard.css';
 
-const SimilarEquipmentCard = ({ equipment }) => {
+const SimilarEquipmentCard = ({ equipment, isActive = false }) => {
     const navigate = useNavigate();
 
     const resolveUrl = (url) => {
@@ -33,7 +33,7 @@ const SimilarEquipmentCard = ({ equipment }) => {
 
     return (
         <div
-            className="similar-equipment-card"
+            className={`similar-equipment-card ${isActive ? 'active' : ''}`}
             onClick={handleCardClick}
             style={{ cursor: 'pointer' }}
         >

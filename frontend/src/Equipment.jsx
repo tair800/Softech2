@@ -462,7 +462,7 @@ function Equipment() {
 
                     <div className="equipment-right">
                         <div className="equipment-img-wrapper" style={slideDirection ? getSlideStyle() : resetSlideStyle()}>
-                            <div className="equipment-title-left">
+                            <div className="equipment-title-left" style={{ display: 'none' }}>
                                 <div className="equipment-product-id">{currentItem.id}</div>
                                 {currentItem.name}
                             </div>

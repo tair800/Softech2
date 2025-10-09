@@ -42,6 +42,22 @@ function About() {
         return url;
     };
 
+    // Function to resolve LinkedIn URLs
+    const resolveLinkedInUrl = (linkedinUrl) => {
+        console.log('LinkedIn URL received:', linkedinUrl); // Debug
+        if (!linkedinUrl) {
+            console.log('LinkedIn URL is empty, returning #');
+            return '#';
+        }
+        if (linkedinUrl.startsWith('http://') || linkedinUrl.startsWith('https://')) {
+            console.log('LinkedIn URL has protocol:', linkedinUrl);
+            return linkedinUrl;
+        }
+        const fullUrl = `https://${linkedinUrl}`;
+        console.log('LinkedIn URL without protocol, adding https:', fullUrl);
+        return fullUrl;
+    };
+
     // Handle Spline load completion
     const handleSplineLoad = () => {
         setSplineLoaded(true);
@@ -81,16 +97,20 @@ function About() {
                 ]);
                 if (empRes.ok) {
                     const employees = await empRes.json();
+                    console.log('Employees data:', employees); // Debug log
+
                     // Find the director from the API response
                     const directorEmployee = employees.find(emp =>
                         emp.position.toLowerCase().includes('direktor') ||
                         emp.position.toLowerCase().includes('director') ||
                         emp.position.toLowerCase().includes('директор')
                     );
+                    console.log('Director data:', directorEmployee); // Debug log
                     setDirector(directorEmployee);
 
                     // Filter out the director from the team members list
                     const otherEmployees = employees.filter(emp => emp.id !== directorEmployee?.id);
+                    console.log('Team members data:', otherEmployees); // Debug log
                     setTeamMembersState(otherEmployees);
                 }
                 if (refRes.ok) setLogosState(await refRes.json());
@@ -195,9 +215,22 @@ function About() {
                 <img src={resolveUrl(director?.imageUrl) || "/assets/market4.png"} alt="Director" className="about-director-img" />
                 <div className="about-name">{translated.directorName}</div>
                 <div className="about-position">{translated.directorPosition}</div>
-                <div>
+                <div className="about-description-wrapper">
                     <p className="about-description-text">{translated.directorDescription}</p>
-                    <img src="/assets/comma.png" alt="Comma" className="about-comma" />
+                    <div className="about-comma-container">
+                        <img src="/assets/comma.png" alt="Comma" className="about-comma" />
+                        <div className="about-director-contacts">
+                            <a href={`tel:${director?.phone}`}>
+                                <img src={phoneIcon} alt="Phone" />
+                            </a>
+                            <a href={`mailto:${director?.email}`}>
+                                <img src={mailIcon} alt="Email" />
+                            </a>
+                            <a href={resolveLinkedInUrl(director?.linkedIn || director?.linkedin)} target="_blank" rel="noopener noreferrer">
+                                <img src={linkedinIcon} alt="LinkedIn" className="linkedin-icon" />
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -217,7 +250,7 @@ function About() {
                                 <a href={`mailto:${member.email}`}>
                                     <img src={mailIcon} alt="Email" />
                                 </a>
-                                <a href={member.linkedin} target="_blank" rel="noopener noreferrer">
+                                <a href={resolveLinkedInUrl(member.linkedIn || member.linkedin)} target="_blank" rel="noopener noreferrer">
                                     <img src={linkedinIcon} alt="LinkedIn" className="linkedin-icon" />
                                 </a>
                             </div>

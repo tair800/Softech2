@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 import { Link } from 'react-router-dom';
-import logoWhite from '/assets/logo-white.png';
+import logoWhite from '/assets/Footer.svg';
 import footerLogo from '/assets/footer-new.png';
 import nextIcon from '/assets/next.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

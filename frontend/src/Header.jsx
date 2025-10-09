@@ -4,7 +4,7 @@ import logoIcon from '/assets/logo-icon.png';
 import logoText from '/assets/logo-text.png';
 import globeImg from '/assets/globe.png';
 import dropdownIcon from '/assets/dropdown-icon.png';
-import logoWhite from '/assets/logo-white.png';
+import logoWhite from '/assets/Header.svg';
 import phoneIcon from '/assets/phone.svg';
 
 import './Header.css';

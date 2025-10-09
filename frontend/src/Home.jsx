@@ -6,7 +6,7 @@ import "./Home.css";
 import "./components/PageTitle.css";
 import prevIcon from "/assets/prev.png";
 import nextIcon from "/assets/next.png";
-import logoIcon from "/assets/logo-icon.png";
+import logoIcon from "/assets/LogoNew.svg";
 import logoText from "/assets/logo-text.png";
 
 function CircularProgress({ currentIndex, totalSlides, slides, language, onSliderClick }) {

@@ -406,15 +406,66 @@
   opacity: 0.5
 }
 
+.about-description-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.about-comma-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  margin-top: 10px;
+  margin-left: -80px;
+}
+
 .about-comma {
   width: 40px;
   height: auto;
-  right: 80px;
   position: relative;
   z-index: 1;
   filter: brightness(0) invert(1);
   transform: rotate(180deg);
   opacity: 0.5;
+}
+
+.about-director-contacts {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-right: -35%;
+}
+
+.about-director-contacts a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  z-index: 10;
+}
+
+.about-director-contacts a:hover {
+  background: rgba(70, 126, 254, 0.2);
+  transform: translateY(-2px);
+}
+
+.about-director-contacts img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+.about-director-contacts .linkedin-icon {
+  width: 22px;
+  height: 22px;
 }
 
 /* Loading Overlay */
@@ -529,6 +580,13 @@
   justify-content: center;
   gap: 7px;
   align-items: center;
+}
+
+.card-contacts a {
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  z-index: 10;
 }
 
 .card-contacts svg,
@@ -900,10 +958,29 @@
     margin: 0 0 1rem 0;
   }
 
+  .about-comma-container {
+    flex-direction: column;
+    gap: 20px;
+    margin-left: 0;
+    align-items: center;
+  }
+
   .about-comma {
     width: 30px;
-    right: 0;
-    margin: 1rem auto 0 auto;
+  }
+
+  .about-director-contacts {
+    margin-right: 0;
+  }
+
+  .about-director-contacts a {
+    width: 35px;
+    height: 35px;
+  }
+
+  .about-director-contacts img {
+    width: 18px;
+    height: 18px;
   }
 
   .team-card {
@@ -1009,8 +1086,22 @@
     font-size: 11px;
   }
 
+  .about-comma-container {
+    gap: 15px;
+  }
+
   .about-comma {
     width: 25px;
+  }
+
+  .about-director-contacts a {
+    width: 32px;
+    height: 32px;
+  }
+
+  .about-director-contacts img {
+    width: 16px;
+    height: 16px;
   }
 
   .team-card {
@@ -1125,8 +1216,22 @@
     margin-left: 105px;
   }
 
+  .about-comma-container {
+    gap: 12px;
+  }
+
   .about-comma {
     width: 20px;
+  }
+
+  .about-director-contacts a {
+    width: 30px;
+    height: 30px;
+  }
+
+  .about-director-contacts img {
+    width: 14px;
+    height: 14px;
   }
 
   .team-card {
@@ -1334,8 +1439,22 @@
     font-size: 9px;
   }
 
+  .about-comma-container {
+    gap: 10px;
+  }
+
   .about-comma {
     width: 18px;
+  }
+
+  .about-director-contacts a {
+    width: 28px;
+    height: 28px;
+  }
+
+  .about-director-contacts img {
+    width: 12px;
+    height: 12px;
   }
 
   .team-card {
