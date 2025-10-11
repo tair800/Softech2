@@ -116,7 +116,11 @@ function EquipmentDetail() {
                     const sameCategoryEquipment = filtered.filter(item =>
                         item.categories && item.categories.some(cat => cat.id === equipment.categories[0].id)
                     );
-                    setFilteredSimilarEquipment(sameCategoryEquipment);
+                    // Remove duplicates by ensuring each equipment appears only once (by id)
+                    const uniqueSameCategoryEquipment = sameCategoryEquipment.filter((item, index, self) =>
+                        index === self.findIndex((t) => t.id === item.id)
+                    );
+                    setFilteredSimilarEquipment(uniqueSameCategoryEquipment);
                 }
             } catch (e) {
                 console.error('Error loading similar equipment:', e);
@@ -142,7 +146,11 @@ function EquipmentDetail() {
         if (selectedCategory === categoryId) {
             // If same category clicked, show all
             setSelectedCategory(null);
-            setFilteredSimilarEquipment(similarEquipment);
+            // Remove duplicates when showing all equipment
+            const uniqueAll = similarEquipment.filter((item, index, self) =>
+                index === self.findIndex((t) => t.id === item.id)
+            );
+            setFilteredSimilarEquipment(uniqueAll);
         } else {
             // Filter by selected category
             setSelectedCategory(categoryId);
@@ -158,16 +166,13 @@ function EquipmentDetail() {
                 return false;
             });
 
-            // Also include current equipment if it belongs to the selected category
-            const currentEquipmentMatches = equipment && equipment.categories &&
-                equipment.categories.some(cat => cat.id === categoryId);
+            // Remove duplicates by ensuring each equipment appears only once (by id)
+            const uniqueFiltered = filtered.filter((item, index, self) =>
+                index === self.findIndex((t) => t.id === item.id)
+            );
 
-            if (currentEquipmentMatches) {
-                filtered.unshift(equipment); // Add current equipment at the beginning
-            }
-
-            setFilteredSimilarEquipment(filtered);
-            console.log(`Filtering by category ${categoryId}:`, filtered);
+            setFilteredSimilarEquipment(uniqueFiltered);
+            console.log(`Filtering by category ${categoryId}:`, uniqueFiltered);
         }
         setSimilarCurrentPage(0); // Reset to first page
     };

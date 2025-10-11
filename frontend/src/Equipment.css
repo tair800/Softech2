@@ -1973,6 +1973,10 @@
         font-size: 11px !important;
     }
 
+    .equipment-rainbow {
+        margin-top: -2% !important;
+    }
+
     .equipment-pagination {
         background: none !important;
         backdrop-filter: none !important;
@@ -2294,5 +2298,16 @@
         height: 30px !important;
         font-size: 0.8rem !important;
         padding: 0.4rem 0.5rem !important;
+    }
+}
+
+/* 425x678 Resolution Specific Styles */
+@media (min-width: 425px) and (max-width: 425px) and (min-height: 678px) and (max-height: 678px) {
+    .equipment-rainbow {
+        margin-top: -9% !important;
+    }
+
+    .equipment-spline {
+        margin-top: 5% !important;
     }
 }

@@ -92,12 +92,36 @@
     .page-title-container.page-title-blog .page-title {
         font-size: 12px !important;
     }
+
+    .blog-content {
+        padding-bottom: 10px !important;
+    }
+
+    .blog-slider-section {
+        padding-top: 0 !important;
+    }
 }
 
 /* iPhone 12 Pro (390x844) Resolution Specific Styles */
 @media (min-width: 390px) and (max-width: 390px) and (min-height: 844px) and (max-height: 844px) {
     .blog-spline {
         margin-top: -2rem !important;
+    }
+
+
+}
+
+/* 425x678 Resolution Specific Styles */
+@media (min-width: 425px) and (max-width: 425px) and (min-height: 678px) and (max-height: 678px) {
+    .blog-container .page-title {
+        font-size: 17px !important;
+    }
+    .blog-slider-section {
+        padding-top: 0 !important;
+    }
+
+    .blog-content {
+        padding-bottom: 10px !important;
     }
 }
 

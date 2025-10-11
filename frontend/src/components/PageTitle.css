@@ -371,7 +371,7 @@
     }
 
     .page-title-container.page-title-contact {
-        top: 138px !important;
+        top: 135px !important;
     }
 
     .page-title-container.page-title-products {
@@ -417,7 +417,50 @@
     }
 
     .page-title-container.page-title-contact .page-title {
-        font-size: 14px !important;
+        font-size: 11px !important;
         margin-left: 8px;
     }
+}
+
+/* 425x678 Resolution Specific Styles */
+@media (min-width: 425px) and (max-width: 425px) and (min-height: 678px) and (max-height: 678px) {
+    .page-title-container.page-title-about {
+        top: 145px !important;
+    }
+
+    .page-title-container.page-title-contact {
+        top: 7.5% !important;
+    }
+
+    .page-title-container.page-title-contact .page-title {
+        font-size: 17px !important;
+    }
+
+    .page-title-container.page-title-equipment {
+        top: 145px !important;
+    }
+
+    .page-title-container.page-title-services {
+        top: 145px !important;
+    }
+
+    .page-title-container.page-title-products {
+        top: 145px !important;
+    }
+
+    .page-title-container.page-title-products .page-title {
+        font-size: 17px !important;
+    }
+
+    .page-title {
+        font-size: 17px !important;
+    }
+
+    .page-title-container.page-title-blog {
+        top: 165px !important;
+    }
+
+
+
+
 }
