@@ -35,7 +35,7 @@ export default function AdminCategoriesTags() {
         color: ''
     });
 
-    const API_BASE = 'https://softech-api.webonly.io/api';
+    const API_BASE = 'http://localhost:5098/api';
 
     useEffect(() => {
         fetchCategoriesAndTags();

@@ -80,11 +80,11 @@ export default function FiltersComponent({ onFilterChange, selectedLanguage = 'e
             setLoading(true);
 
             // Fetch categories without language parameter
-            const categoriesResponse = await fetch(`https://softech-api.webonly.io/api/equipment/categories`);
+            const categoriesResponse = await fetch(`http://localhost:5098/api/equipment/categories`);
             const categoriesData = await categoriesResponse.json();
 
             // Fetch tags without language parameter
-            const tagsResponse = await fetch(`https://softech-api.webonly.io/api/equipment/tags`);
+            const tagsResponse = await fetch(`http://localhost:5098/api/equipment/tags`);
             const tagsData = await tagsResponse.json();
 
             setCategories(categoriesData);

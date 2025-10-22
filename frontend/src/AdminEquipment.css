@@ -47,6 +47,11 @@
     margin: 0 !important;
 }
 
+/* Additional Images Section */
+.additional-images-section {
+    margin-bottom: 8rem !important;
+}
+
 /* Card container */
 .admin-equipment-container .admin-about-card {
     background: linear-gradient(265.98deg, rgba(70, 126, 254, 0.2) -8.44%, rgba(24, 24, 24, 0.2) 94.15%);

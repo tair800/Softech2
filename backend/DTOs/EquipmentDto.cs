@@ -25,6 +25,7 @@ namespace WebOnlyAPI.DTOs
         public List<int> TagIds { get; set; } = new List<int>();
         public List<CreateEquipmentFeatureDto> Features { get; set; } = new List<CreateEquipmentFeatureDto>();
         public List<CreateEquipmentSpecificationDto> Specifications { get; set; } = new List<CreateEquipmentSpecificationDto>();
+        public List<EquipmentImageDto> Images { get; set; } = new List<EquipmentImageDto>();
     }
 
     public class UpdateEquipmentDto
@@ -49,6 +50,7 @@ namespace WebOnlyAPI.DTOs
         public List<int> TagIds { get; set; } = new List<int>();
         public List<CreateEquipmentFeatureDto> Features { get; set; } = new List<CreateEquipmentFeatureDto>();
         public List<CreateEquipmentSpecificationDto> Specifications { get; set; } = new List<CreateEquipmentSpecificationDto>();
+        public List<EquipmentImageDto> Images { get; set; } = new List<EquipmentImageDto>();
     }
 
     public class EquipmentResponseDto
@@ -68,6 +70,15 @@ namespace WebOnlyAPI.DTOs
         public List<EquipmentSpecificationDto> Specifications { get; set; } = new List<EquipmentSpecificationDto>();
         public List<EquipmentCategoryDto> Categories { get; set; } = new List<EquipmentCategoryDto>();
         public List<EquipmentTagDto> Tags { get; set; } = new List<EquipmentTagDto>();
+        public List<EquipmentImageDto> Images { get; set; } = new List<EquipmentImageDto>();
+    }
+
+    public class EquipmentImageDto
+    {
+        public int Id { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
+        public string? Alt { get; set; }
+        public int OrderIndex { get; set; }
     }
 
     public class EquipmentFeatureDto

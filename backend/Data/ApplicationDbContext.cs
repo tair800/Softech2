@@ -22,6 +22,7 @@ namespace WebOnlyAPI.Data
         public DbSet<EquipmentTagMapping> EquipmentTagMapping { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<EquipmentImage> EquipmentImages { get; set; }
         public DbSet<ProductSection> ProductSections { get; set; }
         public DbSet<Reference> References { get; set; }
         public DbSet<Service> Services { get; set; }
@@ -75,6 +76,11 @@ namespace WebOnlyAPI.Data
                 .HasMany(p => p.Images)
                 .WithOne(i => i.Product)
                 .HasForeignKey(i => i.ProductId);
+
+            modelBuilder.Entity<Equipment>()
+                .HasMany(e => e.Images)
+                .WithOne(i => i.Equipment)
+                .HasForeignKey(i => i.EquipmentId);
 
             modelBuilder.Entity<Blog>()
                 .HasMany(b => b.Sections)

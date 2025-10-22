@@ -19,7 +19,7 @@ const SimilarEquipmentCard = ({ equipment, isActive = false }) => {
 
         // For other uploads, try the API server
         if (url.startsWith('/uploads/')) {
-            return `https://softech-api.webonly.io${url}`;
+            return `http://localhost:5098${url}`;
         }
         if (url.startsWith('/assets/')) {
             return url;

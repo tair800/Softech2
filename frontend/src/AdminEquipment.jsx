@@ -3,7 +3,7 @@ import './AdminEquipment.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 export default function AdminEquipment() {
     const [equipments, setEquipments] = useState([]);
@@ -32,7 +32,8 @@ export default function AdminEquipment() {
         categoryIds: [],
         tagIds: [],
         features: [],
-        specifications: []
+        specifications: [],
+        images: []
     });
 
     // File input refs for browse functionality
@@ -40,7 +41,7 @@ export default function AdminEquipment() {
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -56,7 +57,8 @@ export default function AdminEquipment() {
         categoryIds: [],
         tagIds: [],
         features: [],
-        specifications: []
+        specifications: [],
+        images: []
     });
 
     const loadEquipments = async () => {
@@ -187,6 +189,50 @@ export default function AdminEquipment() {
                 ...eq,
                 [type]: reorderedItems
             };
+        }));
+    };
+
+    const reorderImages = (equipmentId, fromIndex, toIndex) => {
+        setEquipments(prev => prev.map(eq => {
+            if (eq.id !== equipmentId) return eq;
+            const items = eq.images || [];
+            if (items.length === 0) return eq;
+            const newItems = [...items];
+            const [movedItem] = newItems.splice(fromIndex, 1);
+            newItems.splice(toIndex, 0, movedItem);
+            const reordered = autoReorder(newItems);
+            return { ...eq, images: reordered };
+        }));
+    };
+
+    const addImage = (equipmentId) => {
+        setEquipments(prev => prev.map(eq => {
+            if (eq.id !== equipmentId) return eq;
+            const current = eq.images || [];
+            if (current.length >= 4) return eq;
+            const next = autoReorder([...current, { id: Date.now(), imageUrl: '', alt: '', orderIndex: 0 }]);
+            return { ...eq, images: next };
+        }));
+    };
+
+    const updateImage = (equipmentId, imageIndex, field, value) => {
+        setEquipments(prev => prev.map(eq => {
+            if (eq.id !== equipmentId) return eq;
+            const items = [...(eq.images || [])];
+            while (items.length <= imageIndex) {
+                items.push({ id: Date.now() + items.length, imageUrl: '', alt: '', orderIndex: items.length });
+            }
+            items[imageIndex] = { ...items[imageIndex], [field]: value, orderIndex: imageIndex };
+            return { ...eq, images: items };
+        }));
+    };
+
+    const removeImage = (equipmentId, imageIndex) => {
+        setEquipments(prev => prev.map(eq => {
+            if (eq.id !== equipmentId) return eq;
+            const items = eq.images || [];
+            const next = autoReorder(items.filter((_, idx) => idx !== imageIndex));
+            return { ...eq, images: next };
         }));
     };
 
@@ -390,7 +436,12 @@ export default function AdminEquipment() {
                             categoryIds: form.categoryIds,
                             tagIds: form.tagIds,
                             features: form.features,
-                            specifications: form.specifications
+                            specifications: form.specifications,
+                            images: (form.images || []).filter(img => img.imageUrl && img.imageUrl.trim() !== '').map(img => ({
+                                imageUrl: img.imageUrl,
+                                alt: img.alt || '',
+                                orderIndex: img.orderIndex || 0
+                            }))
                         })
                     });
 
@@ -428,7 +479,12 @@ export default function AdminEquipment() {
                             categoryIds: form.categoryIds,
                             tagIds: form.tagIds,
                             features: (form.features || []).filter(f => f.feature && f.feature.trim() !== ''),
-                            specifications: (form.specifications || []).filter(s => s.key && s.key.trim() !== '')
+                            specifications: (form.specifications || []).filter(s => s.key && s.key.trim() !== ''),
+                            images: (form.images || []).filter(img => img.imageUrl && img.imageUrl.trim() !== '').map(img => ({
+                                imageUrl: img.imageUrl,
+                                alt: img.alt || '',
+                                orderIndex: img.orderIndex || 0
+                            }))
                         })
                     });
 
@@ -492,7 +548,12 @@ export default function AdminEquipment() {
                     categoryIds: form.categoryIds,
                     tagIds: form.tagIds,
                     features: (form.features || []).filter(f => f.feature && f.feature.trim() !== ''),
-                    specifications: (form.specifications || []).filter(s => s.key && s.key.trim() !== '')
+                    specifications: (form.specifications || []).filter(s => s.key && s.key.trim() !== ''),
+                    images: (form.images || []).filter(img => img.imageUrl && img.imageUrl.trim() !== '').map(img => ({
+                        imageUrl: img.imageUrl,
+                        alt: img.alt || '',
+                        orderIndex: img.orderIndex || 0
+                    }))
                 };
                 const res = await fetch(url, {
                     method,
@@ -634,7 +695,12 @@ export default function AdminEquipment() {
                 categoryIds: categoryIds,
                 tagIds: tagIds,
                 features: features,
-                specifications: specifications
+                specifications: specifications,
+                images: autoReorder((item.images || []).slice(0, 4)).map((img) => ({
+                    imageUrl: img.imageUrl || '',
+                    alt: img.alt || '',
+                    orderIndex: img.orderIndex || 0
+                }))
             };
 
             console.log('Sending PUT request to:', `${API}/equipment/${id}`);
@@ -728,6 +794,11 @@ export default function AdminEquipment() {
         // Check specifications
         const specsChanged = JSON.stringify(e.specifications || []) !== JSON.stringify(o.specifications || []);
         if (specsChanged) return true;
+
+        // Check images
+        const curImages = (e.images || []).map(x => ({ imageUrl: x.imageUrl || '', alt: x.alt || '', orderIndex: x.orderIndex || 0 }));
+        const origImages = (o.images || []).map(x => ({ imageUrl: x.imageUrl || '', alt: x.alt || '', orderIndex: x.orderIndex || 0 }));
+        if (JSON.stringify(curImages) !== JSON.stringify(origImages)) return true;
 
         // Check categories
         const currentCategoryIds = (e.categories || []).map(c => c.id).sort();
@@ -1308,8 +1379,8 @@ export default function AdminEquipment() {
                                                     const result = await response.json();
                                                     let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                     // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                                                    if (imageUrl.startsWith('http://localhost:5098')) {
+                                                        imageUrl = imageUrl.replace('http://localhost:5098', '');
                                                     }
                                                     setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, imageUrl, imageFile: file } : x));
                                                 } else {
@@ -1327,6 +1398,63 @@ export default function AdminEquipment() {
                                     }}
                                 />
                                 <div className="image-info">*Yüklənən şəkil aaa x bbb ölçüsündə olmalıdır. Yeniləmə düyməsi şəkil seçmək üçündür.</div>
+                            </div>
+                            {/* Detail Images (3 placeholders) */}
+                            <div className="mt-3">
+                                <div className="d-flex justify-content-between align-items-center mb-2">
+                                    <strong>Əlavə şəkillər</strong>
+                                    <small className="text-muted">Maksimum 3 ədəd</small>
+                                </div>
+                                <div className="d-flex gap-2">
+                                    {[0, 1, 2].map((k) => {
+                                        const imgObj = (e.images || [])[k + 1];
+                                        const previewUrl = imgObj?.imageUrl;
+                                        const inputId = `equipment-detail-image-${e.id}-${k}`;
+                                        return (
+                                            <div key={k} className="position-relative" style={{ width: 100, height: 80 }}>
+                                                <div className="image-placeholder" style={{ width: '100%', height: '100%', borderRadius: 8, border: '1px dashed #dee2e6', background: '#f8f9fa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                    {previewUrl ? (
+                                                        <img src={resolveUrl(previewUrl)} alt={`detail-${k + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} />
+                                                    ) : (
+                                                        <span style={{ fontSize: 11, color: '#6c757d' }}>No image</span>
+                                                    )}
+                                                </div>
+                                                <div className="image-actions position-absolute" style={{ right: '-42px', top: '50%', transform: 'translateY(-50%)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                                    <button className="action-btn delete-img" aria-label="Delete image" onClick={() => updateImage(e.id, k + 1, 'imageUrl', '')}>
+                                                        <img src="/assets/admin-trash.png" alt="Delete" />
+                                                    </button>
+                                                    <button className="action-btn refresh-img" aria-label="Browse image" onClick={() => document.getElementById(inputId)?.click()}>
+                                                        <img src="/assets/admin-refresh.png" alt="Browse" />
+                                                    </button>
+                                                </div>
+                                                <input id={inputId} type="file" accept="image/*" style={{ display: 'none' }} onChange={async (ev) => {
+                                                    const file = ev.target.files?.[0];
+                                                    if (!file) return;
+                                                    const formData = new FormData();
+                                                    formData.append('image', file);
+                                                    try {
+                                                        const response = await fetch(`${API}/upload/image`, { method: 'POST', body: formData });
+                                                        if (response.ok) {
+                                                            const result = await response.json();
+                                                            let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
+                                                            if (imageUrl.startsWith('http://localhost:5098')) imageUrl = imageUrl.replace('http://localhost:5098', '');
+                                                            updateImage(e.id, k + 1, 'imageUrl', imageUrl);
+                                                            Swal.fire('Uğurlu!', 'Şəkil yükləndi', 'success');
+                                                        } else {
+                                                            const imageUrl = URL.createObjectURL(file);
+                                                            updateImage(e.id, k + 1, 'imageUrl', imageUrl);
+                                                        }
+                                                    } catch (error) {
+                                                        const imageUrl = URL.createObjectURL(file);
+                                                        updateImage(e.id, k + 1, 'imageUrl', imageUrl);
+                                                    } finally {
+                                                        ev.target.value = '';
+                                                    }
+                                                }} />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1474,8 +1602,8 @@ export default function AdminEquipment() {
                                                         const result = await response.json();
                                                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                         // Convert full URL to relative path if needed
-                                                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                                                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                                                        if (imageUrl.startsWith('http://localhost:5098')) {
+                                                            imageUrl = imageUrl.replace('http://localhost:5098', '');
                                                         }
                                                         setForm({ ...form, imageUrl, imageFile: file });
                                                     } else {
@@ -1494,6 +1622,85 @@ export default function AdminEquipment() {
                                     />
 
                                     <div className="image-info">*Yüklənən şəkil aaa x bbb ölçüsündə olmalıdır. Yeniləmə düyməsi şəkil seçmək üçündür.</div>
+                                </div>
+                                {/* Detail Images (3 placeholders) */}
+                                <div className="mt-3 additional-images-section">
+                                    <div className="d-flex justify-content-between align-items-center mb-2">
+                                        <strong>Əlavə şəkillər</strong>
+                                        <small className="text-muted">Maksimum 3 ədəd</small>
+                                    </div>
+                                    <div className="d-flex gap-2 justify-content-center">
+                                        {[0, 1, 2].map((k) => {
+                                            const imgObj = (form.images || [])[k];
+                                            const previewUrl = imgObj?.imageUrl;
+                                            const inputId = `modal-detail-image-${k}`;
+                                            return (
+                                                <div key={k} className="position-relative" style={{ width: 100, height: 60 }}>
+                                                    <div className="image-placeholder" style={{ width: '100%', height: '100%', borderRadius: 8, border: '1px dashed #dee2e6', background: '#f8f9fa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        {previewUrl ? (
+                                                            <img src={resolveUrl(previewUrl)} alt={`detail-${k + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} />
+                                                        ) : (
+                                                            <span style={{ fontSize: 11, color: '#6c757d' }}>No image</span>
+                                                        )}
+                                                    </div>
+                                                    <div className="image-actions position-absolute" style={{ right: '-42px', top: '50%', transform: 'translateY(-50%)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                                        <button className="action-btn delete-img" aria-label="Delete image" onClick={() => {
+                                                            const newImages = [...(form.images || [])];
+                                                            if (newImages[k]) {
+                                                                newImages[k] = { ...newImages[k], imageUrl: '' };
+                                                                setForm(prev => ({ ...prev, images: newImages }));
+                                                            }
+                                                        }}>
+                                                            <img src="/assets/admin-trash.png" alt="Delete" />
+                                                        </button>
+                                                        <button className="action-btn refresh-img" aria-label="Browse image" onClick={() => document.getElementById(inputId)?.click()}>
+                                                            <img src="/assets/admin-refresh.png" alt="Browse" />
+                                                        </button>
+                                                    </div>
+                                                    <input id={inputId} type="file" accept="image/*" style={{ display: 'none' }} onChange={async (ev) => {
+                                                        const file = ev.target.files?.[0];
+                                                        if (!file) return;
+                                                        const formData = new FormData();
+                                                        formData.append('image', file);
+                                                        try {
+                                                            const response = await fetch(`${API}/upload/image`, { method: 'POST', body: formData });
+                                                            if (response.ok) {
+                                                                const result = await response.json();
+                                                                let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
+                                                                if (imageUrl.startsWith('http://localhost:5098')) imageUrl = imageUrl.replace('http://localhost:5098', '');
+
+                                                                const newImages = [...(form.images || [])];
+                                                                while (newImages.length <= k) {
+                                                                    newImages.push({ id: Date.now() + newImages.length, imageUrl: '', alt: '', orderIndex: newImages.length });
+                                                                }
+                                                                newImages[k] = { ...newImages[k], imageUrl };
+                                                                setForm(prev => ({ ...prev, images: newImages }));
+                                                                Swal.fire('Uğurlu!', 'Şəkil yükləndi', 'success');
+                                                            } else {
+                                                                const imageUrl = URL.createObjectURL(file);
+                                                                const newImages = [...(form.images || [])];
+                                                                while (newImages.length <= k) {
+                                                                    newImages.push({ id: Date.now() + newImages.length, imageUrl: '', alt: '', orderIndex: newImages.length });
+                                                                }
+                                                                newImages[k] = { ...newImages[k], imageUrl };
+                                                                setForm(prev => ({ ...prev, images: newImages }));
+                                                            }
+                                                        } catch (error) {
+                                                            const imageUrl = URL.createObjectURL(file);
+                                                            const newImages = [...(form.images || [])];
+                                                            while (newImages.length <= k) {
+                                                                newImages.push({ id: Date.now() + newImages.length, imageUrl: '', alt: '', orderIndex: newImages.length });
+                                                            }
+                                                            newImages[k] = { ...newImages[k], imageUrl };
+                                                            setForm(prev => ({ ...prev, images: newImages }));
+                                                        } finally {
+                                                            ev.target.value = '';
+                                                        }
+                                                    }} />
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                             </div>
                         </div>

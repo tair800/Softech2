@@ -16,6 +16,7 @@ namespace WebOnlyAPI.Services
         public async Task<IEnumerable<EquipmentListResponseDto>> GetAllAsync(string? language = null)
         {
             var equipments = await _context.Equipment
+                .Include(e => e.Images)
                 .Include(e => e.CategoryMappings)
                     .ThenInclude(cm => cm.Category)
                 .Include(e => e.TagMappings)
@@ -23,7 +24,10 @@ namespace WebOnlyAPI.Services
                 .OrderBy(e => e.CreatedAt)
                 .ToListAsync();
 
-            var list = equipments.Select(e => new EquipmentListResponseDto
+            var list = equipments.Select(e =>
+            {
+                var ordered = e.Images?.OrderBy(i => i.OrderIndex).Take(4).ToList() ?? new List<EquipmentImage>();
+                return new EquipmentListResponseDto
             {
                 Id = e.Id,
                 Name = e.Name,
@@ -31,8 +35,13 @@ namespace WebOnlyAPI.Services
                 Core = e.Core,
                 ImageUrl = e.ImageUrl,
                 IsMain = e.IsMain,
-                CategoryNames = e.CategoryMappings.Select(cm => cm.Category.Name).ToList(),
-                TagNames = e.TagMappings.Select(tm => tm.Tag.Name).ToList()
+                    CategoryNames = e.CategoryMappings.Select(cm => cm.Category.Name).ToList(),
+                    TagNames = e.TagMappings.Select(tm => tm.Tag.Name).ToList(),
+                    MainImage = ordered.ElementAtOrDefault(0)?.ImageUrl ?? e.ImageUrl,
+                    DetailImage1 = ordered.ElementAtOrDefault(1)?.ImageUrl,
+                    DetailImage2 = ordered.ElementAtOrDefault(2)?.ImageUrl,
+                    DetailImage3 = ordered.ElementAtOrDefault(3)?.ImageUrl
+                };
             }).ToList();
 
             // No language overrides for equipment list; names are unique
@@ -44,6 +53,7 @@ namespace WebOnlyAPI.Services
         {
             var equipments = await _context.Equipment
                 .Where(e => e.IsMain == true)
+                .Include(e => e.Images)
                 .Include(e => e.CategoryMappings)
                     .ThenInclude(cm => cm.Category)
                 .Include(e => e.TagMappings)
@@ -51,7 +61,10 @@ namespace WebOnlyAPI.Services
                 .OrderBy(e => e.CreatedAt)
                 .ToListAsync();
 
-            var list = equipments.Select(e => new EquipmentListResponseDto
+            var list = equipments.Select(e =>
+            {
+                var ordered = e.Images?.OrderBy(i => i.OrderIndex).Take(4).ToList() ?? new List<EquipmentImage>();
+                return new EquipmentListResponseDto
             {
                 Id = e.Id,
                 Name = e.Name,
@@ -59,8 +72,13 @@ namespace WebOnlyAPI.Services
                 Core = e.Core,
                 ImageUrl = e.ImageUrl,
                 IsMain = e.IsMain,
-                CategoryNames = e.CategoryMappings.Select(cm => cm.Category.Name).ToList(),
-                TagNames = e.TagMappings.Select(tm => tm.Tag.Name).ToList()
+                    CategoryNames = e.CategoryMappings.Select(cm => cm.Category.Name).ToList(),
+                    TagNames = e.TagMappings.Select(tm => tm.Tag.Name).ToList(),
+                    MainImage = ordered.ElementAtOrDefault(0)?.ImageUrl ?? e.ImageUrl,
+                    DetailImage1 = ordered.ElementAtOrDefault(1)?.ImageUrl,
+                    DetailImage2 = ordered.ElementAtOrDefault(2)?.ImageUrl,
+                    DetailImage3 = ordered.ElementAtOrDefault(3)?.ImageUrl
+                };
             }).ToList();
 
             return list;
@@ -71,6 +89,7 @@ namespace WebOnlyAPI.Services
             try
             {
                 var list = await _context.Equipment
+                    .Include(e => e.Images.OrderBy(i => i.OrderIndex))
                     .Include(e => e.FeaturesList.OrderBy(f => f.OrderIndex))
                     .Include(e => e.Specifications.OrderBy(s => s.OrderIndex))
                     .Include(e => e.CategoryMappings)
@@ -103,6 +122,7 @@ namespace WebOnlyAPI.Services
             try
             {
                 var e = await _context.Equipment
+                    .Include(eq => eq.Images.OrderBy(i => i.OrderIndex))
                     .Include(eq => eq.FeaturesList.OrderBy(f => f.OrderIndex))
                     .Include(eq => eq.Specifications.OrderBy(s => s.OrderIndex))
                     .Include(eq => eq.CategoryMappings)
@@ -146,9 +166,38 @@ namespace WebOnlyAPI.Services
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
-
             _context.Equipment.Add(e);
             await _context.SaveChangesAsync();
+
+            // Add images (cap to 4) - after equipment is saved to get the ID
+            if (dto.Images?.Any() == true)
+            {
+                var imagesToAdd = dto.Images
+                    .OrderBy(img => img.OrderIndex)
+                    .Take(4)
+                    .ToList();
+
+                foreach (var imageDto in imagesToAdd)
+                {
+                    var image = new EquipmentImage
+                    {
+                        EquipmentId = e.Id,
+                        ImageUrl = imageDto.ImageUrl,
+                        Alt = imageDto.Alt,
+                        OrderIndex = imageDto.OrderIndex
+                    };
+                    _context.EquipmentImages.Add(image);
+                }
+
+                // If ImageUrl is not set, default to first image
+                if (string.IsNullOrWhiteSpace(e.ImageUrl))
+                {
+                    e.ImageUrl = imagesToAdd.First().ImageUrl;
+                    _context.Equipment.Update(e);
+                }
+                
+                await _context.SaveChangesAsync();
+            }
 
             // Add features
             if (dto.Features?.Any() == true)
@@ -226,6 +275,7 @@ namespace WebOnlyAPI.Services
             try
             {
                 var e = await _context.Equipment
+                    .Include(eq => eq.Images)
                     .Include(eq => eq.CategoryMappings)
                     .Include(eq => eq.TagMappings)
                     .Include(eq => eq.FeaturesList)
@@ -243,6 +293,38 @@ namespace WebOnlyAPI.Services
                 e.ImageUrl = dto.ImageUrl;
                 e.IsMain = dto.IsMain;
                 e.UpdatedAt = DateTime.UtcNow;
+
+                // Update images (replace all)
+                if (dto.Images != null)
+                {
+                    var existingImages = await _context.EquipmentImages
+                        .Where(img => img.EquipmentId == id)
+                        .ToListAsync();
+                    _context.EquipmentImages.RemoveRange(existingImages);
+
+                    var imagesToAdd = dto.Images
+                        .OrderBy(img => img.OrderIndex)
+                        .Take(4)
+                        .ToList();
+
+                    foreach (var imageDto in imagesToAdd)
+                    {
+                        var image = new EquipmentImage
+                        {
+                            EquipmentId = e.Id,
+                            ImageUrl = imageDto.ImageUrl,
+                            Alt = imageDto.Alt,
+                            OrderIndex = imageDto.OrderIndex
+                        };
+                        _context.EquipmentImages.Add(image);
+                    }
+
+                    // If ImageUrl is empty after update, set to first image
+                    if (string.IsNullOrWhiteSpace(e.ImageUrl) && imagesToAdd.Any())
+                    {
+                        e.ImageUrl = imagesToAdd.First().ImageUrl;
+                    }
+                }
 
                 // Update features
                 if (dto.Features != null)
@@ -371,6 +453,7 @@ namespace WebOnlyAPI.Services
                 
                 // Reload the equipment with all navigation properties to avoid null reference in MapToResponse
                 var reloadedEquipment = await _context.Equipment
+                    .Include(eq => eq.Images.OrderBy(i => i.OrderIndex))
                     .Include(eq => eq.FeaturesList.OrderBy(f => f.OrderIndex))
                     .Include(eq => eq.Specifications.OrderBy(s => s.OrderIndex))
                     .Include(eq => eq.CategoryMappings)
@@ -414,6 +497,13 @@ namespace WebOnlyAPI.Services
                 IsMain = e.IsMain,
                 CreatedAt = e.CreatedAt,
                 UpdatedAt = e.UpdatedAt,
+                Images = e.Images?.OrderBy(i => i.OrderIndex).Take(4).Select(i => new EquipmentImageDto
+                {
+                    Id = i.Id,
+                    ImageUrl = i.ImageUrl,
+                    Alt = i.Alt,
+                    OrderIndex = i.OrderIndex
+                }).ToList() ?? new List<EquipmentImageDto>(),
                 Features = e.FeaturesList.Select(f => new EquipmentFeatureDto
                 {
                     Id = f.Id,

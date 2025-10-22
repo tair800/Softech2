@@ -4,7 +4,7 @@ import SimilarEquipmentCard from './components/SimilarEquipmentCard';
 import './EquipmentDetail.css';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 function EquipmentDetail() {
     const { id } = useParams();
@@ -21,10 +21,12 @@ function EquipmentDetail() {
     const [filteredSimilarEquipment, setFilteredSimilarEquipment] = useState([]);
     const [categoryStartIndex, setCategoryStartIndex] = useState(0);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [activeImageIndex, setActiveImageIndex] = useState(0);
+    const [isImageChanging, setIsImageChanging] = useState(false);
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -284,9 +286,30 @@ function EquipmentDetail() {
         version: equipment.version || '',
         core: equipment.core || '',
         imageUrl: equipment.imageUrl || '',
+        images: Array.isArray(equipment.images) ? equipment.images.slice(0, 4) : [],
         features: equipment.features || [],
         specifications: equipment.specifications || []
     };
+
+    // Build slots dynamically - main image + up to 3 additional images (max 4 total)
+    const imageSlots = [];
+
+    // Add main image if it exists (only if it's not empty/null)
+    if (safeEquipment.imageUrl && safeEquipment.imageUrl.trim() !== '' && safeEquipment.imageUrl !== 'string') {
+        imageSlots.push(resolveUrl(safeEquipment.imageUrl));
+    }
+
+    // Add ALL additional images (don't limit to 3, let the total limit handle it)
+    safeEquipment.images.forEach(img => {
+        if (img.imageUrl && img.imageUrl.trim() !== '' && img.imageUrl !== 'string') {
+            imageSlots.push(resolveUrl(img.imageUrl));
+        }
+    });
+
+    // Remove duplicates while preserving order, then limit to 4 total
+    const uniqueImageSlots = [...new Set(imageSlots)].slice(0, 4);
+
+    const mainResolved = uniqueImageSlots[Math.min(activeImageIndex, uniqueImageSlots.length - 1)] || resolveUrl(safeEquipment.imageUrl);
 
     return (
         <div className="equipment-detail-container">
@@ -333,10 +356,38 @@ function EquipmentDetail() {
                 </div>
                 <div className="equipment-detail-right">
                     <div className="equipment-image-container">
-                        <img src={resolveUrl(safeEquipment.imageUrl)} alt={safeEquipment.name} className="equipment-detail-image" />
+                        <img
+                            src={mainResolved}
+                            alt={safeEquipment.name}
+                            className={`equipment-detail-image ${isImageChanging ? 'fade-out' : 'fade-in'}`}
+                            onLoad={() => setIsImageChanging(false)}
+                        />
                     </div>
                 </div>
             </div>
+
+            {/* Thumbnails row under the whole content - only show if more than 1 image */}
+            {uniqueImageSlots.length > 1 && (
+                <div className="equipment-detail-thumbnails">
+                    {uniqueImageSlots.map((url, idx) => (
+                        <button
+                            key={idx}
+                            className={`equipment-thumb ${idx === activeImageIndex ? 'active' : ''}`}
+                            onClick={() => {
+                                if (url && idx !== activeImageIndex) {
+                                    setIsImageChanging(true);
+                                    setTimeout(() => {
+                                        setActiveImageIndex(idx);
+                                    }, 200); // Delay to see fade-out
+                                }
+                            }}
+                            title={idx === 0 ? 'Main image' : `Detail image ${idx}`}
+                        >
+                            <img src={url} alt={idx === 0 ? 'main-thumb' : `thumb-${idx}`} />
+                        </button>
+                    ))}
+                </div>
+            )}
 
             <div className="equipment-detail-team-header">
                 <div className="equipment-detail-team-title">{language === 'en' ? 'Features' : language === 'ru' ? 'Особенности' : 'Xüsusiyyətlər'}</div>

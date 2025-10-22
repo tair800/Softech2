@@ -31,12 +31,28 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("HeadingEn")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HeadingRu")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Subtext")
                         .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SubtextEn")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SubtextRu")
                         .HasMaxLength(2000)
                         .HasColumnType("TEXT");
 
@@ -58,12 +74,27 @@ namespace WebOnlyAPI.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Desc1")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Desc1En")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Desc1Ru")
+                        .HasMaxLength(2000)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Desc2")
+                        .HasMaxLength(2000)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Desc3")
+                    b.Property<string>("Desc2En")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Desc2Ru")
+                        .HasMaxLength(2000)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DetailImg1Url")
@@ -79,6 +110,7 @@ namespace WebOnlyAPI.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Features")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MainImageUrl")
@@ -89,12 +121,28 @@ namespace WebOnlyAPI.Migrations
 
                     b.Property<string>("Title1")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title1En")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title1Ru")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title2")
+                        .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Title3")
+                    b.Property<string>("Title2En")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title2Ru")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
@@ -103,6 +151,56 @@ namespace WebOnlyAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Blogs", (string)null);
+                });
+
+            modelBuilder.Entity("WebOnlyAPI.Models.BlogSection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DescriptionEn")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DescriptionRu")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TitleEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TitleRu")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("BlogSections", (string)null);
                 });
 
             modelBuilder.Entity("WebOnlyAPI.Models.Employee", b =>
@@ -115,6 +213,14 @@ namespace WebOnlyAPI.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DescriptionEn")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DescriptionRu")
                         .HasMaxLength(2000)
                         .HasColumnType("TEXT");
 
@@ -135,12 +241,28 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("NameEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NameRu")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Phone")
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Position")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PositionEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PositionRu")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
@@ -162,6 +284,14 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("CoreEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CoreRu")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
@@ -169,12 +299,31 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DescriptionEn")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DescriptionRu")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NameEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NameRu")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
@@ -182,6 +331,14 @@ namespace WebOnlyAPI.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Version")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("VersionEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("VersionRu")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
@@ -207,7 +364,7 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("DescriptionAz")
+                    b.Property<string>("DescriptionEn")
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
@@ -227,7 +384,7 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("NameAz")
+                    b.Property<string>("NameEn")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
@@ -278,6 +435,14 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("FeatureEn")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FeatureRu")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("OrderIndex")
                         .HasColumnType("INTEGER");
 
@@ -289,6 +454,34 @@ namespace WebOnlyAPI.Migrations
                     b.HasIndex("EquipmentId");
 
                     b.ToTable("EquipmentFeatures", (string)null);
+                });
+
+            modelBuilder.Entity("WebOnlyAPI.Models.EquipmentImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Alt")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("EquipmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EquipmentId");
+
+                    b.ToTable("EquipmentImages");
                 });
 
             modelBuilder.Entity("WebOnlyAPI.Models.EquipmentSpecification", b =>
@@ -308,6 +501,14 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("KeyEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("KeyRu")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("OrderIndex")
                         .HasColumnType("INTEGER");
 
@@ -315,6 +516,14 @@ namespace WebOnlyAPI.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ValueEn")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ValueRu")
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
@@ -342,7 +551,7 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("DescriptionAz")
+                    b.Property<string>("DescriptionEn")
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
@@ -358,7 +567,7 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("NameAz")
+                    b.Property<string>("NameEn")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
@@ -416,7 +625,7 @@ namespace WebOnlyAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PasswordResetTokens", (string)null);
+                    b.ToTable("PasswordResetTokens");
                 });
 
             modelBuilder.Entity("WebOnlyAPI.Models.Product", b =>
@@ -439,6 +648,12 @@ namespace WebOnlyAPI.Migrations
                     b.Property<string>("DetailDescription")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DetailDescriptionEn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DetailDescriptionRu")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Icon")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
@@ -456,11 +671,25 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("NameEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NameRu")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Path")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Section1Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Section1DescriptionEn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Section1DescriptionRu")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Section1Image")
@@ -470,10 +699,28 @@ namespace WebOnlyAPI.Migrations
                     b.Property<string>("Section1MoreText")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Section1MoreTextEn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Section1MoreTextRu")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Section1Title")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Section1TitleEn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Section1TitleRu")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Section2Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Section2DescriptionEn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Section2DescriptionRu")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Section2Image")
@@ -483,10 +730,28 @@ namespace WebOnlyAPI.Migrations
                     b.Property<string>("Section2MoreText")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Section2MoreTextEn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Section2MoreTextRu")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Section2Title")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Section2TitleEn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Section2TitleRu")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Section3Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Section3DescriptionEn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Section3DescriptionRu")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Section3Image")
@@ -496,10 +761,30 @@ namespace WebOnlyAPI.Migrations
                     b.Property<string>("Section3MoreText")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Section3MoreTextEn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Section3MoreTextRu")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Section3Title")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Section3TitleEn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Section3TitleRu")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Subtext")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SubtextEn")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SubtextRu")
                         .HasMaxLength(1000)
                         .HasColumnType("TEXT");
 
@@ -620,6 +905,14 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DescriptionEn")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DescriptionRu")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("DetailImage")
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
@@ -637,11 +930,35 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("NameEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NameRu")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Subtext")
                         .HasMaxLength(1000)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("SubtextEn")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SubtextRu")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Subtitle")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SubtitleEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SubtitleRu")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
@@ -674,7 +991,18 @@ namespace WebOnlyAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("NameEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NameRu")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("OrderIndex")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ProductId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -733,7 +1061,7 @@ namespace WebOnlyAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("WebOnlyAPI.Models.UserLoginHistory", b =>
@@ -768,7 +1096,7 @@ namespace WebOnlyAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserLoginHistory", (string)null);
+                    b.ToTable("UserLoginHistory");
                 });
 
             modelBuilder.Entity("WebOnlyAPI.Models.UserSession", b =>
@@ -801,7 +1129,7 @@ namespace WebOnlyAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserSessions", (string)null);
+                    b.ToTable("UserSessions");
                 });
 
             modelBuilder.Entity("WebOnlyAPI.Models.VisitorAnalytics", b =>
@@ -856,6 +1184,17 @@ namespace WebOnlyAPI.Migrations
                     b.ToTable("VisitorAnalytics", (string)null);
                 });
 
+            modelBuilder.Entity("WebOnlyAPI.Models.BlogSection", b =>
+                {
+                    b.HasOne("WebOnlyAPI.Models.Blog", "Blog")
+                        .WithMany("Sections")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Blog");
+                });
+
             modelBuilder.Entity("WebOnlyAPI.Models.EquipmentCategoryMapping", b =>
                 {
                     b.HasOne("WebOnlyAPI.Models.EquipmentCategory", "Category")
@@ -879,6 +1218,17 @@ namespace WebOnlyAPI.Migrations
                 {
                     b.HasOne("WebOnlyAPI.Models.Equipment", "Equipment")
                         .WithMany("FeaturesList")
+                        .HasForeignKey("EquipmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Equipment");
+                });
+
+            modelBuilder.Entity("WebOnlyAPI.Models.EquipmentImage", b =>
+                {
+                    b.HasOne("WebOnlyAPI.Models.Equipment", "Equipment")
+                        .WithMany("Images")
                         .HasForeignKey("EquipmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -970,11 +1320,18 @@ namespace WebOnlyAPI.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("WebOnlyAPI.Models.Blog", b =>
+                {
+                    b.Navigation("Sections");
+                });
+
             modelBuilder.Entity("WebOnlyAPI.Models.Equipment", b =>
                 {
                     b.Navigation("CategoryMappings");
 
                     b.Navigation("FeaturesList");
+
+                    b.Navigation("Images");
 
                     b.Navigation("Specifications");
 

@@ -55,7 +55,7 @@ export default function AdminDashboard() {
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
-            const baseUrl = 'https://softech-api.webonly.io/api';
+            const baseUrl = 'http://localhost:5098/api';
 
             // Fetch all data in parallel
             const [employeesRes, productsRes, equipmentRes, referencesRes] = await Promise.all([

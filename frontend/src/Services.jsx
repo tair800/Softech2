@@ -44,7 +44,7 @@ function Services() {
             const startTime = Date.now();
 
             try {
-                const response = await fetch(`https://softech-api.webonly.io/api/services?language=${language}`);
+                const response = await fetch(`http://localhost:5098/api/services?language=${language}`);
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

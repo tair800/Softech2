@@ -12,5 +12,10 @@ namespace WebOnlyAPI.DTOs
         public bool IsMain { get; set; }
         public List<string> CategoryNames { get; set; } = new List<string>();
         public List<string> TagNames { get; set; } = new List<string>();
+        // Convenience fields for up to 4 images in list payloads
+        public string? MainImage { get; set; }
+        public string? DetailImage1 { get; set; }
+        public string? DetailImage2 { get; set; }
+        public string? DetailImage3 { get; set; }
     }
 }

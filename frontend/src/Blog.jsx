@@ -6,7 +6,7 @@ import BlogSlider from './components/BlogSlider.jsx';
 import LoadingAnimation from './components/LoadingAnimation';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 function Blog() {
     const [blogs, setBlogs] = useState([]);
@@ -41,7 +41,7 @@ function Blog() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 

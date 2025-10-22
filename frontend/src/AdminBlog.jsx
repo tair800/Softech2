@@ -3,7 +3,7 @@ import './AdminBlog.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 export default function AdminBlog() {
     const [blogs, setBlogs] = useState([]);
@@ -35,7 +35,7 @@ export default function AdminBlog() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 
