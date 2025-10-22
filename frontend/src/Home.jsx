@@ -214,7 +214,7 @@ export default function Home() {
 
       try {
         const response = await fetch(
-          "http://localhost:5098/api/sliders"
+          "https://softech-api.webonly.io/api/sliders"
         );
         if (response.ok) {
           const data = await response.json();
@@ -223,7 +223,7 @@ export default function Home() {
           const transformedSlides = data.map((slide) => ({
             id: slide.id,
             img: slide.imageUrl
-              ? `http://localhost:5098${slide.imageUrl}`
+              ? `https://softech-api.webonly.io${slide.imageUrl}`
               : "/assets/slider1.png",
             name: slide.name || "Default",
             nameEn: slide.nameEn || "Default",

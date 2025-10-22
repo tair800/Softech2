@@ -56,7 +56,7 @@ function Contact() {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:5098/api/contact', {
+            const response = await fetch('https://softech-api.webonly.io/api/contact', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

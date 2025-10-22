@@ -3,7 +3,7 @@ import './AdminServices.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'http://localhost:5098/api';
+const API = 'https://softech-api.webonly.io/api';
 
 export default function AdminServices() {
     const [services, setServices] = useState([]);
@@ -17,7 +17,7 @@ export default function AdminServices() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         return url;
     };
 
@@ -114,8 +114,8 @@ export default function AdminServices() {
             formData.append('subtextEn', newService.subtextEn || '');
             formData.append('subtextRu', newService.subtextRu || '');
             formData.append('icon', newService.icon);
-            const detailImageForApi = newService.detailImage?.startsWith('http://localhost:5098')
-                ? newService.detailImage.replace('http://localhost:5098', '')
+            const detailImageForApi = newService.detailImage?.startsWith('https://softech-api.webonly.io')
+                ? newService.detailImage.replace('https://softech-api.webonly.io', '')
                 : (newService.detailImage || '');
             formData.append('detailImage', detailImageForApi);
             formData.append('imageUrl', newService.imageUrl || '');
@@ -498,7 +498,7 @@ export default function AdminServices() {
                                                     const response = await fetch(`${API}/upload/service/icon`, { method: 'POST', body: formData });
                                                     if (response.ok) {
                                                         const result = await response.json();
-                                                        const imageUrl = result.url ? result.url.replace('http://localhost:5098', '') : '';
+                                                        const imageUrl = result.url ? result.url.replace('https://softech-api.webonly.io', '') : '';
                                                         setServices(prev => prev.map(x => x.id === s.id ? { ...x, icon: imageUrl } : x));
                                                     } else {
                                                         console.error('Icon upload failed');
@@ -620,7 +620,7 @@ export default function AdminServices() {
                                                 const response = await fetch(`${API}/upload/service/icon`, { method: 'POST', body: formData });
                                                 if (response.ok) {
                                                     const result = await response.json();
-                                                    const imageUrl = result.url ? result.url.replace('http://localhost:5098', '') : '';
+                                                    const imageUrl = result.url ? result.url.replace('https://softech-api.webonly.io', '') : '';
                                                     setNewService({ ...newService, icon: imageUrl });
                                                 } else {
                                                     console.error('Icon upload failed');
