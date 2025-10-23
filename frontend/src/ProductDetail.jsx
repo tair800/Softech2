@@ -39,7 +39,7 @@ function ProductDetail() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
         return url;
     };
 
@@ -58,8 +58,8 @@ function ProductDetail() {
                 // Check if id is numeric (for ID) or string (for slug)
                 const isNumeric = /^\d+$/.test(id);
                 const apiUrl = isNumeric
-                    ? `http://localhost:5098/api/products/${id}?language=${language}`
-                    : `http://localhost:5098/api/products/slug/${id}?language=${language}`;
+                    ? `https://softech-api.webonly.io/api/products/${id}?language=${language}`
+                    : `https://softech-api.webonly.io/api/products/slug/${id}?language=${language}`;
 
                 const res = await fetch(apiUrl);
                 if (!res.ok) throw new Error('Failed to load product');

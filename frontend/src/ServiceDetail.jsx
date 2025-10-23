@@ -6,7 +6,7 @@ import LoadingAnimation from './components/LoadingAnimation';
 import { generateDetailMetaDescription, generateDetailPageTitle, truncateMetaDescription } from './utils/metaDescriptions';
 import './ServiceDetail.css';
 
-const API = 'http://localhost:5098/api';
+const API = 'https://softech-api.webonly.io/api';
 
 function ServiceDetail() {
     const { id } = useParams();
@@ -20,7 +20,7 @@ function ServiceDetail() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `http://localhost:5098
+        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io
 ${url}`;
         return url;
     };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AdminMetaDescriptions.css';
 
-const API = 'http://localhost:5098/api';
+const API = 'https://softech-api.webonly.io/api';
 
 function AdminMetaDescriptions() {
     const [metaDescriptions, setMetaDescriptions] = useState([]);

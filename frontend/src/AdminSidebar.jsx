@@ -18,7 +18,7 @@ export default function AdminSidebar() {
             // Call logout API
             const token = localStorage.getItem('adminToken');
             if (token) {
-                await fetch('http://localhost:5098/api/auth/logout', {
+                await fetch('https://softech-api.webonly.io/api/auth/logout', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`

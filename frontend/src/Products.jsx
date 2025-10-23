@@ -49,7 +49,7 @@ function Products() {
             const startTime = Date.now();
 
             try {
-                const API = 'http://localhost:5098/api';
+                const API = 'https://softech-api.webonly.io/api';
                 const res = await fetch(`${API}/products?language=${language}`);
                 if (!res.ok) throw new Error('Failed to load products');
                 const data = await res.json();
