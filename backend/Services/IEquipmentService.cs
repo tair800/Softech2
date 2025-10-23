@@ -7,6 +7,7 @@ namespace WebOnlyAPI.Services
         Task<IEnumerable<EquipmentListResponseDto>> GetAllAsync(string? language = null);
         Task<IEnumerable<EquipmentResponseDto>> GetAllFullAsync(string? language = null);
         Task<EquipmentResponseDto?> GetByIdAsync(int id, string? language = null);
+        Task<EquipmentResponseDto?> GetBySlugAsync(string slug, string? language = null);
         Task<EquipmentResponseDto> CreateAsync(CreateEquipmentDto dto);
         Task<EquipmentResponseDto?> UpdateAsync(int id, UpdateEquipmentDto dto);
         Task<bool> DeleteAsync(int id);

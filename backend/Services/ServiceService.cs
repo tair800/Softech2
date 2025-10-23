@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebOnlyAPI.Data;
 using WebOnlyAPI.DTOs;
 using WebOnlyAPI.Models;
+using WebOnlyAPI.Utils;
 
 namespace WebOnlyAPI.Services
 {
@@ -73,6 +74,14 @@ namespace WebOnlyAPI.Services
             return dto;
         }
 
+        public async Task<ServiceResponseDto?> GetBySlugAsync(string slug, string? language = null)
+        {
+            var service = await _context.Services
+                .FirstOrDefaultAsync(s => s.Slug == slug);
+            if (service == null) return null;
+            return await GetServiceByIdAsync(service.Id, language);
+        }
+
         public async Task<ServiceResponseDto> CreateServiceAsync(CreateServiceDto createServiceDto)
         {
             var service = new Service
@@ -92,6 +101,7 @@ namespace WebOnlyAPI.Services
                 SubtextEn = createServiceDto.SubtextEn,
                 SubtextRu = createServiceDto.SubtextRu,
                 ImageUrl = createServiceDto.ImageUrl,
+                Slug = !string.IsNullOrWhiteSpace(createServiceDto.Slug) ? createServiceDto.Slug : SlugGenerator.GenerateSlug(createServiceDto.Name),
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -122,6 +132,7 @@ namespace WebOnlyAPI.Services
             service.SubtextEn = updateServiceDto.SubtextEn;
             service.SubtextRu = updateServiceDto.SubtextRu;
             service.ImageUrl = updateServiceDto.ImageUrl;
+            service.Slug = !string.IsNullOrWhiteSpace(updateServiceDto.Slug) ? updateServiceDto.Slug : SlugGenerator.GenerateSlug(updateServiceDto.Name);
             service.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
@@ -161,6 +172,7 @@ namespace WebOnlyAPI.Services
                 SubtextEn = service.SubtextEn,
                 SubtextRu = service.SubtextRu,
                 ImageUrl = service.ImageUrl,
+                Slug = service.Slug,
                 CreatedAt = service.CreatedAt,
                 UpdatedAt = service.UpdatedAt
             };

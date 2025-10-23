@@ -30,6 +30,7 @@ namespace WebOnlyAPI.Data
         public DbSet<VisitorAnalytics> VisitorAnalytics { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<BlogSection> BlogSections { get; set; }
+        public DbSet<MetaDescription> MetaDescriptions { get; set; }
         
         // User system DbSets
         public DbSet<User> Users { get; set; }

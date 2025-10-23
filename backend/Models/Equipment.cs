@@ -46,6 +46,9 @@ namespace WebOnlyAPI.Models
         [StringLength(500)]
         public string? ImageUrl { get; set; }
         
+        [StringLength(200)]
+        public string? Slug { get; set; }
+        
         public bool IsMain { get; set; } = false;
         
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

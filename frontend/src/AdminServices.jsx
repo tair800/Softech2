@@ -3,13 +3,13 @@ import './AdminServices.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 export default function AdminServices() {
     const [services, setServices] = useState([]);
     const [originalById, setOriginalById] = useState({});
     const [showModal, setShowModal] = useState(false);
-    const [newService, setNewService] = useState({ name: '', nameEn: '', nameRu: '', subtitle: '', subtitleEn: '', subtitleRu: '', description: '', descriptionEn: '', descriptionRu: '', subtext: '', subtextEn: '', subtextRu: '', icon: '', detailImage: '', imageUrl: '', imageFile: null });
+    const [newService, setNewService] = useState({ name: '', nameEn: '', nameRu: '', subtitle: '', subtitleEn: '', subtitleRu: '', description: '', descriptionEn: '', descriptionRu: '', subtext: '', subtextEn: '', subtextRu: '', icon: '', detailImage: '', imageUrl: '', slug: '', imageFile: null });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [submitting, setSubmitting] = useState(false);
@@ -17,7 +17,7 @@ export default function AdminServices() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 
@@ -78,7 +78,7 @@ export default function AdminServices() {
 
     const handleCloseModal = () => {
         setShowModal(false);
-        setNewService({ name: '', subtitle: '', description: '', icon: '', detailImage: '', imageUrl: '', imageFile: null });
+        setNewService({ name: '', subtitle: '', description: '', icon: '', detailImage: '', imageUrl: '', slug: '', imageFile: null });
     };
 
     const handleSearchChange = (e) => {
@@ -114,11 +114,12 @@ export default function AdminServices() {
             formData.append('subtextEn', newService.subtextEn || '');
             formData.append('subtextRu', newService.subtextRu || '');
             formData.append('icon', newService.icon);
-            const detailImageForApi = newService.detailImage?.startsWith('https://softech-api.webonly.io')
-                ? newService.detailImage.replace('https://softech-api.webonly.io', '')
+            const detailImageForApi = newService.detailImage?.startsWith('http://localhost:5098')
+                ? newService.detailImage.replace('http://localhost:5098', '')
                 : (newService.detailImage || '');
             formData.append('detailImage', detailImageForApi);
             formData.append('imageUrl', newService.imageUrl || '');
+            formData.append('slug', newService.slug || '');
             if (newService.imageFile) {
                 formData.append('imageFile', newService.imageFile);
             }
@@ -170,6 +171,7 @@ export default function AdminServices() {
             (s.icon || '') !== (o.icon || '') ||
             (s.detailImage || '') !== (o.detailImage || '') ||
             (s.imageUrl || '') !== (o.imageUrl || '') ||
+            (s.slug || '') !== (o.slug || '') ||
             s.imageFile !== undefined
         );
     };
@@ -207,6 +209,7 @@ export default function AdminServices() {
             formData.append('icon', s.icon || '');
             formData.append('detailImage', s.detailImage || '');
             formData.append('imageUrl', s.imageUrl || '');
+            formData.append('slug', s.slug || '');
             if (s.imageFile) {
                 formData.append('imageFile', s.imageFile);
             }
@@ -397,6 +400,17 @@ export default function AdminServices() {
                                 <label className="col-sm-3 col-form-label">Subtext (RU)</label>
                                 <div className="col-sm-9"><textarea className="form-control" rows={3} value={s.subtextRu || ''} onChange={(e) => setServices(prev => prev.map(x => x.id === s.id ? { ...x, subtextRu: e.target.value } : x))} /></div>
                             </div>
+                            <div className="form-group row g-3 align-items-start">
+                                <label className="col-sm-3 col-form-label">Slug</label>
+                                <div className="col-sm-9">
+                                    <input
+                                        className="form-control"
+                                        placeholder="URL-friendly identifier (e.g., my-service)"
+                                        value={s.slug || ''}
+                                        onChange={(e) => setServices(prev => prev.map(x => x.id === s.id ? { ...x, slug: e.target.value } : x))}
+                                    />
+                                </div>
+                            </div>
                             <div className="d-flex gap-2">
                                 <button className="btn btn-primary" disabled={!hasChanges(s) || submitting} onClick={() => saveService(s.id)}>
                                     {submitting ? 'Yadda saxlanır...' : 'Yadda saxla'}
@@ -498,7 +512,7 @@ export default function AdminServices() {
                                                     const response = await fetch(`${API}/upload/service/icon`, { method: 'POST', body: formData });
                                                     if (response.ok) {
                                                         const result = await response.json();
-                                                        const imageUrl = result.url ? result.url.replace('https://softech-api.webonly.io', '') : '';
+                                                        const imageUrl = result.url ? result.url.replace('http://localhost:5098', '') : '';
                                                         setServices(prev => prev.map(x => x.id === s.id ? { ...x, icon: imageUrl } : x));
                                                     } else {
                                                         console.error('Icon upload failed');
@@ -589,6 +603,17 @@ export default function AdminServices() {
                             </div>
 
                             <div className="form-group mb-3">
+                                <label className="form-label">Slug</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="URL-friendly identifier (e.g., my-service)"
+                                    value={newService.slug}
+                                    onChange={(e) => setNewService({ ...newService, slug: e.target.value })}
+                                />
+                            </div>
+
+                            <div className="form-group mb-3">
                                 <label className="form-label">İkon</label>
                                 <div className="d-flex align-items-center gap-3">
                                     <div className="image-placeholder position-relative" style={{ width: 72, height: 72 }}>
@@ -620,7 +645,7 @@ export default function AdminServices() {
                                                 const response = await fetch(`${API}/upload/service/icon`, { method: 'POST', body: formData });
                                                 if (response.ok) {
                                                     const result = await response.json();
-                                                    const imageUrl = result.url ? result.url.replace('https://softech-api.webonly.io', '') : '';
+                                                    const imageUrl = result.url ? result.url.replace('http://localhost:5098', '') : '';
                                                     setNewService({ ...newService, icon: imageUrl });
                                                 } else {
                                                     console.error('Icon upload failed');

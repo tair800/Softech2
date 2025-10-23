@@ -43,6 +43,7 @@ namespace WebOnlyAPI.DTOs
         public string? Section3MoreTextEn { get; set; }
         public string? Section3MoreTextRu { get; set; }
         public string? Section3Image { get; set; }
+        public string? Slug { get; set; }
     }
 
     public class UpdateProductDto
@@ -88,6 +89,7 @@ namespace WebOnlyAPI.DTOs
         public string? Section3MoreTextEn { get; set; }
         public string? Section3MoreTextRu { get; set; }
         public string? Section3Image { get; set; }
+        public string? Slug { get; set; }
     }
 
     public class ProductResponseDto
@@ -137,6 +139,7 @@ namespace WebOnlyAPI.DTOs
         public string? Section3MoreTextEn { get; set; }
         public string? Section3MoreTextRu { get; set; }
         public string? Section3Image { get; set; }
+        public string? Slug { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public List<ProductImageDto> Images { get; set; } = new();

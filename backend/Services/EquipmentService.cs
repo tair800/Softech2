@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebOnlyAPI.Data;
 using WebOnlyAPI.DTOs;
 using WebOnlyAPI.Models;
+using WebOnlyAPI.Utils;
 
 namespace WebOnlyAPI.Services
 {
@@ -34,6 +35,7 @@ namespace WebOnlyAPI.Services
                 Version = e.Version,
                 Core = e.Core,
                 ImageUrl = e.ImageUrl,
+                Slug = e.Slug,
                 IsMain = e.IsMain,
                     CategoryNames = e.CategoryMappings.Select(cm => cm.Category.Name).ToList(),
                     TagNames = e.TagMappings.Select(tm => tm.Tag.Name).ToList(),
@@ -71,6 +73,7 @@ namespace WebOnlyAPI.Services
                 Version = e.Version,
                 Core = e.Core,
                 ImageUrl = e.ImageUrl,
+                Slug = e.Slug,
                 IsMain = e.IsMain,
                     CategoryNames = e.CategoryMappings.Select(cm => cm.Category.Name).ToList(),
                     TagNames = e.TagMappings.Select(tm => tm.Tag.Name).ToList(),
@@ -152,6 +155,14 @@ namespace WebOnlyAPI.Services
             }
         }
 
+        public async Task<EquipmentResponseDto?> GetBySlugAsync(string slug, string? language = null)
+        {
+            var equipment = await _context.Equipment
+                .FirstOrDefaultAsync(e => e.Slug == slug);
+            if (equipment == null) return null;
+            return await GetByIdAsync(equipment.Id, language);
+        }
+
         public async Task<EquipmentResponseDto> CreateAsync(CreateEquipmentDto dto)
         {
             var e = new Equipment
@@ -163,6 +174,7 @@ namespace WebOnlyAPI.Services
                 ImageUrl = dto.ImageUrl,
                 DescriptionEn = dto.DescriptionEn,
                 DescriptionRu = dto.DescriptionRu,
+                Slug = !string.IsNullOrWhiteSpace(dto.Slug) ? dto.Slug : SlugGenerator.GenerateSlug(dto.Name),
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -291,6 +303,7 @@ namespace WebOnlyAPI.Services
                 e.DescriptionEn = dto.DescriptionEn;
                 e.DescriptionRu = dto.DescriptionRu;
                 e.ImageUrl = dto.ImageUrl;
+                e.Slug = !string.IsNullOrWhiteSpace(dto.Slug) ? dto.Slug : SlugGenerator.GenerateSlug(dto.Name);
                 e.IsMain = dto.IsMain;
                 e.UpdatedAt = DateTime.UtcNow;
 
@@ -494,6 +507,7 @@ namespace WebOnlyAPI.Services
                 DescriptionEn = e.DescriptionEn,
                 DescriptionRu = e.DescriptionRu,
                 ImageUrl = e.ImageUrl,
+                Slug = e.Slug,
                 IsMain = e.IsMain,
                 CreatedAt = e.CreatedAt,
                 UpdatedAt = e.UpdatedAt,

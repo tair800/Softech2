@@ -20,6 +20,7 @@ namespace WebOnlyAPI.DTOs
         public string? DescriptionRu { get; set; }
         [StringLength(500)]
         public string? ImageUrl { get; set; }
+        public string? Slug { get; set; }
         public bool IsMain { get; set; } = false;
         public List<int> CategoryIds { get; set; } = new List<int>();
         public List<int> TagIds { get; set; } = new List<int>();
@@ -45,6 +46,7 @@ namespace WebOnlyAPI.DTOs
         public string? DescriptionRu { get; set; }
         [StringLength(500)]
         public string? ImageUrl { get; set; }
+        public string? Slug { get; set; }
         public bool IsMain { get; set; } = false;
         public List<int> CategoryIds { get; set; } = new List<int>();
         public List<int> TagIds { get; set; } = new List<int>();
@@ -63,6 +65,7 @@ namespace WebOnlyAPI.DTOs
         public string? DescriptionEn { get; set; }
         public string? DescriptionRu { get; set; }
         public string? ImageUrl { get; set; }
+        public string? Slug { get; set; }
         public bool IsMain { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

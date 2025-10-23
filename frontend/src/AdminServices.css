@@ -242,3 +242,23 @@
     color: rgba(255, 255, 255, 0.3);
     cursor: not-allowed;
 }
+
+/* Slug input field styling */
+.form-group input[placeholder*="URL-friendly"] {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(70, 126, 254, 0.3);
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.form-group input[placeholder*="URL-friendly"]:focus {
+    background: linear-gradient(135deg, rgba(70, 126, 254, 0.15) 0%, rgba(70, 126, 254, 0.05) 100%);
+    border-color: rgba(70, 126, 254, 0.6);
+    box-shadow: 0 0 10px rgba(70, 126, 254, 0.3);
+    outline: none;
+}
+
+.form-group input[placeholder*="URL-friendly"]::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+}

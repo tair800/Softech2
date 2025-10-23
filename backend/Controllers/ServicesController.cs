@@ -33,6 +33,17 @@ namespace WebOnlyAPI.Controllers
             return Ok(service);
         }
 
+        // GET: api/services/slug/{slug}
+        [HttpGet("slug/{slug}")]
+        public async Task<ActionResult<ServiceResponseDto>> GetServiceBySlug(string slug, [FromQuery] string? language)
+        {
+            var service = await _serviceService.GetBySlugAsync(slug, language);
+            if (service == null)
+                return NotFound();
+
+            return Ok(service);
+        }
+
         [HttpPost]
         public async Task<ActionResult<ServiceResponseDto>> CreateService([FromForm] CreateServiceDto createServiceDto, IFormFile? imageFile)
         {

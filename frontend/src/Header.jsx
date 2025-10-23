@@ -50,12 +50,12 @@ function Header() {
                 </div>
                 <ul className="navbar-links">
                     <li><Link to="/" className={location.pathname === "/" ? "active" : ""}>{t('home', language)}</Link></li>
-                    <li><Link to="/about" className={location.pathname === "/about" ? "active" : ""}>{t('about', language)}</Link></li>
-                    <li><Link to="/products" className={location.pathname === "/products" || location.pathname.startsWith("/product/") ? "active" : ""}>{t('products', language)}</Link></li>
-                    <li><Link to="/services" className={location.pathname === "/services" || location.pathname.startsWith("/services/") ? "active" : ""}>{t('services', language)}</Link></li>
-                    <li><Link to="/equipment" className={location.pathname === "/equipment" || location.pathname.startsWith("/equipment/") ? "active" : ""}>{t('equipment', language)}</Link></li>
-                    <li><Link to="/blog" className={location.pathname === "/blog" || location.pathname.startsWith("/blog/") ? "active" : ""}>{t('blog', language)}</Link></li>
-                    <li><Link to="/contact" className={location.pathname === "/contact" ? "active" : ""}>{t('contact', language)}</Link></li>
+                    <li><Link to="/haqqımızda" className={location.pathname === "/haqqımızda" ? "active" : ""}>{t('about', language)}</Link></li>
+                    <li><Link to="/məhsullar" className={location.pathname === "/məhsullar" || location.pathname.startsWith("/məhsul/") ? "active" : ""}>{t('products', language)}</Link></li>
+                    <li><Link to="/xidmətlər" className={location.pathname === "/xidmətlər" || location.pathname.startsWith("/xidmətlər/") ? "active" : ""}>{t('services', language)}</Link></li>
+                    <li><Link to="/avadanlıqlar" className={location.pathname === "/avadanlıqlar" || location.pathname.startsWith("/avadanlıqlar/") ? "active" : ""}>{t('equipment', language)}</Link></li>
+                    <li><Link to="/bloq" className={location.pathname === "/bloq" || location.pathname.startsWith("/bloq/") ? "active" : ""}>{t('blog', language)}</Link></li>
+                    <li><Link to="/əlaqə" className={location.pathname === "/əlaqə" ? "active" : ""}>{t('contact', language)}</Link></li>
                 </ul>
                 <div className="navbar-right">
                     <div
@@ -86,12 +86,12 @@ function Header() {
                             position="right"
                             items={[
                                 { label: t('home', language), ariaLabel: 'Go to home page', link: '/' },
-                                { label: t('about', language), ariaLabel: 'Learn about us', link: '/about' },
-                                { label: t('products', language), ariaLabel: 'View products', link: '/products' },
-                                { label: t('services', language), ariaLabel: 'View services', link: '/services' },
-                                { label: t('equipment', language), ariaLabel: 'View equipment', link: '/equipment' },
-                                { label: t('blog', language), ariaLabel: 'Read blog', link: '/blog' },
-                                { label: t('contact', language), ariaLabel: 'Get in touch', link: '/contact' },
+                                { label: t('about', language), ariaLabel: 'Learn about us', link: '/haqqımızda' },
+                                { label: t('products', language), ariaLabel: 'View products', link: '/məhsullar' },
+                                { label: t('services', language), ariaLabel: 'View services', link: '/xidmətlər' },
+                                { label: t('equipment', language), ariaLabel: 'View equipment', link: '/avadanlıqlar' },
+                                { label: t('blog', language), ariaLabel: 'Read blog', link: '/bloq' },
+                                { label: t('contact', language), ariaLabel: 'Get in touch', link: '/əlaqə' },
                             ]}
                             displaySocials={false}
                             displayItemNumbering={false}

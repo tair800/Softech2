@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useLanguage } from './contexts/LanguageContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import LoadingAnimation from './components/LoadingAnimation';
+import { generateDetailMetaDescription, generateDetailPageTitle, truncateMetaDescription } from './utils/metaDescriptions';
 import './ServiceDetail.css';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 function ServiceDetail() {
     const { id } = useParams();
@@ -18,7 +20,8 @@ function ServiceDetail() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098
+${url}`;
         return url;
     };
 
@@ -49,8 +52,13 @@ function ServiceDetail() {
                 const servicesData = await servicesRes.json();
                 setAllServices(servicesData);
 
-                // Fetch current service details
-                const serviceRes = await fetch(`${API}/services/${id}?language=${language}`);
+                // Fetch current service details - check if id is numeric (for ID) or string (for slug)
+                const isNumeric = /^\d+$/.test(id);
+                const serviceApiUrl = isNumeric
+                    ? `${API}/services/${id}?language=${language}`
+                    : `${API}/services/slug/${id}?language=${language}`;
+
+                const serviceRes = await fetch(serviceApiUrl);
                 if (!serviceRes.ok) throw new Error('Failed to load service');
                 const serviceData = await serviceRes.json();
                 setCurrentService(serviceData);
@@ -75,7 +83,7 @@ function ServiceDetail() {
     }, [id, language]);
 
     // Stable navigate handler to avoid re-creating on language changes
-    const handleNav = useCallback((targetId) => navigate(`/services/${targetId}`), [navigate]);
+    const handleNav = useCallback((targetSlugOrId) => navigate(`/xidmətlər/${targetSlugOrId}`), [navigate]);
 
 
     // Show error state
@@ -120,7 +128,7 @@ function ServiceDetail() {
     function Link({ service, isActive }) {
         const subtitle = pickByLanguage(language, service.subtitleEn, service.subtitleRu, service.subtitle);
         return (
-            <div className="link-container" data-name="Link" onClick={() => handleNav(service.id)}>
+            <div className="link-container" data-name="Link" onClick={() => handleNav(service.slug || service.id)}>
                 <div className="link-text">
                     <p className="adjustLetterSpacing">
                         {subtitle}
@@ -157,7 +165,7 @@ function ServiceDetail() {
     function Link1({ service, isActive }) {
         const subtitle = pickByLanguage(language, service.subtitleEn, service.subtitleRu, service.subtitle);
         return (
-            <div className="link-container-inactive" data-name="Link" onClick={() => handleNav(service.id)}>
+            <div className="link-container-inactive" data-name="Link" onClick={() => handleNav(service.slug || service.id)}>
                 <div className="link-text-inactive">
                     <p className="adjustLetterSpacing">
                         {subtitle}
@@ -206,41 +214,59 @@ function ServiceDetail() {
         );
     }
 
+    // Debug logging
+    console.log('ServiceDetail component language:', language);
+    console.log('ServiceDetail service data:', currentService);
+    console.log('ServiceDetail page title:', generateDetailPageTitle(currentService, 'service', language));
+    console.log('ServiceDetail meta description:', truncateMetaDescription(generateDetailMetaDescription(currentService, 'service', language)));
+
     return (
-        <div className="service-detail-container">
-            {/* Circle Background Element */}
-            <div className="service-detail-circle-background-right"></div>
+        <>
+            <Helmet>
+                <title>{generateDetailPageTitle(currentService, 'service', language)}</title>
+                <meta name="description" content={truncateMetaDescription(generateDetailMetaDescription(currentService, 'service', language))} />
+                <meta property="og:title" content={generateDetailPageTitle(currentService, 'service', language)} />
+                <meta property="og:description" content={truncateMetaDescription(generateDetailMetaDescription(currentService, 'service', language))} />
+                <meta property="og:type" content="article" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={generateDetailPageTitle(currentService, 'service', language)} />
+                <meta name="twitter:description" content={truncateMetaDescription(generateDetailMetaDescription(currentService, 'service', language))} />
+            </Helmet>
+            <div className="service-detail-container">
+                {/* Circle Background Element */}
+                <div className="service-detail-circle-background-right"></div>
 
-            <div className="service-detail-content">
-                <div className="service-detail-left">
-                    <h3 className="service-detail-sidebar-title">{pickByLanguage(language, 'Our Services', 'Наши услуги', 'Xidmətlərimiz')}</h3>
-                    <div className="list-container">
-                        <Aside />
+                <div className="service-detail-content">
+                    <div className="service-detail-left">
+                        <h3 className="service-detail-sidebar-title">{pickByLanguage(language, 'Our Services', 'Наши услуги', 'Xidmətlərimiz')}</h3>
+                        <div className="list-container">
+                            <Aside />
+                        </div>
+                    </div>
+                    <div className="service-detail-right">
+                        <div className="service-detail-content-area">
+                            <img
+                                src={resolveUrl(currentService.detailImage)}
+                                alt={pickByLanguage(language, currentService.nameEn, currentService.nameRu, currentService.name)}
+                                className="service-detail-image"
+                            />
+                        </div>
+                        <h1 className="service-detail-title">{pickByLanguage(language, currentService.nameEn, currentService.nameRu, currentService.name)}</h1>
+                        {(currentService.description || currentService.descriptionEn || currentService.descriptionRu) && (
+                            <p className="service-detail-description">{pickByLanguage(language, currentService.descriptionEn, currentService.descriptionRu, currentService.description)}</p>
+                        )}
+                        {refetching && <div className="service-detail-refetching-overlay" />}
                     </div>
                 </div>
-                <div className="service-detail-right">
-                    <div className="service-detail-content-area">
-                        <img
-                            src={resolveUrl(currentService.detailImage)}
-                            alt={pickByLanguage(language, currentService.nameEn, currentService.nameRu, currentService.name)}
-                            className="service-detail-image"
-                        />
+
+                {/* Loading Overlay */}
+                {loading && (
+                    <div className="loading-overlay">
+                        <LoadingAnimation message={language === 'en' ? 'Loading Service...' : language === 'ru' ? 'Загрузка услуги...' : 'Xidmət yüklənir...'} />
                     </div>
-                    <h1 className="service-detail-title">{pickByLanguage(language, currentService.nameEn, currentService.nameRu, currentService.name)}</h1>
-                    {(currentService.description || currentService.descriptionEn || currentService.descriptionRu) && (
-                        <p className="service-detail-description">{pickByLanguage(language, currentService.descriptionEn, currentService.descriptionRu, currentService.description)}</p>
-                    )}
-                    {refetching && <div className="service-detail-refetching-overlay" />}
-                </div>
+                )}
             </div>
-
-            {/* Loading Overlay */}
-            {loading && (
-                <div className="loading-overlay">
-                    <LoadingAnimation message={language === 'en' ? 'Loading Service...' : language === 'ru' ? 'Загрузка услуги...' : 'Xidmət yüklənir...'} />
-                </div>
-            )}
-        </div>
+        </>
     );
 }
 

@@ -32,6 +32,15 @@ namespace WebOnlyAPI.Controllers
             return Ok(blog);
         }
 
+        // GET: api/blogs/slug/my-blog-post
+        [HttpGet("slug/{slug}")]
+        public async Task<ActionResult<BlogResponseDto>> GetBlogBySlug(string slug)
+        {
+            var blog = await _blogService.GetBySlugAsync(slug);
+            if (blog == null) return NotFound();
+            return Ok(blog);
+        }
+
         // POST: api/blogs
         [HttpPost]
         public async Task<ActionResult<BlogResponseDto>> CreateBlog([FromBody] CreateBlogDto createDto)

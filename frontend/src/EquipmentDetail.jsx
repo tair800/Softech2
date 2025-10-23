@@ -4,7 +4,7 @@ import SimilarEquipmentCard from './components/SimilarEquipmentCard';
 import './EquipmentDetail.css';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 function EquipmentDetail() {
     const { id } = useParams();
@@ -26,7 +26,7 @@ function EquipmentDetail() {
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -65,7 +65,13 @@ function EquipmentDetail() {
         const fetchEquipment = async () => {
             try {
                 setLoading(true);
-                const res = await fetch(`${API}/equipment/${id}`);
+                // Check if id is numeric (for ID) or string (for slug)
+                const isNumeric = /^\d+$/.test(id);
+                const apiUrl = isNumeric
+                    ? `${API}/equipment/${id}`
+                    : `${API}/equipment/slug/${id}`;
+
+                const res = await fetch(apiUrl);
                 if (!res.ok) throw new Error('Failed to load equipment');
                 const data = await res.json();
 
@@ -232,7 +238,7 @@ function EquipmentDetail() {
                 <div className="equipment-detail-center">
                     <h2>{language === 'en' ? 'Error' : language === 'ru' ? 'Ошибка' : 'Xəta'}: {error}</h2>
                     <button
-                        onClick={() => navigate('/equipment')}
+                        onClick={() => navigate('/avadanlıqlar')}
                         style={{
                             background: 'linear-gradient(90deg, #007bff, #00d4ff)',
                             border: 'none',
@@ -257,7 +263,7 @@ function EquipmentDetail() {
                 <div className="equipment-detail-center">
                     <h2>{language === 'en' ? 'Equipment not found' : language === 'ru' ? 'Оборудование не найдено' : 'Avadanlıq tapılmadı'}</h2>
                     <button
-                        onClick={() => navigate('/equipment')}
+                        onClick={() => navigate('/avadanlıqlar')}
                         style={{
                             background: 'linear-gradient(90deg, #007bff, #00d4ff)',
                             border: 'none',
@@ -542,26 +548,59 @@ function EquipmentDetail() {
             </div>
 
             {/* Category Filter */}
-            <div className="equipment-category-filter">
-                <div className="category-filter-container">
-                    <div className="category-filter-slider">
-                        {visibleCategories.map((category) => {
-                            const categoryName = pickByLanguage(language || 'az', category.nameEn, category.nameRu, category.name);
-                            return (
-                                <button
-                                    key={category.id}
-                                    className={`category-filter-btn ${selectedCategory === category.id ? 'active' : ''}`}
-                                    onClick={() => handleCategoryFilter(category.id)}
-                                >
-                                    {categoryName}
-                                </button>
-                            );
-                        })}
+            <div className="equipment-category-filter-wrapper">
+                <div className="equipment-category-filter">
+                    {/* Desktop Layout - Buttons on sides */}
+                    <button
+                        className="category-nav-arrow category-nav-arrow-left desktop-only"
+                        onClick={handleCategoryPrevious}
+                        disabled={categoryStartIndex === 0}
+                        style={{ opacity: categoryStartIndex === 0 ? 0.3 : 1 }}
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </button>
+
+                    <div className="category-filter-container">
+                        <div className="category-filter-slider">
+                            {visibleCategories.map((category) => {
+                                const categoryName = pickByLanguage(language || 'az', category.nameEn, category.nameRu, category.name);
+                                return (
+                                    <button
+                                        key={category.id}
+                                        className={`category-filter-btn ${selectedCategory === category.id ? 'active' : ''}`}
+                                        onClick={() => handleCategoryFilter(category.id)}
+                                    >
+                                        {categoryName}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
+
+                    <button
+                        className="category-nav-arrow category-nav-arrow-right desktop-only"
+                        onClick={handleCategoryNext}
+                        disabled={(() => {
+                            const categoriesPerPage = isMobile ? 3 : 6;
+                            return categoryStartIndex >= categories.length - categoriesPerPage;
+                        })()}
+                        style={{
+                            opacity: (() => {
+                                const categoriesPerPage = isMobile ? 3 : 6;
+                                return categoryStartIndex >= categories.length - categoriesPerPage ? 0.3 : 1;
+                            })()
+                        }}
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </button>
                 </div>
 
-                {/* Arrow Navigation */}
-                <div className="category-nav-container">
+                {/* Mobile Layout - Buttons below */}
+                <div className="category-nav-buttons-container mobile-only">
                     <button
                         className="category-nav-arrow category-nav-arrow-left"
                         onClick={handleCategoryPrevious}
@@ -598,7 +637,7 @@ function EquipmentDetail() {
             <div className="equipment-back-button-container">
                 <button
                     className="equipment-back-btn"
-                    onClick={() => navigate('/equipment')}
+                    onClick={() => navigate('/avadanlıqlar')}
                 >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

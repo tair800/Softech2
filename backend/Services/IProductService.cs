@@ -6,6 +6,7 @@ namespace WebOnlyAPI.Services
     {
         Task<IEnumerable<ProductResponseDto>> GetAllProductsAsync(string? language = null);
         Task<ProductResponseDto?> GetProductByIdAsync(int id, string? language = null);
+        Task<ProductResponseDto?> GetBySlugAsync(string slug, string? language = null);
         Task<ProductResponseDto> CreateProductAsync(CreateProductDto createDto);
         Task<ProductResponseDto?> UpdateProductAsync(int id, UpdateProductDto updateDto);
         Task<bool> DeleteProductAsync(int id);

@@ -56,6 +56,10 @@ namespace WebOnlyAPI.Models
         public string? DetailImg3Url { get; set; }
         public string? DetailImg4Url { get; set; }
 
+        // URL-friendly identifier for the blog post
+        [StringLength(200)]
+        public string? Slug { get; set; }
+
         public DateTimeOffset? PublishedAt { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;

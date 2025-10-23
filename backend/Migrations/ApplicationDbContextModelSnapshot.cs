@@ -119,6 +119,10 @@ namespace WebOnlyAPI.Migrations
                     b.Property<DateTimeOffset?>("PublishedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Slug")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Title1")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -325,6 +329,10 @@ namespace WebOnlyAPI.Migrations
 
                     b.Property<string>("NameRu")
                         .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Slug")
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -601,6 +609,62 @@ namespace WebOnlyAPI.Migrations
                     b.ToTable("EquipmentTagMapping", (string)null);
                 });
 
+            modelBuilder.Entity("WebOnlyAPI.Models.MetaDescription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OpenGraphDescription")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OpenGraphTitle")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PageKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TwitterDescription")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TwitterTitle")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MetaDescriptions");
+                });
+
             modelBuilder.Entity("WebOnlyAPI.Models.PasswordResetToken", b =>
                 {
                     b.Property<int>("Id")
@@ -776,6 +840,10 @@ namespace WebOnlyAPI.Migrations
                     b.Property<string>("Section3TitleRu")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Slug")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Subtext")
                         .HasMaxLength(1000)
                         .HasColumnType("TEXT");
@@ -936,6 +1004,10 @@ namespace WebOnlyAPI.Migrations
 
                     b.Property<string>("NameRu")
                         .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Slug")
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Subtext")

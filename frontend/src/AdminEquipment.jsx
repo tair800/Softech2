@@ -3,7 +3,7 @@ import './AdminEquipment.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 export default function AdminEquipment() {
     const [equipments, setEquipments] = useState([]);
@@ -27,6 +27,7 @@ export default function AdminEquipment() {
         core: '',
         description: '',
         imageUrl: '',
+        slug: '',
         imageFile: null,
         isMain: false,
         categoryIds: [],
@@ -41,7 +42,7 @@ export default function AdminEquipment() {
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -52,6 +53,7 @@ export default function AdminEquipment() {
         core: '',
         description: '',
         imageUrl: '',
+        slug: '',
         imageFile: null,
         isMain: false,
         categoryIds: [],
@@ -432,6 +434,7 @@ export default function AdminEquipment() {
                             descriptionEn: form.descriptionEn,
                             descriptionRu: form.descriptionRu,
                             imageUrl: '',
+                            slug: form.slug,
                             isMain: form.isMain,
                             categoryIds: form.categoryIds,
                             tagIds: form.tagIds,
@@ -475,6 +478,7 @@ export default function AdminEquipment() {
                             descriptionEn: form.descriptionEn,
                             descriptionRu: form.descriptionRu,
                             imageUrl: finalImageUrl,
+                            slug: form.slug,
                             isMain: form.isMain,
                             categoryIds: form.categoryIds,
                             tagIds: form.tagIds,
@@ -544,6 +548,7 @@ export default function AdminEquipment() {
                     descriptionEn: form.descriptionEn,
                     descriptionRu: form.descriptionRu,
                     imageUrl: form.imageUrl,
+                    slug: form.slug,
                     isMain: form.isMain,
                     categoryIds: form.categoryIds,
                     tagIds: form.tagIds,
@@ -691,6 +696,7 @@ export default function AdminEquipment() {
                 descriptionEn: item.descriptionEn || '',
                 descriptionRu: item.descriptionRu || '',
                 imageUrl: item.imageUrl || '',
+                slug: item.slug || '',
                 isMain: item.isMain || false,
                 categoryIds: categoryIds,
                 tagIds: tagIds,
@@ -782,7 +788,8 @@ export default function AdminEquipment() {
             (e.description || '') !== (o.description || '') ||
             (e.descriptionEn || '') !== (o.descriptionEn || '') ||
             (e.descriptionRu || '') !== (o.descriptionRu || '') ||
-            (e.imageUrl || '') !== (o.imageUrl || '')
+            (e.imageUrl || '') !== (o.imageUrl || '') ||
+            (e.slug || '') !== (o.slug || '')
         );
 
         if (basicFieldsChanged) return true;
@@ -918,6 +925,17 @@ export default function AdminEquipment() {
                                     <textarea className="form-control" rows={4} placeholder="Description (default)" value={e.description || ''} onChange={(ev) => setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, description: ev.target.value } : x))} />
                                     <textarea className="form-control" rows={3} placeholder="Description (EN)" value={e.descriptionEn || ''} onChange={(ev) => setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, descriptionEn: ev.target.value } : x))} />
                                     <textarea className="form-control" rows={3} placeholder="Description (RU)" value={e.descriptionRu || ''} onChange={(ev) => setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, descriptionRu: ev.target.value } : x))} />
+                                </div>
+                            </div>
+                            <div className="form-group row g-3 align-items-start">
+                                <label className="col-sm-3 col-form-label">Slug</label>
+                                <div className="col-sm-9">
+                                    <input
+                                        className="form-control"
+                                        placeholder="URL-friendly identifier (e.g., my-equipment)"
+                                        value={e.slug || ''}
+                                        onChange={(ev) => setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, slug: ev.target.value } : x))}
+                                    />
                                 </div>
                             </div>
                             <div className="form-group row g-3 align-items-center">
@@ -1379,8 +1397,8 @@ export default function AdminEquipment() {
                                                     const result = await response.json();
                                                     let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                     // Convert full URL to relative path if needed
-                                                    if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                                                        imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                                                    if (imageUrl.startsWith('http://localhost:5098')) {
+                                                        imageUrl = imageUrl.replace('http://localhost:5098', '');
                                                     }
                                                     setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, imageUrl, imageFile: file } : x));
                                                 } else {
@@ -1437,7 +1455,7 @@ export default function AdminEquipment() {
                                                         if (response.ok) {
                                                             const result = await response.json();
                                                             let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
-                                                            if (imageUrl.startsWith('https://softech-api.webonly.io')) imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                                                            if (imageUrl.startsWith('http://localhost:5098')) imageUrl = imageUrl.replace('http://localhost:5098', '');
                                                             updateImage(e.id, k + 1, 'imageUrl', imageUrl);
                                                             Swal.fire('Uğurlu!', 'Şəkil yükləndi', 'success');
                                                         } else {
@@ -1504,6 +1522,7 @@ export default function AdminEquipment() {
                                 <div className="col-md-6"><label className="form-label">Core *</label><input className="form-control" value={form.core} onChange={(e) => setForm({ ...form, core: e.target.value })} /></div>
                             </div>
                             <div className="form-group mb-3 mt-3"><label className="form-label">Təsvir *</label><textarea className="form-control" rows={4} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
+                            <div className="form-group mb-3"><label className="form-label">Slug</label><input className="form-control" placeholder="URL-friendly identifier (e.g., my-equipment)" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} /></div>
 
                             {/* IsMain Button */}
                             <div className="form-group mb-3">
@@ -1602,8 +1621,8 @@ export default function AdminEquipment() {
                                                         const result = await response.json();
                                                         let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
                                                         // Convert full URL to relative path if needed
-                                                        if (imageUrl.startsWith('https://softech-api.webonly.io')) {
-                                                            imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                                                        if (imageUrl.startsWith('http://localhost:5098')) {
+                                                            imageUrl = imageUrl.replace('http://localhost:5098', '');
                                                         }
                                                         setForm({ ...form, imageUrl, imageFile: file });
                                                     } else {
@@ -1667,7 +1686,7 @@ export default function AdminEquipment() {
                                                             if (response.ok) {
                                                                 const result = await response.json();
                                                                 let imageUrl = result.imageUrl || `/uploads/${result.filename}`;
-                                                                if (imageUrl.startsWith('https://softech-api.webonly.io')) imageUrl = imageUrl.replace('https://softech-api.webonly.io', '');
+                                                                if (imageUrl.startsWith('http://localhost:5098')) imageUrl = imageUrl.replace('http://localhost:5098', '');
 
                                                                 const newImages = [...(form.images || [])];
                                                                 while (newImages.length <= k) {

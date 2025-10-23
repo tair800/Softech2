@@ -85,6 +85,9 @@ namespace WebOnlyAPI.Models
         public string? Section3MoreTextRu { get; set; }
         [StringLength(500)]
         public string? Section3Image { get; set; }
+        
+        [StringLength(200)]
+        public string? Slug { get; set; }
 
         // Navigation properties
         public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();

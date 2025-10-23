@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebOnlyAPI.Data;
 using WebOnlyAPI.DTOs;
 using WebOnlyAPI.Models;
+using WebOnlyAPI.Utils;
 
 namespace WebOnlyAPI.Services
 {
@@ -107,6 +108,15 @@ namespace WebOnlyAPI.Services
             return dto;
         }
 
+        public async Task<ProductResponseDto?> GetBySlugAsync(string slug, string? language = null)
+        {
+            var product = await _context.Products
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(p => p.Slug == slug);
+            if (product == null) return null;
+            return await GetProductByIdAsync(product.Id, language);
+        }
+
         public async Task<ProductResponseDto> CreateProductAsync(CreateProductDto createDto)
         {
             var product = new Product
@@ -152,6 +162,7 @@ namespace WebOnlyAPI.Services
                 Section3MoreTextEn = createDto.Section3MoreTextEn,
                 Section3MoreTextRu = createDto.Section3MoreTextRu,
                 Section3Image = createDto.Section3Image,
+                Slug = !string.IsNullOrWhiteSpace(createDto.Slug) ? createDto.Slug : SlugGenerator.GenerateSlug(createDto.Name),
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -208,6 +219,7 @@ namespace WebOnlyAPI.Services
             product.Section3MoreTextEn = updateDto.Section3MoreTextEn;
             product.Section3MoreTextRu = updateDto.Section3MoreTextRu;
             product.Section3Image = updateDto.Section3Image;
+            product.Slug = !string.IsNullOrWhiteSpace(updateDto.Slug) ? updateDto.Slug : SlugGenerator.GenerateSlug(updateDto.Name);
             product.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
@@ -278,6 +290,7 @@ namespace WebOnlyAPI.Services
                 Section3MoreTextEn = product.Section3MoreTextEn,
                 Section3MoreTextRu = product.Section3MoreTextRu,
                 Section3Image = product.Section3Image,
+                Slug = product.Slug,
                 Images = product.Images?.OrderBy(i => i.OrderIndex).Select(i => new ProductImageDto
                 {
                     Id = i.Id,

@@ -9,6 +9,7 @@ import AdminServices from './AdminServices';
 import AdminBlog from './AdminBlog';
 import AdminCategoriesTags from './AdminCategoriesTags';
 import AdminSliders from './AdminSliders';
+import AdminMetaDescriptions from './AdminMetaDescriptions';
 import UserProfile from './UserProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 import './AdminPanel.css';
@@ -46,6 +47,7 @@ function AdminPanel() {
                         <Route path="/blog" element={<AdminBlog />} />
                         <Route path="/sliders" element={<AdminSliders />} />
                         <Route path="/categories-tags" element={<AdminCategoriesTags />} />
+                        <Route path="/meta-descriptions" element={<AdminMetaDescriptions />} />
                         <Route path="/profile" element={<UserProfile />} />
                         <Route path="/settings" element={<div>Settings Page</div>} />
                         <Route path="/test" element={<div />} />

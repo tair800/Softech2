@@ -48,6 +48,20 @@ namespace WebOnlyAPI.Controllers
             return Ok(product);
         }
 
+        // GET: api/products/slug/{slug}
+        [HttpGet("slug/{slug}")]
+        public async Task<ActionResult<ProductResponseDto>> GetProductBySlug(string slug, [FromQuery] string? language)
+        {
+            var product = await _productService.GetBySlugAsync(slug, language);
+            
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(product);
+        }
+
         // POST: api/products
         [HttpPost]
         public async Task<ActionResult<ProductResponseDto>> CreateProduct(CreateProductDto createDto)

@@ -6,6 +6,7 @@ namespace WebOnlyAPI.Services
     {
         Task<IEnumerable<BlogResponseDto>> GetAllAsync();
         Task<BlogResponseDto?> GetByIdAsync(int id);
+        Task<BlogResponseDto?> GetBySlugAsync(string slug);
         Task<BlogResponseDto> CreateAsync(CreateBlogDto createDto);
         Task<BlogResponseDto?> UpdateAsync(int id, UpdateBlogDto updateDto);
         Task<bool> DeleteAsync(int id);

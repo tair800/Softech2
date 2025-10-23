@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 import { useLanguage } from "./contexts/LanguageContext.jsx";
 import LoadingAnimation from "./components/LoadingAnimation";
+import { getMetaDescription, getPageTitle } from "./utils/metaDescriptions";
 import "./Home.css";
 import "./components/PageTitle.css";
 import prevIcon from "/assets/prev.png";
@@ -214,7 +216,7 @@ export default function Home() {
 
       try {
         const response = await fetch(
-          "https://softech-api.webonly.io/api/sliders"
+          "http://localhost:5098/api/sliders"
         );
         if (response.ok) {
           const data = await response.json();
@@ -223,7 +225,7 @@ export default function Home() {
           const transformedSlides = data.map((slide) => ({
             id: slide.id,
             img: slide.imageUrl
-              ? `https://softech-api.webonly.io${slide.imageUrl}`
+              ? `http://localhost:5098${slide.imageUrl}`
               : "/assets/slider1.png",
             name: slide.name || "Default",
             nameEn: slide.nameEn || "Default",
@@ -445,108 +447,125 @@ export default function Home() {
     }
   };
 
+  // Debug logging
+  console.log('Home component language:', language);
+  console.log('Home page title:', getPageTitle('home', language));
+  console.log('Home meta description:', getMetaDescription('home', language));
+
   return (
-    <div className="home-container">
-      <div className="circle-background-left"></div>
-      <div className="circle-background-right"></div>
+    <>
+      <Helmet>
+        <title>{getPageTitle('home', language)}</title>
+        <meta name="description" content={getMetaDescription('home', language)} />
+        <meta property="og:title" content={getPageTitle('home', language)} />
+        <meta property="og:description" content={getMetaDescription('home', language)} />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={getPageTitle('home', language)} />
+        <meta name="twitter:description" content={getMetaDescription('home', language)} />
+      </Helmet>
+      <div className="home-container">
+        <div className="circle-background-left"></div>
+        <div className="circle-background-right"></div>
 
 
 
-      {/* Logo text positioned absolutely */}
-      <div className="home-logo-text">
-        <img
-          src={logoText}
-          alt="Logo Text"
-          className="home-logo-text-background"
-        />
-      </div>
-
-      <div className="slider-container">
-        <div className="top-ellipse">
-          <svg
-            className="ellipse-svg"
-            fill="none"
-            preserveAspectRatio="none"
-            viewBox="0 0 1920 147"
-          >
-            <ellipse cx="960" cy="73.5" fill="#111214" rx="960" ry="73.5" />
-          </svg>
+        {/* Logo text positioned absolutely */}
+        <div className="home-logo-text">
+          <img
+            src={logoText}
+            alt="Logo Text"
+            className="home-logo-text-background"
+          />
         </div>
 
-        <div className="image-scroller-wrapper">
-          <div className="image-scroller-container">
-            <div
-              ref={scrollerRef}
-              className="image-scroller"
-              style={{
-                width: `${slides.length * 3 *
-                  (window.innerWidth <= 768
-                    ? window.innerWidth
-                    : imageWidth + 20)
-                  }px`,
-              }}
+        <div className="slider-container">
+          <div className="top-ellipse">
+            <svg
+              className="ellipse-svg"
+              fill="none"
+              preserveAspectRatio="none"
+              viewBox="0 0 1920 147"
             >
-              {[...slides, ...slides, ...slides].map((slide, index) => (
-                <div
-                  key={`${index}-${slide.id}`}
-                  className={`image-slide ${slide.productId ? 'clickable' : ''}`}
-                  style={{
-                    width: `${window.innerWidth <= 768
+              <ellipse cx="960" cy="73.5" fill="#111214" rx="960" ry="73.5" />
+            </svg>
+          </div>
+
+          <div className="image-scroller-wrapper">
+            <div className="image-scroller-container">
+              <div
+                ref={scrollerRef}
+                className="image-scroller"
+                style={{
+                  width: `${slides.length * 3 *
+                    (window.innerWidth <= 768
                       ? window.innerWidth
-                      : imageWidth
-                      }px`,
-                    backgroundImage: `url('${slide.img}')`,
-                    cursor: slide.productId ? 'pointer' : 'default',
-                  }}
-                  onClick={() => slide.productId && handleSliderClick(slide)}
-                />
-              ))}
+                      : imageWidth + 20)
+                    }px`,
+                }}
+              >
+                {[...slides, ...slides, ...slides].map((slide, index) => (
+                  <div
+                    key={`${index}-${slide.id}`}
+                    className={`image-slide ${slide.productId ? 'clickable' : ''}`}
+                    style={{
+                      width: `${window.innerWidth <= 768
+                        ? window.innerWidth
+                        : imageWidth
+                        }px`,
+                      backgroundImage: `url('${slide.img}')`,
+                      cursor: slide.productId ? 'pointer' : 'default',
+                    }}
+                    onClick={() => slide.productId && handleSliderClick(slide)}
+                  />
+                ))}
+              </div>
             </div>
+          </div>
+
+          <div className="bottom-ellipse">
+            <svg
+              className="ellipse-svg"
+              fill="none"
+              preserveAspectRatio="none"
+              viewBox="0 0 1920 147"
+            >
+              <ellipse cx="960" cy="73.5" fill="#111214" rx="960" ry="73.5" />
+            </svg>
           </div>
         </div>
 
-        <div className="bottom-ellipse">
-          <svg
-            className="ellipse-svg"
-            fill="none"
-            preserveAspectRatio="none"
-            viewBox="0 0 1920 147"
+        <div className="circular-progress-container">
+          <button
+            className="slider-nav-btn slider-prev-btn"
+            onClick={prevSlide}
+            disabled={isTransitioning}
           >
-            <ellipse cx="960" cy="73.5" fill="#111214" rx="960" ry="73.5" />
-          </svg>
+            <img src={prevIcon} alt="Previous" className="slider-nav-icon" />
+          </button>
+          <CircularProgress
+            currentIndex={currentIndex}
+            totalSlides={slides.length}
+            slides={slides}
+            language={language}
+            onSliderClick={handleSliderClick}
+          />
+          <button
+            className="slider-nav-btn slider-next-btn"
+            onClick={nextSlide}
+            disabled={isTransitioning}
+          >
+            <img src={nextIcon} alt="Next" className="slider-nav-icon" />
+          </button>
         </div>
-      </div>
 
-      <div className="circular-progress-container">
-        <button
-          className="slider-nav-btn slider-prev-btn"
-          onClick={prevSlide}
-          disabled={isTransitioning}
-        >
-          <img src={prevIcon} alt="Previous" className="slider-nav-icon" />
-        </button>
-        <CircularProgress
-          currentIndex={currentIndex}
-          totalSlides={slides.length}
-          slides={slides}
-          language={language}
-          onSliderClick={handleSliderClick}
-        />
-        <button
-          className="slider-nav-btn slider-next-btn"
-          onClick={nextSlide}
-          disabled={isTransitioning}
-        >
-          <img src={nextIcon} alt="Next" className="slider-nav-icon" />
-        </button>
+        {/* Loading Overlay */}
+        {isLoading && (
+          <div className="loading-overlay">
+            <LoadingAnimation message={language === 'en' ? 'Loading Home...' : language === 'ru' ? 'Загрузка главной...' : 'Ana səhifə yüklənir...'} />
+          </div>
+        )}
       </div>
-
-      {/* Loading Overlay */}
-      {isLoading && (
-        <div className="loading-overlay">
-          <LoadingAnimation message={language === 'en' ? 'Loading Home...' : language === 'ru' ? 'Загрузка главной...' : 'Ana səhifə yüklənir...'} />
-        </div>
-      )}
-    </div>
+    </>
   );
 }

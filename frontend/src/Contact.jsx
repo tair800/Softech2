@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 import Spline from '@splinetool/react-spline';
 import PageTitle from './components/PageTitle';
 import LoadingAnimation from './components/LoadingAnimation';
+import { getMetaDescription, getPageTitle } from './utils/metaDescriptions';
 import contactPhoneIcon from '/assets/contact-phone.svg';
 import contactLocationIcon from '/assets/contact-location.svg';
 import contactMailIcon from '/assets/contact-mail.svg';
@@ -56,7 +58,7 @@ function Contact() {
         e.preventDefault();
 
         try {
-            const response = await fetch('https://softech-api.webonly.io/api/contact', {
+            const response = await fetch('http://localhost:5098/api/contact', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,129 +101,146 @@ function Contact() {
         return (dict[key] && (dict[key][language] || dict[key].az)) || key;
     };
 
+    // Debug logging
+    console.log('Contact component language:', language);
+    console.log('Contact page title:', getPageTitle('contact', language));
+    console.log('Contact meta description:', getMetaDescription('contact', language));
+
     return (
-        <div className="contact-container">
-            <PageTitle title={t('pageTitle')} customClass="page-title-contact" />
-            <div className="contact-circle-background-left"></div>
-            <div className="contact-circle-background-right"></div>
+        <>
+            <Helmet>
+                <title>{getPageTitle('contact', language)}</title>
+                <meta name="description" content={getMetaDescription('contact', language)} />
+                <meta property="og:title" content={getPageTitle('contact', language)} />
+                <meta property="og:description" content={getMetaDescription('contact', language)} />
+                <meta property="og:type" content="website" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={getPageTitle('contact', language)} />
+                <meta name="twitter:description" content={getMetaDescription('contact', language)} />
+            </Helmet>
+            <div className="contact-container">
+                <PageTitle title={t('pageTitle')} customClass="page-title-contact" />
+                <div className="contact-circle-background-left"></div>
+                <div className="contact-circle-background-right"></div>
 
-            <div className="contact-center">
-                <div className="contact-rainbow">
-                    {!splineError ? (
-                        <Spline
-                            scene="https://prod.spline.design/mP2TljaQ-tsNIzZt/scene.splinecode"
-                            onLoad={handleSplineLoad}
-                            onError={(error) => {
-                                setSplineError(true);
-                                setSplineLoaded(false);
-                                // Clear sessionStorage if Spline fails to load
-                                sessionStorage.removeItem("splineLoaded");
-                            }}
-                        />
-                    ) : (
-                        <div className="spline-fallback">
-                            <img src="/assets/rainbow.png" alt="Rainbow" />
-                        </div>
-                    )}
+                <div className="contact-center">
+                    <div className="contact-rainbow">
+                        {!splineError ? (
+                            <Spline
+                                scene="https://prod.spline.design/mP2TljaQ-tsNIzZt/scene.splinecode"
+                                onLoad={handleSplineLoad}
+                                onError={(error) => {
+                                    setSplineError(true);
+                                    setSplineLoaded(false);
+                                    // Clear sessionStorage if Spline fails to load
+                                    sessionStorage.removeItem("splineLoaded");
+                                }}
+                            />
+                        ) : (
+                            <div className="spline-fallback">
+                                <img src="/assets/rainbow.png" alt="Rainbow" />
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
 
-            <div className="contact-main-section">
-                <div className="contact-left-section">
-                    <div className="contact-content">
-                        <div className="contact-heading">
-                            <h1 className="heading-line-1">{t('q1')}</h1>
-                            <h1 className="heading-line-2">{t('q2')}</h1>
-                        </div>
-                        <div className="contact-description">
-                            <p>{t('desc')}</p>
-                        </div>
-                        <div className="contact-location">
-                            <span>{t('locationFull')}</span>
-                        </div>
-                        <div className="contact-info">
-                            <div className="contact-item">
-                                <div className="contact-icon">
-                                    <img src={contactPhoneIcon} alt={t('phone')} />
-                                </div>
-                                <span>
-                                    <a href="tel:+994552742303" style={{ color: 'inherit', textDecoration: 'none' }}>+994 55 274 23 03</a> <br />
-                                    <a href="tel:+994512521556" style={{ color: 'inherit', textDecoration: 'none' }}>+994 51 252 15 56</a>
-                                </span>
+                <div className="contact-main-section">
+                    <div className="contact-left-section">
+                        <div className="contact-content">
+                            <div className="contact-heading">
+                                <h1 className="heading-line-1">{t('q1')}</h1>
+                                <h1 className="heading-line-2">{t('q2')}</h1>
                             </div>
+                            <div className="contact-description">
+                                <p>{t('desc')}</p>
+                            </div>
+                            <div className="contact-location">
+                                <span>{t('locationFull')}</span>
+                            </div>
+                            <div className="contact-info">
+                                <div className="contact-item">
+                                    <div className="contact-icon">
+                                        <img src={contactPhoneIcon} alt={t('phone')} />
+                                    </div>
+                                    <span>
+                                        <a href="tel:+994552742303" style={{ color: 'inherit', textDecoration: 'none' }}>+994 55 274 23 03</a> <br />
+                                        <a href="tel:+994512521556" style={{ color: 'inherit', textDecoration: 'none' }}>+994 51 252 15 56</a>
+                                    </span>
+                                </div>
 
-                            <div className="contact-item">
-                                <div className="contact-icon">
-                                    <img src={contactMailIcon} alt={t('email')} />
+                                <div className="contact-item">
+                                    <div className="contact-icon">
+                                        <img src={contactMailIcon} alt={t('email')} />
+                                    </div>
+                                    <span>
+                                        <a href="mailto:cavidn@softech.az" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                            cavidn@softech.az
+                                        </a>
+                                    </span>
                                 </div>
-                                <span>
-                                    <a href="mailto:cavidn@softech.az" style={{ color: 'inherit', textDecoration: 'none' }}>
-                                        cavidn@softech.az
-                                    </a>
-                                </span>
-                            </div>
-                            <div className="contact-item">
-                                <div className="contact-icon">
-                                    <img src={contactLocationIcon} alt={t('location')} />
+                                <div className="contact-item">
+                                    <div className="contact-icon">
+                                        <img src={contactLocationIcon} alt={t('location')} />
+                                    </div>
+                                    <span>
+                                        <a href="https://maps.google.com/maps?q=1+Ahmad+Rajabli,+Baku,+Azerbaijan" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                            1 Ahmad Rajabli, {t('locationFull')}
+                                        </a>
+                                    </span>
                                 </div>
-                                <span>
-                                    <a href="https://maps.google.com/maps?q=1+Ahmad+Rajabli,+Baku,+Azerbaijan" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
-                                        1 Ahmad Rajabli, {t('locationFull')}
-                                    </a>
-                                </span>
                             </div>
+                        </div>
+                    </div>
+
+                    <div className="contact-right-section">
+                        <div className="contact-form-container">
+                            <h2>{t('yourInfo')}</h2>
+                            <form onSubmit={handleSubmit} className="contact-form">
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="name">{t('nameLabel')} <span className="required">*</span></label>
+                                        <input type="text" id="name" name="name" placeholder={t('namePh')} value={formData.name} onChange={handleChange} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="email">{t('emailLabel')} <span className="required">*</span></label>
+                                        <input type="email" id="email" name="email" placeholder={t('emailPh')} value={formData.email} onChange={handleChange} required />
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="subject">{t('subjectLabel')} <span className="required">*</span></label>
+                                    <input type="text" id="subject" name="subject" placeholder={t('subjectPh')} value={formData.subject} onChange={handleChange} required />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="message">{t('messageLabel')} <span className="required">*</span></label>
+                                    <textarea id="message" name="message" placeholder={t('messagePh')} value={formData.message} onChange={handleChange} required />
+                                </div>
+                                <button type="submit" className="submit-btn">{t('send')}</button>
+                            </form>
                         </div>
                     </div>
                 </div>
 
-                <div className="contact-right-section">
-                    <div className="contact-form-container">
-                        <h2>{t('yourInfo')}</h2>
-                        <form onSubmit={handleSubmit} className="contact-form">
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label htmlFor="name">{t('nameLabel')} <span className="required">*</span></label>
-                                    <input type="text" id="name" name="name" placeholder={t('namePh')} value={formData.name} onChange={handleChange} required />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="email">{t('emailLabel')} <span className="required">*</span></label>
-                                    <input type="email" id="email" name="email" placeholder={t('emailPh')} value={formData.email} onChange={handleChange} required />
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="subject">{t('subjectLabel')} <span className="required">*</span></label>
-                                <input type="text" id="subject" name="subject" placeholder={t('subjectPh')} value={formData.subject} onChange={handleChange} required />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="message">{t('messageLabel')} <span className="required">*</span></label>
-                                <textarea id="message" name="message" placeholder={t('messagePh')} value={formData.message} onChange={handleChange} required />
-                            </div>
-                            <button type="submit" className="submit-btn">{t('send')}</button>
-                        </form>
+                <div className="contact-map">
+                    <iframe
+                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=1+Ahmad+Rajabli,Baku,Azerbaijan"
+                        width="100%"
+                        height="400"
+                        style={{ border: 0 }}
+                        allowFullScreen=""
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title="Softech Location - 1 Ahmad Rajabli, Baku, Azerbaijan"
+                    ></iframe>
+                </div>
+
+                {/* Loading Overlay */}
+                {isLoading && (
+                    <div className="loading-overlay">
+                        <LoadingAnimation message={language === 'en' ? 'Loading Contact...' : language === 'ru' ? 'Загрузка контактов...' : 'Əlaqə yüklənir...'} />
                     </div>
-                </div>
+                )}
             </div>
-
-            <div className="contact-map">
-                <iframe
-                    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=1+Ahmad+Rajabli,Baku,Azerbaijan"
-                    width="100%"
-                    height="400"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Softech Location - 1 Ahmad Rajabli, Baku, Azerbaijan"
-                ></iframe>
-            </div>
-
-            {/* Loading Overlay */}
-            {isLoading && (
-                <div className="loading-overlay">
-                    <LoadingAnimation message={language === 'en' ? 'Loading Contact...' : language === 'ru' ? 'Загрузка контактов...' : 'Əlaqə yüklənir...'} />
-                </div>
-            )}
-        </div>
+        </>
     );
 }
 

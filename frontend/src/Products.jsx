@@ -49,7 +49,7 @@ function Products() {
             const startTime = Date.now();
 
             try {
-                const API = 'https://softech-api.webonly.io/api';
+                const API = 'http://localhost:5098/api';
                 const res = await fetch(`${API}/products?language=${language}`);
                 if (!res.ok) throw new Error('Failed to load products');
                 const data = await res.json();
@@ -67,10 +67,11 @@ function Products() {
                     products = [data]; // Single product
                 }
 
-                // Normalize for card: ensure icon is present
+                // Normalize for card: ensure icon is present and slug is available
                 const normalized = products.map(p => ({
                     ...p,
-                    icon: p.icon || p.imageUrl || '/assets/market-icon.png'
+                    icon: p.icon || p.imageUrl || '/assets/market-icon.png',
+                    slug: p.slug || p.id.toString()
                 }));
 
                 setAllProducts(normalized);

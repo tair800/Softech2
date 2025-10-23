@@ -1393,15 +1393,33 @@
     transform: scale(1);
 }
 
+/* Utility Classes */
+.desktop-only {
+    display: flex;
+}
+
+.mobile-only {
+    display: none;
+}
+
 /* Category Filter */
-.equipment-category-filter {
+.equipment-category-filter-wrapper {
     margin-top: 20px;
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0 20px;
+    gap: 15px;
+}
+
+.equipment-category-filter {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 0 20px;
+    gap: 15px;
 }
 
 .category-nav-arrow {
@@ -1418,6 +1436,7 @@
     color: white;
     flex-shrink: 0;
     box-shadow: 0 4px 15px rgba(23, 219, 252, 0.3);
+    z-index: 10;
 }
 
 .category-nav-arrow:hover:not(:disabled) {
@@ -1443,17 +1462,11 @@
     justify-content: center;
     padding: 10px 20px;
     flex: 1;
-    max-width: 1000px;
+    max-width: 1010px;
     overflow: hidden;
     position: relative;
 }
 
-.category-nav-container {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    justify-content: center;
-}
 
 .category-filter-slider {
     display: flex;
@@ -1708,18 +1721,42 @@
         height: 18px;
     }
 
-    .equipment-category-filter {
+    .equipment-category-filter-wrapper {
         margin-top: 15px;
         margin-bottom: 15px;
-        gap: 15px;
+        gap: 10px;
         padding: 0 10px;
         flex-direction: column !important;
         align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .equipment-category-filter {
+        gap: 10px;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: flex !important;
     }
 
     .category-nav-arrow {
         width: 50px;
         height: 50px;
+    }
+
+    .category-nav-buttons-container {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
     }
 
     .category-nav-arrow svg {
@@ -1748,10 +1785,6 @@
         min-width: 80px;
     }
 
-    .category-nav-container {
-        order: 2;
-        gap: 20px;
-    }
 
     .equipment-detail-nav-button {
         min-width: 110px;
@@ -1770,11 +1803,27 @@
 }
 
 @media (max-width: 600px) {
-    .equipment-category-filter {
-        gap: 12px;
+    .equipment-category-filter-wrapper {
+        gap: 10px;
         padding: 0 8px;
         flex-direction: column !important;
         align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .equipment-category-filter {
+        gap: 10px;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: flex !important;
     }
 
     .category-nav-arrow {
@@ -1791,8 +1840,9 @@
 
     .category-filter-container {
         padding: 8px;
+        flex: 1;
+        order: 0;
         width: 100%;
-        order: 1;
     }
 
     .category-filter-slider {
@@ -1806,10 +1856,6 @@
         min-width: 75px;
     }
 
-    .category-nav-container {
-        order: 2;
-        gap: 18px;
-    }
 
     .equipment-detail-nav-button {
         min-width: 100px;
@@ -1828,11 +1874,27 @@
 }
 
 @media (max-width: 480px) {
-    .equipment-category-filter {
+    .equipment-category-filter-wrapper {
         gap: 10px;
         padding: 0 8px;
         flex-direction: column !important;
         align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .equipment-category-filter {
+        gap: 10px;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: flex !important;
     }
 
     .category-nav-arrow {
@@ -1864,10 +1926,6 @@
         min-width: 70px;
     }
 
-    .category-nav-container {
-        order: 2;
-        gap: 16px;
-    }
 
     .equipment-detail-nav-button {
         min-width: 96px;
@@ -1921,10 +1979,6 @@
         min-width: 60px;
     }
 
-    .category-nav-container {
-        order: 2;
-        gap: 14px;
-    }
 
     .equipment-detail-nav-button {
         min-width: 92px;
@@ -1943,11 +1997,27 @@
 }
 
 @media (max-width: 360px) {
-    .equipment-category-filter {
-        gap: 8px;
+    .equipment-category-filter-wrapper {
+        gap: 10px;
         padding: 0 5px;
         flex-direction: column !important;
         align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .equipment-category-filter {
+        gap: 10px;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: flex !important;
     }
 
     .category-nav-arrow {
@@ -1978,10 +2048,6 @@
         min-width: 50px;
     }
 
-    .category-nav-container {
-        order: 2;
-        gap: 12px;
-    }
 
     .equipment-detail-nav-button {
         min-width: 88px;
@@ -2000,11 +2066,27 @@
 }
 
 @media (max-width: 320px) {
-    .equipment-category-filter {
-        gap: 8px;
+    .equipment-category-filter-wrapper {
+        gap: 10px;
         padding: 0 4px;
         flex-direction: column !important;
         align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .equipment-category-filter {
+        gap: 10px;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: flex !important;
     }
 
     .category-nav-arrow {
@@ -2035,10 +2117,6 @@
         min-width: 45px;
     }
 
-    .category-nav-container {
-        order: 2;
-        gap: 10px;
-    }
 
     .equipment-detail-nav-button {
         min-width: 84px;

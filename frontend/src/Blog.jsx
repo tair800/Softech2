@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import './Blog.css';
 import PageTitle from './components/PageTitle';
 import LazySpline from './components/LazySpline.jsx';
 import BlogSlider from './components/BlogSlider.jsx';
 import LoadingAnimation from './components/LoadingAnimation';
 import { useLanguage } from './contexts/LanguageContext.jsx';
+import { getMetaDescription, getPageTitle } from './utils/metaDescriptions';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 function Blog() {
     const [blogs, setBlogs] = useState([]);
@@ -41,7 +43,7 @@ function Blog() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 
@@ -78,6 +80,7 @@ function Blog() {
     // Transform blog data for BlogSlider
     const transformedBlogs = blogs.map((blog, index) => ({
         id: blog.id,
+        slug: blog.slug || blog.id.toString(), // Use slug if available, fallback to ID
         image: resolveUrl(blog.mainImageUrl) || resolveUrl(blog.detailImg1Url) || "/assets/equipment1.png",
         alt: pick(blog.title1, blog.title1En, blog.title1Ru) || "Blog",
         number: String(index + 1).padStart(2, '0'),
@@ -85,60 +88,77 @@ function Blog() {
         description: pick(blog.desc1, blog.desc1En, blog.desc1Ru) || "Blog description"
     }));
 
+    // Debug logging
+    console.log('Blog component language:', language);
+    console.log('Blog page title:', getPageTitle('blog', language));
+    console.log('Blog meta description:', getMetaDescription('blog', language));
+
     return (
-        <div className="blog-container">
-            <PageTitle title={t('pageTitle')} customClass="page-title-blog" />
+        <>
+            <Helmet>
+                <title>{getPageTitle('blog', language)}</title>
+                <meta name="description" content={getMetaDescription('blog', language)} />
+                <meta property="og:title" content={getPageTitle('blog', language)} />
+                <meta property="og:description" content={getMetaDescription('blog', language)} />
+                <meta property="og:type" content="website" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={getPageTitle('blog', language)} />
+                <meta name="twitter:description" content={getMetaDescription('blog', language)} />
+            </Helmet>
+            <div className="blog-container">
+                <PageTitle title={t('pageTitle')} customClass="page-title-blog" />
 
-            <div className="blog-top">
-                <div className="blog-spline">
-                    <LazySpline
-                        scene="https://prod.spline.design/mP2TljaQ-tsNIzZt/scene.splinecode"
-                        fallbackImage="/assets/rainbow.png"
-                        className="blog-spline-canvas"
-                    />
-                </div>
-            </div>
-
-            <div className="container blog-content">
-                <div className="row g-5 align-items-start">
-                    <div className="col-12 col-lg-6">
-                        <div className="blog-section blog-section-left">
-                            <h3 className="blog-section-title">{t('leftTitle')}</h3>
-
-                        </div>
-                    </div>
-                    <div className="col-12 col-lg-6">
-                        <div className="blog-section blog-section-right">
-                            <h3 className="blog-section-title text-lg-end">{t('rightTitle')}</h3>
-
-                        </div>
+                <div className="blog-top">
+                    <div className="blog-spline">
+                        <LazySpline
+                            scene="https://prod.spline.design/mP2TljaQ-tsNIzZt/scene.splinecode"
+                            fallbackImage="/assets/rainbow.png"
+                            className="blog-spline-canvas"
+                        />
                     </div>
                 </div>
 
-                {/* Blog Slider */}
-                <div className="blog-slider-section mt-2 pt-5">
-                    {/* Loading/Error */}
-                    {loading && (
-                        <div className="text-center text-white-50">{t('loading')}</div>
-                    )}
-                    {(!loading && error) && (
-                        <div className="text-center text-danger">{error}</div>
-                    )}
+                <div className="container blog-content">
+                    <div className="row g-5 align-items-start">
+                        <div className="col-12 col-lg-6">
+                            <div className="blog-section blog-section-left">
+                                <h3 className="blog-section-title">{t('leftTitle')}</h3>
+
+                            </div>
+                        </div>
+                        <div className="col-12 col-lg-6">
+                            <div className="blog-section blog-section-right">
+                                <h3 className="blog-section-title text-lg-end">{t('rightTitle')}</h3>
+
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Blog Slider */}
-                    {(!loading && !error && transformedBlogs.length > 0) && (
-                        <BlogSlider blogData={transformedBlogs} />
-                    )}
-                </div>
-            </div>
+                    <div className="blog-slider-section mt-2 pt-5">
+                        {/* Loading/Error */}
+                        {loading && (
+                            <div className="text-center text-white-50">{t('loading')}</div>
+                        )}
+                        {(!loading && error) && (
+                            <div className="text-center text-danger">{error}</div>
+                        )}
 
-            {/* Loading Overlay */}
-            {loading && (
-                <div className="loading-overlay">
-                    <LoadingAnimation message={t('loading')} />
+                        {/* Blog Slider */}
+                        {(!loading && !error && transformedBlogs.length > 0) && (
+                            <BlogSlider blogData={transformedBlogs} />
+                        )}
+                    </div>
                 </div>
-            )}
-        </div>
+
+                {/* Loading Overlay */}
+                {loading && (
+                    <div className="loading-overlay">
+                        <LoadingAnimation message={t('loading')} />
+                    </div>
+                )}
+            </div>
+        </>
     );
 }
 

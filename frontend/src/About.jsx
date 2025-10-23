@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 // import { teamMembers } from './data/teamData';
 // import { logos } from './data/logoData';
+import { Helmet } from 'react-helmet-async';
 import Spline from '@splinetool/react-spline';
 import PageTitle from './components/PageTitle';
 import LoadingAnimation from './components/LoadingAnimation';
@@ -10,6 +11,7 @@ import mailIcon from '/assets/mail.svg';
 import './About.css';
 import AboutTeamHeader from './components/AboutTeamHeader.jsx';
 import { useLanguage } from './contexts/LanguageContext';
+import { getMetaDescription, getPageTitle } from './utils/metaDescriptions';
 // no external translator; use API-provided localized fields
 import { t } from './utils/i18n';
 
@@ -38,7 +40,7 @@ function About() {
     const resolveUrl = (url) => {
         if (!url) return '';
         if (url.startsWith('/assets/')) return url; // Static assets don't need API base URL
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 
@@ -91,9 +93,9 @@ function About() {
 
             try {
                 const [empRes, refRes, aboutLogoRes] = await Promise.all([
-                    fetch(`https://softech-api.webonly.io/api/employees?language=${language}`),
-                    fetch('https://softech-api.webonly.io/api/references'),
-                    fetch(`https://softech-api.webonly.io/api/AboutLogo?language=${language}`)
+                    fetch(`http://localhost:5098/api/employees?language=${language}`),
+                    fetch('http://localhost:5098/api/references'),
+                    fetch(`http://localhost:5098/api/AboutLogo?language=${language}`)
                 ]);
                 if (empRes.ok) {
                     const employees = await empRes.json();
@@ -176,116 +178,133 @@ function About() {
 
 
 
+    // Debug logging
+    console.log('About component language:', language);
+    console.log('About page title:', getPageTitle('about', language));
+    console.log('About meta description:', getMetaDescription('about', language));
+
     return (
-        <div className="about-container">
-            <PageTitle title={t('about', language)} customClass="page-title-about" />
-            <div className="about-circle-background"></div>
-            <div className="about-circle-background-left-2"></div>
-            <div className="about-circle-background-right"></div>
-            <div className="about-circle-background-right-2"></div>
+        <>
+            <Helmet>
+                <title>{getPageTitle('about', language)}</title>
+                <meta name="description" content={getMetaDescription('about', language)} />
+                <meta property="og:title" content={getPageTitle('about', language)} />
+                <meta property="og:description" content={getMetaDescription('about', language)} />
+                <meta property="og:type" content="website" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={getPageTitle('about', language)} />
+                <meta name="twitter:description" content={getMetaDescription('about', language)} />
+            </Helmet>
+            <div className="about-container">
+                <PageTitle title={t('about', language)} customClass="page-title-about" />
+                <div className="about-circle-background"></div>
+                <div className="about-circle-background-left-2"></div>
+                <div className="about-circle-background-right"></div>
+                <div className="about-circle-background-right-2"></div>
 
-            <div className="about-rainbow">
-                {!splineError ? (
-                    <Spline
-                        scene="https://prod.spline.design/mP2TljaQ-tsNIzZt/scene.splinecode"
-                        onLoad={handleSplineLoad}
-                        onError={(error) => {
-                            setSplineError(true);
-                            setSplineLoaded(false);
-                            // Clear sessionStorage if Spline fails to load
-                            sessionStorage.removeItem("splineLoaded");
-                        }}
-                    />
-                ) : (
-                    <div className="spline-fallback">
-                        <img src="/assets/rainbow.png" alt="Rainbow" />
-                    </div>
-                )}
-            </div>
-
-            <div className="about-logo">
-                <img src={resolveUrl(aboutLogo?.imageUrl) || "/assets/logo-only.png"} alt="Logo" />
-                <p className="about-logo-text">{translated.aboutHeading}</p>
-                <p className="about-logo-description">{translated.aboutSubtext}</p>
-            </div>
-
-            <AboutTeamHeader title={t('team', language)} />
-
-            <div className="about-description-section">
-                <img src={resolveUrl(director?.imageUrl) || "/assets/market4.png"} alt="Director" className="about-director-img" />
-                <div className="about-name">{translated.directorName}</div>
-                <div className="about-position">{translated.directorPosition}</div>
-                <div className="about-description-wrapper">
-                    <p className="about-description-text">{translated.directorDescription}</p>
-                    <div className="about-comma-container">
-                        <img src="/assets/comma.png" alt="Comma" className="about-comma" />
-                        <div className="about-director-contacts">
-                            <a href={`tel:${director?.phone}`}>
-                                <img src={phoneIcon} alt="Phone" />
-                            </a>
-                            <a href={`mailto:${director?.email}`}>
-                                <img src={mailIcon} alt="Email" />
-                            </a>
-                            <a href={resolveLinkedInUrl(director?.linkedIn || director?.linkedin)} target="_blank" rel="noopener noreferrer">
-                                <img src={linkedinIcon} alt="LinkedIn" className="linkedin-icon" />
-                            </a>
+                <div className="about-rainbow">
+                    {!splineError ? (
+                        <Spline
+                            scene="https://prod.spline.design/mP2TljaQ-tsNIzZt/scene.splinecode"
+                            onLoad={handleSplineLoad}
+                            onError={(error) => {
+                                setSplineError(true);
+                                setSplineLoaded(false);
+                                // Clear sessionStorage if Spline fails to load
+                                sessionStorage.removeItem("splineLoaded");
+                            }}
+                        />
+                    ) : (
+                        <div className="spline-fallback">
+                            <img src="/assets/rainbow.png" alt="Rainbow" />
                         </div>
-                    </div>
+                    )}
                 </div>
-            </div>
 
-            <div className="about-team-cards">
-                {translatedTeamMembers.map((member) => (
-                    <div key={member.id} className="team-card">
-                        <div className="card-image">
-                            <img src={resolveUrl(member.imageUrl)} alt={member.name} />
-                        </div>
-                        <div className="card-content">
-                            <div className="card-name">{member.name}</div>
-                            <div className="card-position">{member.positionTranslated || member.position}</div>
-                            <div className="card-contacts">
-                                <a href={`tel:${member.phone}`}>
+                <div className="about-logo">
+                    <img src={resolveUrl(aboutLogo?.imageUrl) || "/assets/logo-only.png"} alt="Logo" />
+                    <p className="about-logo-text">{translated.aboutHeading}</p>
+                    <p className="about-logo-description">{translated.aboutSubtext}</p>
+                </div>
+
+                <AboutTeamHeader title={t('team', language)} />
+
+                <div className="about-description-section">
+                    <img src={resolveUrl(director?.imageUrl) || "/assets/market4.png"} alt="Director" className="about-director-img" />
+                    <div className="about-name">{translated.directorName}</div>
+                    <div className="about-position">{translated.directorPosition}</div>
+                    <div className="about-description-wrapper">
+                        <p className="about-description-text">{translated.directorDescription}</p>
+                        <div className="about-comma-container">
+                            <img src="/assets/comma.png" alt="Comma" className="about-comma" />
+                            <div className="about-director-contacts">
+                                <a href={`tel:${director?.phone}`}>
                                     <img src={phoneIcon} alt="Phone" />
                                 </a>
-                                <a href={`mailto:${member.email}`}>
+                                <a href={`mailto:${director?.email}`}>
                                     <img src={mailIcon} alt="Email" />
                                 </a>
-                                <a href={resolveLinkedInUrl(member.linkedIn || member.linkedin)} target="_blank" rel="noopener noreferrer">
+                                <a href={resolveLinkedInUrl(director?.linkedIn || director?.linkedin)} target="_blank" rel="noopener noreferrer">
                                     <img src={linkedinIcon} alt="LinkedIn" className="linkedin-icon" />
                                 </a>
                             </div>
-                            {/* No description for non-director employees on normal page */}
                         </div>
                     </div>
-                ))}
-            </div>
+                </div>
 
-            <AboutTeamHeader title={t('references', language)} />
+                <div className="about-team-cards">
+                    {translatedTeamMembers.map((member) => (
+                        <div key={member.id} className="team-card">
+                            <div className="card-image">
+                                <img src={resolveUrl(member.imageUrl)} alt={member.name} />
+                            </div>
+                            <div className="card-content">
+                                <div className="card-name">{member.name}</div>
+                                <div className="card-position">{member.positionTranslated || member.position}</div>
+                                <div className="card-contacts">
+                                    <a href={`tel:${member.phone}`}>
+                                        <img src={phoneIcon} alt="Phone" />
+                                    </a>
+                                    <a href={`mailto:${member.email}`}>
+                                        <img src={mailIcon} alt="Email" />
+                                    </a>
+                                    <a href={resolveLinkedInUrl(member.linkedIn || member.linkedin)} target="_blank" rel="noopener noreferrer">
+                                        <img src={linkedinIcon} alt="LinkedIn" className="linkedin-icon" />
+                                    </a>
+                                </div>
+                                {/* No description for non-director employees on normal page */}
+                            </div>
+                        </div>
+                    ))}
+                </div>
 
-            <div className="logo-carousel-container">
-                <div className="logo-carousel">
-                    <div className="logo-carousel-track">
-                        {logosState.map((logo) => (
-                            <div key={`first-${logo.id}`} className="logo-item">
-                                <img src={resolveUrl(logo.imageUrl)} alt={logo.name} />
-                            </div>
-                        ))}
-                        {logosState.map((logo) => (
-                            <div key={`second-${logo.id}`} className="logo-item">
-                                <img src={resolveUrl(logo.imageUrl)} alt={logo.name} />
-                            </div>
-                        ))}
+                <AboutTeamHeader title={t('references', language)} />
+
+                <div className="logo-carousel-container">
+                    <div className="logo-carousel">
+                        <div className="logo-carousel-track">
+                            {logosState.map((logo) => (
+                                <div key={`first-${logo.id}`} className="logo-item">
+                                    <img src={resolveUrl(logo.imageUrl)} alt={logo.name} />
+                                </div>
+                            ))}
+                            {logosState.map((logo) => (
+                                <div key={`second-${logo.id}`} className="logo-item">
+                                    <img src={resolveUrl(logo.imageUrl)} alt={logo.name} />
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Loading Overlay */}
-            {isLoading && (
-                <div className="loading-overlay">
-                    <LoadingAnimation message={t('loading', language) || "Loading..."} />
-                </div>
-            )}
-        </div>
+                {/* Loading Overlay */}
+                {isLoading && (
+                    <div className="loading-overlay">
+                        <LoadingAnimation message={t('loading', language) || "Loading..."} />
+                    </div>
+                )}
+            </div>
+        </>
     );
 }
 

@@ -47,6 +47,7 @@ builder.Services.AddScoped<IVisitorAnalyticsService, VisitorAnalyticsService>();
 builder.Services.AddScoped<DataTransferService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<IBlogSectionService, BlogSectionService>();
+builder.Services.AddScoped<IMetaDescriptionService, MetaDescriptionService>();
 
 var app = builder.Build();
 

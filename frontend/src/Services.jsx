@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useLanguage } from './contexts/LanguageContext';
 import ServiceCard3D from './components/ServiceCard3D';
 import Spline from '@splinetool/react-spline';
 import PageTitle from './components/PageTitle';
 import LoadingAnimation from './components/LoadingAnimation';
+import { getMetaDescription, getPageTitle } from './utils/metaDescriptions';
 import './Services.css';
 import { t } from './utils/i18n';
 
@@ -44,7 +46,7 @@ function Services() {
             const startTime = Date.now();
 
             try {
-                const response = await fetch(`https://softech-api.webonly.io/api/services?language=${language}`);
+                const response = await fetch(`http://localhost:5098/api/services?language=${language}`);
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -95,43 +97,60 @@ function Services() {
         );
     }
 
-    return (
-        <div className="services-container">
-            <PageTitle title={t('services', language)} customClass="page-title-services" />
-            <div className="services-circle-background-1"></div>
-            <div className="services-circle-background-2"></div>
-            <div className="services-circle-background-3"></div>
+    // Debug logging
+    console.log('Services component language:', language);
+    console.log('Services page title:', getPageTitle('services', language));
+    console.log('Services meta description:', getMetaDescription('services', language));
 
-            <div className="services-center">
-                <div className="services-rainbow">
-                    {!splineError ? (
-                        memoizedSpline
-                    ) : (
-                        <div className="spline-fallback">
-                            <img src="/assets/rainbow.png" alt="Rainbow" />
-                        </div>
+    return (
+        <>
+            <Helmet>
+                <title>{getPageTitle('services', language)}</title>
+                <meta name="description" content={getMetaDescription('services', language)} />
+                <meta property="og:title" content={getPageTitle('services', language)} />
+                <meta property="og:description" content={getMetaDescription('services', language)} />
+                <meta property="og:type" content="website" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={getPageTitle('services', language)} />
+                <meta name="twitter:description" content={getMetaDescription('services', language)} />
+            </Helmet>
+            <div className="services-container">
+                <PageTitle title={t('services', language)} customClass="page-title-services" />
+                <div className="services-circle-background-1"></div>
+                <div className="services-circle-background-2"></div>
+                <div className="services-circle-background-3"></div>
+
+                <div className="services-center">
+                    <div className="services-rainbow">
+                        {!splineError ? (
+                            memoizedSpline
+                        ) : (
+                            <div className="spline-fallback">
+                                <img src="/assets/rainbow.png" alt="Rainbow" />
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="services-grid-3d">
+                        {services.map((service) => (
+                            <div key={service.id} className="service-card-3d-wrapper">
+                                <ServiceCard3D service={service} />
+                            </div>
+                        ))}
+                    </div>
+                    {refetching && (
+                        <div className="services-refetching-overlay" />
                     )}
                 </div>
 
-                <div className="services-grid-3d">
-                    {services.map((service) => (
-                        <div key={service.id} className="service-card-3d-wrapper">
-                            <ServiceCard3D service={service} />
-                        </div>
-                    ))}
-                </div>
-                {refetching && (
-                    <div className="services-refetching-overlay" />
+                {/* Loading Overlay */}
+                {loading && (
+                    <div className="loading-overlay">
+                        <LoadingAnimation message={language === 'en' ? 'Loading Services...' : language === 'ru' ? 'Загрузка услуг...' : 'Xidmətlər yüklənir...'} />
+                    </div>
                 )}
             </div>
-
-            {/* Loading Overlay */}
-            {loading && (
-                <div className="loading-overlay">
-                    <LoadingAnimation message={language === 'en' ? 'Loading Services...' : language === 'ru' ? 'Загрузка услуг...' : 'Xidmətlər yüklənir...'} />
-                </div>
-            )}
-        </div>
+        </>
     );
 }
 

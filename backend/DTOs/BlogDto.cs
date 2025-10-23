@@ -22,6 +22,7 @@ namespace WebOnlyAPI.DTOs
         public string? DetailImg2Url { get; set; }
         public string? DetailImg3Url { get; set; }
         public string? DetailImg4Url { get; set; }
+        public string? Slug { get; set; }
         public DateTimeOffset? PublishedAt { get; set; }
     }
 
@@ -45,6 +46,7 @@ namespace WebOnlyAPI.DTOs
         public string? DetailImg2Url { get; set; }
         public string? DetailImg3Url { get; set; }
         public string? DetailImg4Url { get; set; }
+        public string? Slug { get; set; }
         public DateTimeOffset? PublishedAt { get; set; }
     }
 
@@ -69,6 +71,7 @@ namespace WebOnlyAPI.DTOs
         public string? DetailImg2Url { get; set; }
         public string? DetailImg3Url { get; set; }
         public string? DetailImg4Url { get; set; }
+        public string? Slug { get; set; }
         public DateTimeOffset? PublishedAt { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }

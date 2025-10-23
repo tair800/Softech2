@@ -35,6 +35,7 @@ namespace WebOnlyAPI.DTOs
 
         [StringLength(500)]
         public string? ImageUrl { get; set; }
+        public string? Slug { get; set; }
     }
 
     public class UpdateServiceDto
@@ -68,6 +69,7 @@ namespace WebOnlyAPI.DTOs
 
         [StringLength(500)]
         public string? ImageUrl { get; set; }
+        public string? Slug { get; set; }
     }
 
     public class ServiceResponseDto
@@ -88,6 +90,7 @@ namespace WebOnlyAPI.DTOs
         public string? SubtextEn { get; set; }
         public string? SubtextRu { get; set; }
         public string? ImageUrl { get; set; }
+        public string? Slug { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }

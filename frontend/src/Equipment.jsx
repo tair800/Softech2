@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import LazySpline from './components/LazySpline';
@@ -8,6 +9,7 @@ import EquipmentCard from './components/EquipmentCard';
 import MemoryCleanupButton from './components/MemoryCleanupButton';
 import PageTitle from './components/PageTitle';
 import LoadingAnimation from './components/LoadingAnimation';
+import { getMetaDescription, getPageTitle } from './utils/metaDescriptions';
 import { memoryManager } from './utils/memoryManager';
 import equipmentPrevIcon from '/assets/equipment-prev.svg';
 import equipmentNextIcon from '/assets/equipment-next.svg';
@@ -62,7 +64,7 @@ function Equipment() {
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -72,7 +74,7 @@ function Equipment() {
     const currentImage = resolveUrl(currentItem.imageUrl);
 
     const handleMoreClick = () => {
-        if (currentItem?.id) navigate(`/equipment/${currentItem.id}`);
+        if (currentItem?.id) navigate(`/avadanlıqlar/${currentItem.slug || currentItem.id}`);
     };
 
     const handleFilterChange = async (filters) => {
@@ -118,7 +120,7 @@ function Equipment() {
 
             // If there's a search term, use API search
             if (filters.search && filters.search.trim() !== '') {
-                const searchUrl = `https://softech-api.webonly.io/api/equipment/search?q=${encodeURIComponent(filters.search.trim())}`;
+                const searchUrl = `http://localhost:5098/api/equipment/search?q=${encodeURIComponent(filters.search.trim())}`;
 
 
                 const response = await fetch(searchUrl);
@@ -281,8 +283,8 @@ function Equipment() {
 
             try {
                 const [equipmentRes, mainEquipmentRes] = await Promise.all([
-                    fetch(`https://softech-api.webonly.io/api/equipment/full`),
-                    fetch(`https://softech-api.webonly.io/api/equipment/main`)
+                    fetch(`http://localhost:5098/api/equipment/full`),
+                    fetch(`http://localhost:5098/api/equipment/main`)
                 ]);
 
                 if (isMounted) {
@@ -344,8 +346,8 @@ function Equipment() {
         };
     }, []);
 
-    const handleEquipmentCardClick = (equipmentId) => {
-        navigate(`/equipment/${equipmentId}`);
+    const handleEquipmentCardClick = (equipmentId, equipmentSlug) => {
+        navigate(`/avadanlıqlar/${equipmentSlug || equipmentId}`);
     };
 
     // Translation function for pagination
@@ -423,217 +425,234 @@ function Equipment() {
         return paginatedItems;
     };
 
+    // Debug logging
+    console.log('Equipment component language:', language);
+    console.log('Equipment page title:', getPageTitle('equipment', language));
+    console.log('Equipment meta description:', getMetaDescription('equipment', language));
+
     return (
-        <div className="equipment-container">
-            <PageTitle title={language === 'en' ? 'Equipment' : language === 'ru' ? 'Оборудование' : 'Avadanlıqlar'} customClass="page-title-equipment" />
-            <div className="equipment-circle-background-left-1"></div>
-            <div className="equipment-circle-background-left-2"></div>
-            <div className="equipment-circle-background-left-3"></div>
-            <div className="equipment-circle-background-left-4"></div>
+        <>
+            <Helmet>
+                <title>{getPageTitle('equipment', language)}</title>
+                <meta name="description" content={getMetaDescription('equipment', language)} />
+                <meta property="og:title" content={getPageTitle('equipment', language)} />
+                <meta property="og:description" content={getMetaDescription('equipment', language)} />
+                <meta property="og:type" content="website" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={getPageTitle('equipment', language)} />
+                <meta name="twitter:description" content={getMetaDescription('equipment', language)} />
+            </Helmet>
+            <div className="equipment-container">
+                <PageTitle title={language === 'en' ? 'Equipment' : language === 'ru' ? 'Оборудование' : 'Avadanlıqlar'} customClass="page-title-equipment" />
+                <div className="equipment-circle-background-left-1"></div>
+                <div className="equipment-circle-background-left-2"></div>
+                <div className="equipment-circle-background-left-3"></div>
+                <div className="equipment-circle-background-left-4"></div>
 
-            <div className="equipment-center">
-                <div className="equipment-rainbow">
-                    <LazySpline
-                        scene="https://prod.spline.design/mP2TljaQ-tsNIzZt/scene.splinecode"
-                        fallbackImage="/assets/rainbow.png"
-                        className="equipment-spline"
-                    />
+                <div className="equipment-center">
+                    <div className="equipment-rainbow">
+                        <LazySpline
+                            scene="https://prod.spline.design/mP2TljaQ-tsNIzZt/scene.splinecode"
+                            fallbackImage="/assets/rainbow.png"
+                            className="equipment-spline"
+                        />
+                    </div>
                 </div>
-            </div>
 
-            <div className="equipment-content-row">
-                {/* Main Content Area */}
-                <div className="equipment-main-content">
-                    <div className="equipment-left">
-                        <div className="equipment-square" style={slideDirection ? getSlideStyle() : resetSlideStyle()} onTouchStart={handleScrollerTouchStart} onTouchMove={handleScrollerTouchMove} onTouchEnd={handleScrollerTouchEnd}>
-                            <div className="equipment-square-content">
-                                <div className="equipment-product-title">
-                                    {(currentItem.name || '').split(' ').slice(0, -1).join(' ')}<br />
-                                    {(currentItem.name || '').split(' ').slice(-1)}
+                <div className="equipment-content-row">
+                    {/* Main Content Area */}
+                    <div className="equipment-main-content">
+                        <div className="equipment-left">
+                            <div className="equipment-square" style={slideDirection ? getSlideStyle() : resetSlideStyle()} onTouchStart={handleScrollerTouchStart} onTouchMove={handleScrollerTouchMove} onTouchEnd={handleScrollerTouchEnd}>
+                                <div className="equipment-square-content">
+                                    <div className="equipment-product-title">
+                                        {(currentItem.name || '').split(' ').slice(0, -1).join(' ')}<br />
+                                        {(currentItem.name || '').split(' ').slice(-1)}
+                                    </div>
+                                    <div className="equipment-product-model blue">{currentItem.version}</div>
+                                    <div className="equipment-product-cpu">{currentItem.core}</div>
+                                    <button className="equipment-more-btn" onClick={handleMoreClick}>
+                                        {language === 'en' ? 'More' : language === 'ru' ? 'Подробнее' : 'Daha çox'}
+                                    </button>
                                 </div>
-                                <div className="equipment-product-model blue">{currentItem.version}</div>
-                                <div className="equipment-product-cpu">{currentItem.core}</div>
-                                <button className="equipment-more-btn" onClick={handleMoreClick}>
+                            </div>
+                        </div>
+
+                        <div className="equipment-right">
+                            <div className="equipment-img-wrapper" style={slideDirection ? getSlideStyle() : resetSlideStyle()}>
+                                <div className="equipment-title-left" style={{ display: 'none' }}>
+                                    <div className="equipment-product-id">{currentItem.id}</div>
+                                    {currentItem.name}
+                                </div>
+                                <img src={equipmentPrevIcon} alt="Previous" className="equipment-nav-btn prev-btn" onClick={() => startSlide('right')} />
+                                {currentImage && <OptimizedImage src={currentImage} alt={currentItem.name} className="equipment-main-img" onClick={() => setShowModal(true)} lazy={false} />}
+                                <img src={equipmentNextIcon} alt="Next" className="equipment-nav-btn next-btn" onClick={() => startSlide('left')} />
+                            </div>
+
+                            <div className="equipment-details" style={slideDirection ? getSlideStyle() : resetSlideStyle()}>
+                                <div className="equipment-product-id">{String(currentItem.id || '').padStart(2, '0')}</div>
+                                <div className="equipment-product-name">{currentItem.name}</div>
+                                <div className="equipment-cpu">{currentItem.core}</div>
+                                <div className="equipment-model">{currentItem.version}</div>
+                                <button className="emc-more-btn" onClick={handleMoreClick}>
                                     {language === 'en' ? 'More' : language === 'ru' ? 'Подробнее' : 'Daha çox'}
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <div className="equipment-right">
-                        <div className="equipment-img-wrapper" style={slideDirection ? getSlideStyle() : resetSlideStyle()}>
-                            <div className="equipment-title-left" style={{ display: 'none' }}>
-                                <div className="equipment-product-id">{currentItem.id}</div>
-                                {currentItem.name}
-                            </div>
-                            <img src={equipmentPrevIcon} alt="Previous" className="equipment-nav-btn prev-btn" onClick={() => startSlide('right')} />
-                            {currentImage && <OptimizedImage src={currentImage} alt={currentItem.name} className="equipment-main-img" onClick={() => setShowModal(true)} lazy={false} />}
-                            <img src={equipmentNextIcon} alt="Next" className="equipment-nav-btn next-btn" onClick={() => startSlide('left')} />
-                        </div>
+                    {/* Mobile controls: filter button + search bar */}
+                    <div className="equipment-mobile-controls">
+                        <button
+                            className="emc-filter-btn"
+                            type="button"
+                            onClick={() => setShowFilterModal(true)}
+                            aria-label="Filters"
+                        >
+                            <img src="/assets/filter.svg" alt="filters" className="emc-filter-svg" />
+                        </button>
 
-                        <div className="equipment-details" style={slideDirection ? getSlideStyle() : resetSlideStyle()}>
-                            <div className="equipment-product-id">{String(currentItem.id || '').padStart(2, '0')}</div>
-                            <div className="equipment-product-name">{currentItem.name}</div>
-                            <div className="equipment-cpu">{currentItem.core}</div>
-                            <div className="equipment-model">{currentItem.version}</div>
-                            <button className="emc-more-btn" onClick={handleMoreClick}>
-                                {language === 'en' ? 'More' : language === 'ru' ? 'Подробнее' : 'Daha çox'}
+                        <div className="emc-search">
+                            <input
+                                className="emc-search-input"
+                                type="text"
+                                value={currentFilters.search}
+                                onChange={(e) => handleFilterChange({ ...currentFilters, search: e.target.value })}
+                                placeholder={language === 'en' ? 'Search Product' : language === 'ru' ? 'Поиск товара' : 'Məhsul Axtar'}
+                            />
+                            <button
+                                className="emc-search-btn"
+                                type="button"
+                                onClick={() => handleFilterChange({ ...currentFilters })}
+                                aria-label={language === 'en' ? 'Search' : language === 'ru' ? 'Поиск' : 'Axtar'}
+                            >
+                                <span className="emc-search-icon" />
                             </button>
                         </div>
                     </div>
-                </div>
 
-                {/* Mobile controls: filter button + search bar */}
-                <div className="equipment-mobile-controls">
-                    <button
-                        className="emc-filter-btn"
-                        type="button"
-                        onClick={() => setShowFilterModal(true)}
-                        aria-label="Filters"
-                    >
-                        <img src="/assets/filter.svg" alt="filters" className="emc-filter-svg" />
-                    </button>
-
-                    <div className="emc-search">
-                        <input
-                            className="emc-search-input"
-                            type="text"
-                            value={currentFilters.search}
-                            onChange={(e) => handleFilterChange({ ...currentFilters, search: e.target.value })}
-                            placeholder={language === 'en' ? 'Search Product' : language === 'ru' ? 'Поиск товара' : 'Məhsul Axtar'}
-                        />
-                        <button
-                            className="emc-search-btn"
-                            type="button"
-                            onClick={() => handleFilterChange({ ...currentFilters })}
-                            aria-label={language === 'en' ? 'Search' : language === 'ru' ? 'Поиск' : 'Axtar'}
-                        >
-                            <span className="emc-search-icon" />
-                        </button>
-                    </div>
-                </div>
-
-                {/* Bottom Section - Left Sidebar + Right Content */}
-                <div className="equipment-bottom-section">
-                    {/* Left Sidebar - Filters */}
-                    <div className="equipment-sidebar">
-                        {/* Language follows global header; no local selector */}
-                        <FiltersComponent onFilterChange={handleFilterChange} selectedLanguage={language} />
-                        <MemoryCleanupButton className="equipment-memory-cleanup" />
-                    </div>
-
-                    {/* Right Content Area */}
-                    <div className="equipment-right-content">
-                        <div className="equipment-cards-container">
-                            <div className="equipment-cards-heade">
-                                {currentFilters.categories.length > 0 || currentFilters.tags.length > 0 || currentFilters.search ? (
-                                    <div className="active-filters">
-                                        <span>{language === 'en' ? 'Active filters:' : language === 'ru' ? 'Активные фильтры:' : 'Aktiv filterlər:'}</span>
-                                        {currentFilters.categoryNames && currentFilters.categoryNames.length > 0 && (
-                                            currentFilters.categoryNames.map(name => (
-                                                <span key={`cat-${name}`} className="filter-badge">{name}</span>
-                                            ))
-                                        )}
-                                        {currentFilters.tagNames && currentFilters.tagNames.length > 0 && (
-                                            currentFilters.tagNames.map(name => (
-                                                <span key={`tag-${name}`} className="filter-badge">{name}</span>
-                                            ))
-                                        )}
-                                        {currentFilters.search && (
-                                            <span className="filter-badge">{language === 'en' ? 'Search' : language === 'ru' ? 'Поиск' : 'Axtarış'}: "{currentFilters.search}"</span>
-                                        )}
-                                    </div>
-                                ) : null}
-                            </div>
-
-                            {filteredEquipment.length === 0 ? (
-                                <div className="no-equipment-found">
-                                    <p>{language === 'en' ? 'No equipment found matching your filters.' : language === 'ru' ? 'Оборудование, соответствующее вашим фильтрам, не найдено.' : 'Filtrlərə uyğun avadanlıq tapılmadı.'}</p>
-                                    <button
-                                        className="clear-filters-btn"
-                                        onClick={() => handleFilterChange({ categories: [], tags: [], search: '' })}
-                                    >
-                                        {language === 'en' ? 'Clear All Filters' : language === 'ru' ? 'Сбросить все фильтры' : 'Bütün Filtrləri Təmizlə'}
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="equipment-cards-grid">
-                                    {getPaginatedEquipment().map(equipment => (
-                                        <EquipmentCard
-                                            key={equipment.id}
-                                            equipment={equipment}
-                                            onMoreClick={handleEquipmentCardClick}
-                                        />
-                                    ))}
-                                </div>
-                            )}
-
-                            {/* Pagination Component */}
-                            {totalEquipment > 8 && (
-                                <div className="equipment-pagination">
-                                    <div className="pagination-controls">
-                                        <button
-                                            className="pagination-btn pagination-prev"
-                                            onClick={handlePrevious}
-                                            disabled={currentPage === 1}
-                                        >
-                                            <span>{tPagination('previous')}</span>
-                                        </button>
-
-                                        <div className="pagination-numbers">
-                                            {getPageNumbers().map((pageNumber) => (
-                                                <button
-                                                    key={pageNumber}
-                                                    className={`pagination-number ${pageNumber === currentPage ? 'active' : ''}`}
-                                                    onClick={() => handlePageClick(pageNumber)}
-                                                >
-                                                    {pageNumber}
-                                                </button>
-                                            ))}
-                                        </div>
-
-                                        <button
-                                            className="pagination-btn pagination-next"
-                                            onClick={handleNext}
-                                            disabled={currentPage === totalPages}
-                                        >
-                                            <span>{tPagination('next')}</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {showModal && currentImage && (
-                <div className="equipment-modal" onClick={() => setShowModal(false)}>
-                    <OptimizedImage src={currentImage} alt={currentItem.name} className="equipment-modal-img" lazy={false} />
-                </div>
-            )}
-
-            {showFilterModal && (
-                <div className="emc-filter-modal" onClick={() => setShowFilterModal(false)}>
-                    <div className="emc-filter-sheet" onClick={(e) => e.stopPropagation()}>
-                        <div className="emc-filter-header">
-                            <span>{language === 'en' ? 'Filters' : language === 'ru' ? 'Фильтры' : 'Filterlər'}</span>
-                            <button className="emc-filter-close" onClick={() => setShowFilterModal(false)} aria-label="Close">✕</button>
-                        </div>
-                        <div className="emc-filter-body">
+                    {/* Bottom Section - Left Sidebar + Right Content */}
+                    <div className="equipment-bottom-section">
+                        {/* Left Sidebar - Filters */}
+                        <div className="equipment-sidebar">
+                            {/* Language follows global header; no local selector */}
                             <FiltersComponent onFilterChange={handleFilterChange} selectedLanguage={language} />
+                            <MemoryCleanupButton className="equipment-memory-cleanup" />
+                        </div>
+
+                        {/* Right Content Area */}
+                        <div className="equipment-right-content">
+                            <div className="equipment-cards-container">
+                                <div className="equipment-cards-heade">
+                                    {currentFilters.categories.length > 0 || currentFilters.tags.length > 0 || currentFilters.search ? (
+                                        <div className="active-filters">
+                                            <span>{language === 'en' ? 'Active filters:' : language === 'ru' ? 'Активные фильтры:' : 'Aktiv filterlər:'}</span>
+                                            {currentFilters.categoryNames && currentFilters.categoryNames.length > 0 && (
+                                                currentFilters.categoryNames.map(name => (
+                                                    <span key={`cat-${name}`} className="filter-badge">{name}</span>
+                                                ))
+                                            )}
+                                            {currentFilters.tagNames && currentFilters.tagNames.length > 0 && (
+                                                currentFilters.tagNames.map(name => (
+                                                    <span key={`tag-${name}`} className="filter-badge">{name}</span>
+                                                ))
+                                            )}
+                                            {currentFilters.search && (
+                                                <span className="filter-badge">{language === 'en' ? 'Search' : language === 'ru' ? 'Поиск' : 'Axtarış'}: "{currentFilters.search}"</span>
+                                            )}
+                                        </div>
+                                    ) : null}
+                                </div>
+
+                                {filteredEquipment.length === 0 ? (
+                                    <div className="no-equipment-found">
+                                        <p>{language === 'en' ? 'No equipment found matching your filters.' : language === 'ru' ? 'Оборудование, соответствующее вашим фильтрам, не найдено.' : 'Filtrlərə uyğun avadanlıq tapılmadı.'}</p>
+                                        <button
+                                            className="clear-filters-btn"
+                                            onClick={() => handleFilterChange({ categories: [], tags: [], search: '' })}
+                                        >
+                                            {language === 'en' ? 'Clear All Filters' : language === 'ru' ? 'Сбросить все фильтры' : 'Bütün Filtrləri Təmizlə'}
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="equipment-cards-grid">
+                                        {getPaginatedEquipment().map(equipment => (
+                                            <EquipmentCard
+                                                key={equipment.id}
+                                                equipment={equipment}
+                                                onMoreClick={handleEquipmentCardClick}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Pagination Component */}
+                                {totalEquipment > 8 && (
+                                    <div className="equipment-pagination">
+                                        <div className="pagination-controls">
+                                            <button
+                                                className="pagination-btn pagination-prev"
+                                                onClick={handlePrevious}
+                                                disabled={currentPage === 1}
+                                            >
+                                                <span>{tPagination('previous')}</span>
+                                            </button>
+
+                                            <div className="pagination-numbers">
+                                                {getPageNumbers().map((pageNumber) => (
+                                                    <button
+                                                        key={pageNumber}
+                                                        className={`pagination-number ${pageNumber === currentPage ? 'active' : ''}`}
+                                                        onClick={() => handlePageClick(pageNumber)}
+                                                    >
+                                                        {pageNumber}
+                                                    </button>
+                                                ))}
+                                            </div>
+
+                                            <button
+                                                className="pagination-btn pagination-next"
+                                                onClick={handleNext}
+                                                disabled={currentPage === totalPages}
+                                            >
+                                                <span>{tPagination('next')}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
-            )}
 
-            {/* Loading Overlay */}
-            {isLoading && (
-                <div className="loading-overlay">
-                    <LoadingAnimation message={language === 'en' ? 'Loading Equipment...' : language === 'ru' ? 'Загрузка оборудования...' : 'Avadanlıq yüklənir...'} />
-                </div>
-            )}
-        </div>
+                {showModal && currentImage && (
+                    <div className="equipment-modal" onClick={() => setShowModal(false)}>
+                        <OptimizedImage src={currentImage} alt={currentItem.name} className="equipment-modal-img" lazy={false} />
+                    </div>
+                )}
+
+                {showFilterModal && (
+                    <div className="emc-filter-modal" onClick={() => setShowFilterModal(false)}>
+                        <div className="emc-filter-sheet" onClick={(e) => e.stopPropagation()}>
+                            <div className="emc-filter-header">
+                                <span>{language === 'en' ? 'Filters' : language === 'ru' ? 'Фильтры' : 'Filterlər'}</span>
+                                <button className="emc-filter-close" onClick={() => setShowFilterModal(false)} aria-label="Close">✕</button>
+                            </div>
+                            <div className="emc-filter-body">
+                                <FiltersComponent onFilterChange={handleFilterChange} selectedLanguage={language} />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Loading Overlay */}
+                {isLoading && (
+                    <div className="loading-overlay">
+                        <LoadingAnimation message={language === 'en' ? 'Loading Equipment...' : language === 'ru' ? 'Загрузка оборудования...' : 'Avadanlıq yüklənir...'} />
+                    </div>
+                )}
+            </div>
+        </>
     );
 }
 

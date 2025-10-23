@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const ProductCard3D = ({ product }) => {
   return (
-    <Link to={`/product/${product.id}`} style={{ textDecoration: 'none' }}>
+    <Link to={`/məhsul/${product.slug || product.id}`} style={{ textDecoration: 'none' }}>
       <StyledWrapper>
         <div className="container noselect">
           <div className="canvas">

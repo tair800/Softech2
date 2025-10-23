@@ -36,6 +36,15 @@ namespace WebOnlyAPI.Controllers
             return Ok(item);
         }
 
+        // GET: api/equipment/slug/{slug}
+        [HttpGet("slug/{slug}")]
+        public async Task<ActionResult<EquipmentResponseDto>> GetBySlug(string slug)
+        {
+            var item = await _equipmentService.GetBySlugAsync(slug);
+            if (item == null) return NotFound();
+            return Ok(item);
+        }
+
         [HttpPost]
         public async Task<ActionResult<EquipmentResponseDto>> Create([FromBody] CreateEquipmentDto dto)
         {

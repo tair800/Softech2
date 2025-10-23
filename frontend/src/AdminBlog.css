@@ -35,3 +35,18 @@
     font-size: 12px;
     margin-top: 6px;
 }
+
+.admin-blog-container .form-control[placeholder*="URL-friendly"] {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(155, 89, 182, 0.1) 100%);
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    color: #3498db;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.admin-blog-container .form-control[placeholder*="URL-friendly"]:focus {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(155, 89, 182, 0.15) 100%);
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    color: #3498db;
+}

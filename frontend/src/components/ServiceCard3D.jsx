@@ -191,14 +191,15 @@ const StyledWrapper = styled.div`
 const ServiceCard3D = ({ service }) => {
   const resolveUrl = (url) => {
     if (!url || url === 'null') return '';
-    if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+    if (url.startsWith('/uploads/')) return `http://localhost:5098
+${url}`;
     return url;
   };
 
   const iconSrc = resolveUrl(service.icon);
 
   return (
-    <Link to={`/services/${service.id}`} style={{ textDecoration: 'none' }}>
+    <Link to={`/xidmətlər/${service.slug || service.id}`} style={{ textDecoration: 'none' }}>
       <StyledWrapper>
         <div className="card">
           <img

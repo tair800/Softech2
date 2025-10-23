@@ -3,13 +3,13 @@ import './AdminProducts.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 export default function AdminProducts() {
     const [products, setProducts] = useState([]);
     const [originalById, setOriginalById] = useState({});
     const [showModal, setShowModal] = useState(false);
-    const [newProduct, setNewProduct] = useState({ name: '', subtext: '', icon: '', alt: '', path: '', mainImage: '', imageUrl: '', detailDescription: '', section1Title: '', section1Description: '', section1MoreText: '', section1Image: '', section2Title: '', section2Description: '', section2MoreText: '', section2Image: '', section3Title: '', section3Description: '', section3MoreText: '', section3Image: '' });
+    const [newProduct, setNewProduct] = useState({ name: '', subtext: '', icon: '', alt: '', path: '', mainImage: '', imageUrl: '', detailDescription: '', section1Title: '', section1Description: '', section1MoreText: '', section1Image: '', section2Title: '', section2Description: '', section2MoreText: '', section2Image: '', section3Title: '', section3Description: '', section3MoreText: '', section3Image: '', slug: '' });
     const [newImageFile, setNewImageFile] = useState(null);
     const [newImagePreview, setNewImagePreview] = useState('');
     const [newIconFile, setNewIconFile] = useState(null);
@@ -63,7 +63,7 @@ export default function AdminProducts() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 
@@ -87,7 +87,7 @@ export default function AdminProducts() {
     const handleAddProduct = () => setShowModal(true);
     const handleCloseModal = () => {
         setShowModal(false);
-        setNewProduct({ name: '', subtext: '', icon: '', alt: '', path: '', mainImage: '', imageUrl: '', detailDescription: '', section1Title: '', section1Description: '', section1MoreText: '', section1Image: '', section2Title: '', section2Description: '', section2MoreText: '', section2Image: '', section3Title: '', section3Description: '', section3MoreText: '', section3Image: '' });
+        setNewProduct({ name: '', subtext: '', icon: '', alt: '', path: '', mainImage: '', imageUrl: '', detailDescription: '', section1Title: '', section1Description: '', section1MoreText: '', section1Image: '', section2Title: '', section2Description: '', section2MoreText: '', section2Image: '', section3Title: '', section3Description: '', section3MoreText: '', section3Image: '', slug: '' });
         setNewImageFile(null);
         setNewImagePreview('');
         setCreating(false);
@@ -172,7 +172,8 @@ export default function AdminProducts() {
                             section2MoreText: newProduct.section2MoreText,
                             section3Title: newProduct.section3Title,
                             section3Description: newProduct.section3Description,
-                            section3MoreText: newProduct.section3MoreText
+                            section3MoreText: newProduct.section3MoreText,
+                            slug: newProduct.slug || ''
                         })
                     });
 
@@ -221,7 +222,8 @@ export default function AdminProducts() {
                             section2MoreText: newProduct.section2MoreText,
                             section3Title: newProduct.section3Title,
                             section3Description: newProduct.section3Description,
-                            section3MoreText: newProduct.section3MoreText
+                            section3MoreText: newProduct.section3MoreText,
+                            slug: newProduct.slug || ''
                         })
                     });
 
@@ -394,7 +396,8 @@ export default function AdminProducts() {
             (p.section3MoreText || '') !== (o.section3MoreText || '') ||
             (p.section3MoreTextEn || '') !== (o.section3MoreTextEn || '') ||
             (p.section3MoreTextRu || '') !== (o.section3MoreTextRu || '') ||
-            (p.section3Image || '') !== (o.section3Image || '')
+            (p.section3Image || '') !== (o.section3Image || '') ||
+            (p.slug || '') !== (o.slug || '')
         );
     };
 
@@ -491,7 +494,8 @@ export default function AdminProducts() {
                     section3MoreText: p.section3MoreText || '',
                     section3MoreTextEn: p.section3MoreTextEn || '',
                     section3MoreTextRu: p.section3MoreTextRu || '',
-                    section3Image: p.section3Image || ''
+                    section3Image: p.section3Image || '',
+                    slug: p.slug || ''
                 })
             });
             if (!res.ok) throw new Error('Save failed');
@@ -704,6 +708,12 @@ export default function AdminProducts() {
                                 <label className="col-sm-3 col-form-label">Heading (RU)</label>
                                 <div className="col-sm-9">
                                     <input className="form-control" value={p.nameRu || ''} onChange={(e) => setProducts(prev => prev.map(x => x.id === p.id ? { ...x, nameRu: e.target.value } : x))} />
+                                </div>
+                            </div>
+                            <div className="form-group row g-3 align-items-start">
+                                <label className="col-sm-3 col-form-label">Slug</label>
+                                <div className="col-sm-9">
+                                    <input className="form-control" placeholder="URL-friendly identifier (e.g., my-product)" value={p.slug || ''} onChange={(e) => setProducts(prev => prev.map(x => x.id === p.id ? { ...x, slug: e.target.value } : x))} />
                                 </div>
                             </div>
                             <div className="form-group row g-3 align-items-start">
@@ -1204,6 +1214,17 @@ export default function AdminProducts() {
                                     value={newProduct.name}
                                     onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
                                     required
+                                />
+                            </div>
+
+                            <div className="form-group mb-3">
+                                <label className="form-label">Slug</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="URL-friendly identifier (e.g., my-product)"
+                                    value={newProduct.slug}
+                                    onChange={(e) => setNewProduct({ ...newProduct, slug: e.target.value })}
                                 />
                             </div>
 

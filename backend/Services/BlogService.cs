@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebOnlyAPI.Data;
 using WebOnlyAPI.DTOs;
 using WebOnlyAPI.Models;
+using WebOnlyAPI.Utils;
 
 namespace WebOnlyAPI.Services
 {
@@ -29,6 +30,12 @@ namespace WebOnlyAPI.Services
             return blog != null ? MapToResponseDto(blog) : null;
         }
 
+        public async Task<BlogResponseDto?> GetBySlugAsync(string slug)
+        {
+            var blog = await _context.Blogs.FirstOrDefaultAsync(b => b.Slug == slug);
+            return blog != null ? MapToResponseDto(blog) : null;
+        }
+
         public async Task<BlogResponseDto> CreateAsync(CreateBlogDto createDto)
         {
             var blog = new Blog
@@ -46,6 +53,7 @@ namespace WebOnlyAPI.Services
                 Desc2En = createDto.Desc2En,
                 Desc2Ru = createDto.Desc2Ru,
                 Features = createDto.Features,
+                Slug = !string.IsNullOrWhiteSpace(createDto.Slug) ? createDto.Slug : SlugGenerator.GenerateSlug(createDto.Title1),
                 MainImageUrl = createDto.MainImageUrl,
                 DetailImg1Url = createDto.DetailImg1Url,
                 DetailImg2Url = createDto.DetailImg2Url,
@@ -79,6 +87,7 @@ namespace WebOnlyAPI.Services
             blog.Desc2En = updateDto.Desc2En;
             blog.Desc2Ru = updateDto.Desc2Ru;
             blog.Features = updateDto.Features;
+            blog.Slug = !string.IsNullOrWhiteSpace(updateDto.Slug) ? updateDto.Slug : SlugGenerator.GenerateSlug(updateDto.Title1);
             blog.MainImageUrl = updateDto.MainImageUrl;
             blog.DetailImg1Url = updateDto.DetailImg1Url;
             blog.DetailImg2Url = updateDto.DetailImg2Url;
@@ -119,6 +128,7 @@ namespace WebOnlyAPI.Services
                 Desc2En = blog.Desc2En,
                 Desc2Ru = blog.Desc2Ru,
                 Features = blog.Features,
+                Slug = blog.Slug,
                 MainImageUrl = blog.MainImageUrl,
                 DetailImg1Url = blog.DetailImg1Url,
                 DetailImg2Url = blog.DetailImg2Url,

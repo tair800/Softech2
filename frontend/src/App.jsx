@@ -60,17 +60,17 @@ function App() {
                   <Header />
                   <div style={{ flex: 1 }}>
                     <Routes>
-                      <Route path="/about" element={<About />} />
-                      <Route path="/services" element={<Services />} />
-                      <Route path="/services/:id" element={<ServiceDetail />} />
-                      <Route path="/contact" element={<Contact />} />
-                      <Route path="/equipment" element={<Equipment />} />
-                      <Route path="/equipment/:id" element={<EquipmentDetail />} />
-                      <Route path="/products" element={<Products />} />
-                      <Route path="/product/:id" element={<ProductDetail />} />
-                      <Route path="/factory" element={<Factory />} />
-                      <Route path="/blog" element={<Blog />} />
-                      <Route path="/blog/:id" element={<BlogDetail />} />
+                      <Route path="/haqqımızda" element={<About />} />
+                      <Route path="/xidmətlər" element={<Services />} />
+                      <Route path="/xidmətlər/:id" element={<ServiceDetail />} />
+                      <Route path="/əlaqə" element={<Contact />} />
+                      <Route path="/avadanlıqlar" element={<Equipment />} />
+                      <Route path="/avadanlıqlar/:id" element={<EquipmentDetail />} />
+                      <Route path="/məhsullar" element={<Products />} />
+                      <Route path="/məhsul/:id" element={<ProductDetail />} />
+                      <Route path="/zavod" element={<Factory />} />
+                      <Route path="/bloq" element={<Blog />} />
+                      <Route path="/bloq/:id" element={<BlogDetail />} />
                     </Routes>
                   </div>
                   <Footer />

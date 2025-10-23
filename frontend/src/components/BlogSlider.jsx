@@ -6,6 +6,7 @@ const BlogSlider = ({
     blogData = [
         {
             id: 1,
+            slug: "1",
             image: "/assets/equipment1.png",
             alt: "Blog Detail 1",
             number: "01",
@@ -14,6 +15,7 @@ const BlogSlider = ({
         },
         {
             id: 2,
+            slug: "2",
             image: "/assets/maps-logo.png",
             alt: "Blog Detail 2",
             number: "02",
@@ -22,6 +24,7 @@ const BlogSlider = ({
         },
         {
             id: 3,
+            slug: "3",
             image: "/assets/services-active.png",
             alt: "Blog Detail 3",
             number: "03",
@@ -30,6 +33,7 @@ const BlogSlider = ({
         },
         {
             id: 4,
+            slug: "4",
             image: "/assets/equipment1.png",
             alt: "Blog Detail 4",
             number: "04",
@@ -38,6 +42,7 @@ const BlogSlider = ({
         },
         {
             id: 5,
+            slug: "5",
             image: "/assets/maps-logo.png",
             alt: "Blog Detail 5",
             number: "05",
@@ -244,7 +249,7 @@ const BlogSlider = ({
                         className={`blog-slider-card blog-slider-card-small ${slideDirection === 'left' ? 'slide-left' :
                             slideDirection === 'right' ? 'slide-right' : ''
                             }`}
-                        onClick={() => navigate(`/blog/${visibleCards.left.id}`)}
+                        onClick={() => navigate(`/bloq/${visibleCards.left.slug || visibleCards.left.id}`)}
                         role="button"
                         style={{ cursor: 'pointer' }}
                     >
@@ -288,7 +293,7 @@ const BlogSlider = ({
                     className={`blog-slider-card blog-slider-card-big ${slideDirection === 'left' ? 'slide-left' :
                         slideDirection === 'right' ? 'slide-right' : 'slide-center'
                         }`}
-                    onClick={() => navigate(`/blog/${visibleCards.middle.id}`)}
+                    onClick={() => navigate(`/bloq/${visibleCards.middle.slug || visibleCards.middle.id}`)}
                     role="button"
                     style={{ cursor: 'pointer' }}
                 >
@@ -336,7 +341,7 @@ const BlogSlider = ({
                         className={`blog-slider-card blog-slider-card-small ${slideDirection === 'left' ? 'slide-left' :
                             slideDirection === 'right' ? 'slide-right' : ''
                             }`}
-                        onClick={() => navigate(`/blog/${visibleCards.right.id}`)}
+                        onClick={() => navigate(`/bloq/${visibleCards.right.slug || visibleCards.right.id}`)}
                         role="button"
                         style={{ cursor: 'pointer' }}
                     >

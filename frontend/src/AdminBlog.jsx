@@ -3,7 +3,7 @@ import './AdminBlog.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'https://softech-api.webonly.io/api';
+const API = 'http://localhost:5098/api';
 
 export default function AdminBlog() {
     const [blogs, setBlogs] = useState([]);
@@ -16,6 +16,7 @@ export default function AdminBlog() {
         title1: '', desc1: '', title1En: '', title1Ru: '', desc1En: '', desc1Ru: '',
         title2: '', desc2: '', title2En: '', title2Ru: '', desc2En: '', desc2Ru: '',
         features: '',
+        slug: '',
         mainImageUrl: '',
         detailImg1Url: '',
         detailImg2Url: '',
@@ -35,7 +36,7 @@ export default function AdminBlog() {
 
     const resolveUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098${url}`;
         return url;
     };
 
@@ -212,6 +213,7 @@ export default function AdminBlog() {
             (b.title2Ru || '') !== (o.title2Ru || '') ||
             (b.desc2En || '') !== (o.desc2En || '') ||
             (b.desc2Ru || '') !== (o.desc2Ru || '') ||
+            (b.slug || '') !== (o.slug || '') ||
             (serializeFeatures(b._features || []) || '') !== (o.features || '') ||
             (b.mainImageUrl || '') !== (o.mainImageUrl || '') ||
             (b.detailImg1Url || '') !== (o.detailImg1Url || '') ||
@@ -250,6 +252,7 @@ export default function AdminBlog() {
                     title1En: b.title1En || '', title1Ru: b.title1Ru || '', desc1En: b.desc1En || '', desc1Ru: b.desc1Ru || '',
                     title2: b.title2 || '', desc2: b.desc2 || '',
                     title2En: b.title2En || '', title2Ru: b.title2Ru || '', desc2En: b.desc2En || '', desc2Ru: b.desc2Ru || '',
+                    slug: b.slug || '',
                     features: serializeFeatures(b._features || []),
                     mainImageUrl: b.mainImageUrl || '',
                     detailImg1Url: b.detailImg1Url || '',
@@ -287,7 +290,7 @@ export default function AdminBlog() {
     const openCreate = () => setShowModal(true);
     const closeCreate = () => {
         setShowModal(false);
-        setNewBlog({ title1: '', desc1: '', title1En: '', title1Ru: '', desc1En: '', desc1Ru: '', title2: '', desc2: '', title2En: '', title2Ru: '', desc2En: '', desc2Ru: '', features: '', mainImageUrl: '', detailImg1Url: '', detailImg2Url: '', detailImg3Url: '', detailImg4Url: '' });
+        setNewBlog({ title1: '', desc1: '', title1En: '', title1Ru: '', desc1En: '', desc1Ru: '', title2: '', desc2: '', title2En: '', title2Ru: '', desc2En: '', desc2Ru: '', features: '', slug: '', mainImageUrl: '', detailImg1Url: '', detailImg2Url: '', detailImg3Url: '', detailImg4Url: '' });
         setNewBlogFeatures([]);
         setNewMainFile(null);
         setNewMainPreview('');
@@ -398,6 +401,7 @@ export default function AdminBlog() {
                     title1En: newBlog.title1En || '', title1Ru: newBlog.title1Ru || '', desc1En: newBlog.desc1En || '', desc1Ru: newBlog.desc1Ru || '',
                     title2: newBlog.title2 || '', desc2: newBlog.desc2 || '',
                     title2En: newBlog.title2En || '', title2Ru: newBlog.title2Ru || '', desc2En: newBlog.desc2En || '', desc2Ru: newBlog.desc2Ru || '',
+                    slug: newBlog.slug || '',
                     features: serializeFeatures(newBlogFeatures),
                     mainImageUrl: newBlog.mainImageUrl || '',
                     detailImg1Url: newBlog.detailImg1Url || '',
@@ -438,6 +442,7 @@ export default function AdminBlog() {
                         desc2: created.desc2 || newBlog.desc2 || '',
                         title1En: created.title1En || newBlog.title1En || '', title1Ru: created.title1Ru || newBlog.title1Ru || '', desc1En: created.desc1En || newBlog.desc1En || '', desc1Ru: created.desc1Ru || newBlog.desc1Ru || '',
                         title2En: created.title2En || newBlog.title2En || '', title2Ru: created.title2Ru || newBlog.title2Ru || '', desc2En: created.desc2En || newBlog.desc2En || '', desc2Ru: created.desc2Ru || newBlog.desc2Ru || '',
+                        slug: created.slug || newBlog.slug || '',
                         features: created.features || serializeFeatures(newBlogFeatures) || '',
                         mainImageUrl: updatedPayload.mainImageUrl || created.mainImageUrl || '',
                         detailImg1Url: updatedPayload.detailImg1Url || created.detailImg1Url || '',
@@ -553,6 +558,10 @@ export default function AdminBlog() {
                             <div className="form-group row g-3 align-items-start">
                                 <label className="col-sm-3 col-form-label">Desc 2 (RU)</label>
                                 <div className="col-sm-9"><textarea className="form-control" rows={3} value={b.desc2Ru || ''} onChange={(e) => setBlogs(prev => prev.map(x => x.id === b.id ? { ...x, desc2Ru: e.target.value } : x))} /></div>
+                            </div>
+                            <div className="form-group row g-3 align-items-start">
+                                <label className="col-sm-3 col-form-label">Slug</label>
+                                <div className="col-sm-9"><input className="form-control" placeholder="URL-friendly identifier (e.g., my-blog-post)" value={b.slug || ''} onChange={(e) => setBlogs(prev => prev.map(x => x.id === b.id ? { ...x, slug: e.target.value } : x))} /></div>
                             </div>
 
                             {/* Features section (same UX as equipment) */}
@@ -701,6 +710,10 @@ export default function AdminBlog() {
                             <div className="form-group mb-3">
                                 <label className="form-label">Desc 2 (RU)</label>
                                 <textarea className="form-control" rows="3" value={newBlog.desc2Ru} onChange={(e) => setNewBlog({ ...newBlog, desc2Ru: e.target.value })} />
+                            </div>
+                            <div className="form-group mb-3">
+                                <label className="form-label">Slug</label>
+                                <input className="form-control" placeholder="URL-friendly identifier (e.g., my-blog-post)" value={newBlog.slug} onChange={(e) => setNewBlog({ ...newBlog, slug: e.target.value })} />
                             </div>
                             {/* Create modal features section - same UX as admin cards */}
                             <div className="form-group mb-3 features-section">
@@ -952,5 +965,3 @@ export default function AdminBlog() {
         </div>
     );
 }
-
-

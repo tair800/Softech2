@@ -6,7 +6,8 @@ const EquipmentCard = ({ equipment, onMoreClick }) => {
     const { language } = useLanguage();
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `http://localhost:5098
+${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -50,7 +51,7 @@ const EquipmentCard = ({ equipment, onMoreClick }) => {
                     className="equipment-card-more-btn"
                     onClick={() => {
                         try { localStorage.setItem('selectedLanguage', language); } catch { }
-                        onMoreClick(equipment.id);
+                        onMoreClick(equipment.id, equipment.slug);
                     }}
                 >
                     Daha çox

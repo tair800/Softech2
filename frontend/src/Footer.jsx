@@ -89,7 +89,7 @@ function Footer() {
                         <ul className="footer-links">
                             {productItems.map((product, idx) => (
                                 <li key={idx}>
-                                    <Link to={`/product/${product.id}`} className="footer-product-link">
+                                    <Link to={`/məhsul/${product.id}`} className="footer-product-link">
                                         {product.name}
                                     </Link>
                                 </li>
