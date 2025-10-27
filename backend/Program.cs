@@ -31,10 +31,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         o => o.CommandTimeout(30)
     ));
 
-// Legacy SQL Server context for one-time data transfer
-builder.Services.AddDbContext<LegacySqlServerDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionSqlServer")));
-
 // Register services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
@@ -44,7 +40,6 @@ builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IReferenceService, ReferenceService>();
 builder.Services.AddScoped<DataSeederService>();
 builder.Services.AddScoped<IVisitorAnalyticsService, VisitorAnalyticsService>();
-builder.Services.AddScoped<DataTransferService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<IBlogSectionService, BlogSectionService>();
 builder.Services.AddScoped<IMetaDescriptionService, MetaDescriptionService>();
