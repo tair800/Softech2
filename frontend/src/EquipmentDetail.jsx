@@ -4,7 +4,11 @@ import SimilarEquipmentCard from './components/SimilarEquipmentCard';
 import './EquipmentDetail.css';
 import { useLanguage } from './contexts/LanguageContext.jsx';
 
-const API = 'https://softech-api.webonly.io/api';
+// Configurable API base (align with admin)
+const API = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim() !== '')
+    ? import.meta.env.VITE_API_URL.replace(/\/$/, '')
+    : 'https://softech-api.webonly.io/api';
+const API_ORIGIN = API.replace(/\/api$/i, '');
 
 function EquipmentDetail() {
     const { id } = useParams();
@@ -26,7 +30,7 @@ function EquipmentDetail() {
 
     const resolveUrl = (url) => {
         if (!url || url === 'string' || url === '') return '/assets/equipment1.png';
-        if (url.startsWith('/uploads/')) return `https://softech-api.webonly.io${url}`;
+        if (url.startsWith('/uploads/')) return `${API_ORIGIN}${url}`;
         if (url.startsWith('/assets/')) return url;
         return url;
     };
@@ -305,8 +309,10 @@ function EquipmentDetail() {
         imageSlots.push(resolveUrl(safeEquipment.imageUrl));
     }
 
-    // Add ALL additional images (don't limit to 3, let the total limit handle it)
-    safeEquipment.images.forEach(img => {
+    // Add additional images. Admin treats images[0] as the first detail (main is separate),
+    // so skip index 0 when building thumbnails to match admin preview ordering.
+    safeEquipment.images.forEach((img, idx) => {
+        if (idx === 0) return; // skip first slot to avoid duplicating the main
         if (img.imageUrl && img.imageUrl.trim() !== '' && img.imageUrl !== 'string') {
             imageSlots.push(resolveUrl(img.imageUrl));
         }

@@ -3,7 +3,36 @@ import './AdminEquipment.css';
 import './AdminAbout.css';
 import Swal from 'sweetalert2';
 
-const API = 'https://softech-api.webonly.io/api';
+// Configurable API base. Set VITE_API_URL to override. Fallback to production API.
+const API = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim() !== '')
+    ? import.meta.env.VITE_API_URL.replace(/\/$/, '')
+    : 'https://softech-api.webonly.io/api';
+
+// Slug generator (mirrors backend behavior roughly)
+const slugify = (text) => {
+    if (!text) return 'item';
+    let t = (text || '').toString().toLowerCase();
+    // Azerbaijani chars
+    t = t
+        .replace(/ə/g, 'e')
+        .replace(/ü/g, 'u')
+        .replace(/ö/g, 'o')
+        .replace(/ı/g, 'i')
+        .replace(/ğ/g, 'g')
+        .replace(/ç/g, 'c')
+        .replace(/ş/g, 's');
+    // Remove accents
+    t = t.normalize('NFD').replace(/\p{Diacritic}+/gu, '');
+    // Remove invalid chars
+    t = t.replace(/[^a-z0-9\s-]/g, '');
+    // Collapse whitespace/hyphens
+    t = t.replace(/[\s-]+/g, '-');
+    // Trim hyphens
+    t = t.replace(/^-+|-+$/g, '');
+    if (!t) return 'item';
+    if (t.length > 100) t = t.substring(0, 100).replace(/-+$/g, '');
+    return t;
+};
 
 export default function AdminEquipment() {
     const [equipments, setEquipments] = useState([]);
@@ -434,17 +463,20 @@ export default function AdminEquipment() {
                             descriptionEn: form.descriptionEn,
                             descriptionRu: form.descriptionRu,
                             imageUrl: '',
-                            slug: form.slug,
+                            // Auto-generate slug if blank
+                            slug: (form.slug && form.slug.toString().trim() !== '') ? form.slug : slugify(form.name),
                             isMain: form.isMain,
                             categoryIds: form.categoryIds,
                             tagIds: form.tagIds,
                             features: form.features,
                             specifications: form.specifications,
-                            images: (form.images || []).filter(img => img.imageUrl && img.imageUrl.trim() !== '').map(img => ({
-                                imageUrl: img.imageUrl,
-                                alt: img.alt || '',
-                                orderIndex: img.orderIndex || 0
-                            }))
+                            images: (form.images || [])
+                                .filter(img => img.imageUrl && img.imageUrl.toString().trim() !== '')
+                                .map(img => ({
+                                    imageUrl: img.imageUrl,
+                                    alt: img.alt || '',
+                                    orderIndex: img.orderIndex || 0
+                                }))
                         })
                     });
 
@@ -478,17 +510,20 @@ export default function AdminEquipment() {
                             descriptionEn: form.descriptionEn,
                             descriptionRu: form.descriptionRu,
                             imageUrl: finalImageUrl,
-                            slug: form.slug,
+                            // Auto-generate slug if blank
+                            slug: (form.slug && form.slug.toString().trim() !== '') ? form.slug : slugify(form.name),
                             isMain: form.isMain,
                             categoryIds: form.categoryIds,
                             tagIds: form.tagIds,
                             features: (form.features || []).filter(f => f.feature && f.feature.trim() !== ''),
                             specifications: (form.specifications || []).filter(s => s.key && s.key.trim() !== ''),
-                            images: (form.images || []).filter(img => img.imageUrl && img.imageUrl.trim() !== '').map(img => ({
-                                imageUrl: img.imageUrl,
-                                alt: img.alt || '',
-                                orderIndex: img.orderIndex || 0
-                            }))
+                            images: (form.images || [])
+                                .filter(img => img.imageUrl && img.imageUrl.toString().trim() !== '')
+                                .map(img => ({
+                                    imageUrl: img.imageUrl,
+                                    alt: img.alt || '',
+                                    orderIndex: img.orderIndex || 0
+                                }))
                         })
                     });
 
@@ -548,17 +583,20 @@ export default function AdminEquipment() {
                     descriptionEn: form.descriptionEn,
                     descriptionRu: form.descriptionRu,
                     imageUrl: form.imageUrl,
-                    slug: form.slug,
+                    // Auto-generate slug from name on create when blank
+                    slug: (form.slug && form.slug.toString().trim() !== '') ? form.slug : slugify(form.name),
                     isMain: form.isMain,
                     categoryIds: form.categoryIds,
                     tagIds: form.tagIds,
                     features: (form.features || []).filter(f => f.feature && f.feature.trim() !== ''),
                     specifications: (form.specifications || []).filter(s => s.key && s.key.trim() !== ''),
-                    images: (form.images || []).filter(img => img.imageUrl && img.imageUrl.trim() !== '').map(img => ({
-                        imageUrl: img.imageUrl,
-                        alt: img.alt || '',
-                        orderIndex: img.orderIndex || 0
-                    }))
+                    images: (form.images || [])
+                        .filter(img => img.imageUrl && img.imageUrl.toString().trim() !== '')
+                        .map(img => ({
+                            imageUrl: img.imageUrl,
+                            alt: img.alt || '',
+                            orderIndex: img.orderIndex || 0
+                        }))
                 };
                 const res = await fetch(url, {
                     method,
@@ -688,6 +726,7 @@ export default function AdminEquipment() {
                 }));
 
             // Send everything in one update call
+            const autoSlug = (item.slug && item.slug.toString().trim() !== '') ? item.slug : slugify(item.name);
             const requestBody = {
                 name: item.name || '',
                 version: item.version || '',
@@ -696,17 +735,20 @@ export default function AdminEquipment() {
                 descriptionEn: item.descriptionEn || '',
                 descriptionRu: item.descriptionRu || '',
                 imageUrl: item.imageUrl || '',
-                slug: item.slug || '',
+                // Auto-generate slug from name when empty
+                slug: autoSlug,
                 isMain: item.isMain || false,
                 categoryIds: categoryIds,
                 tagIds: tagIds,
                 features: features,
                 specifications: specifications,
-                images: autoReorder((item.images || []).slice(0, 4)).map((img) => ({
-                    imageUrl: img.imageUrl || '',
-                    alt: img.alt || '',
-                    orderIndex: img.orderIndex || 0
-                }))
+                images: autoReorder((item.images || []).slice(0, 4))
+                    .filter(img => img.imageUrl && img.imageUrl.toString().trim() !== '')
+                    .map((img) => ({
+                        imageUrl: img.imageUrl,
+                        alt: img.alt || '',
+                        orderIndex: img.orderIndex || 0
+                    }))
             };
 
             console.log('Sending PUT request to:', `${API}/equipment/${id}`);
@@ -904,7 +946,7 @@ export default function AdminEquipment() {
                             <div className="form-group row g-3 align-items-start">
                                 <label className="col-sm-3 col-form-label">Name *</label>
                                 <div className="col-sm-9">
-                                    <input className="form-control" value={e.name || ''} onChange={(ev) => setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, name: ev.target.value } : x))} />
+                                    <input className="form-control" value={e.name || ''} onChange={(ev) => setEquipments(prev => prev.map(x => x.id === e.id ? { ...x, name: ev.target.value, slug: (x.slug && x.slug.trim() !== '') ? x.slug : slugify(ev.target.value) } : x))} />
                                 </div>
                             </div>
                             <div className="form-group row g-3 align-items-start">

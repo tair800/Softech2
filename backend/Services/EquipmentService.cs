@@ -174,7 +174,8 @@ namespace WebOnlyAPI.Services
                 ImageUrl = dto.ImageUrl,
                 DescriptionEn = dto.DescriptionEn,
                 DescriptionRu = dto.DescriptionRu,
-                Slug = !string.IsNullOrWhiteSpace(dto.Slug) ? dto.Slug : SlugGenerator.GenerateSlug(dto.Name),
+                // Do not auto-generate slug on create when not provided; allow null
+                Slug = string.IsNullOrWhiteSpace(dto.Slug) ? null : dto.Slug,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -303,7 +304,14 @@ namespace WebOnlyAPI.Services
                 e.DescriptionEn = dto.DescriptionEn;
                 e.DescriptionRu = dto.DescriptionRu;
                 e.ImageUrl = dto.ImageUrl;
-                e.Slug = !string.IsNullOrWhiteSpace(dto.Slug) ? dto.Slug : SlugGenerator.GenerateSlug(dto.Name);
+                // Update slug only when it's explicitly provided in the DTO.
+                // - If dto.Slug is null: keep existing slug unchanged
+                // - If dto.Slug is empty/whitespace: clear slug (set to null)
+                // - Otherwise: set provided slug value
+                if (dto.Slug != null)
+                {
+                    e.Slug = string.IsNullOrWhiteSpace(dto.Slug) ? null : dto.Slug;
+                }
                 e.IsMain = dto.IsMain;
                 e.UpdatedAt = DateTime.UtcNow;
 

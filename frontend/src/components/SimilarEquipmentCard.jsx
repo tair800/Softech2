@@ -2,25 +2,21 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SimilarEquipmentCard.css';
 
+// Configurable API base (align with admin)
+const API = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim() !== '')
+    ? import.meta.env.VITE_API_URL.replace(/\/$/, '')
+    : 'https://softech-api.webonly.io/api';
+const API_ORIGIN = API.replace(/\/api$/i, '');
+
 const SimilarEquipmentCard = ({ equipment, isActive = false }) => {
     const navigate = useNavigate();
 
     const resolveUrl = (url) => {
         if (!url) return '';
         if (url.startsWith('http')) return url;
-
-        // Map database upload paths to local assets
-        if (url.includes('equipment1.png')) {
-            return '/assets/equipment1.png';
-        }
-        if (url.includes('equipment2.png')) {
-            return '/assets/equipment2.png';
-        }
-
-        // For other uploads, try the API server
+        // For other uploads, build absolute from API origin
         if (url.startsWith('/uploads/')) {
-            return `https://softech-api.webonly.io
-${url}`;
+            return `${API_ORIGIN}${url}`;
         }
         if (url.startsWith('/assets/')) {
             return url;
