@@ -818,6 +818,15 @@
     }
 }
 
+/* iPhone 14 Pro Max (430x932) Resolution Specific Styles */
+@media (min-width: 430px) and (max-width: 430px) and (min-height: 932px) and (max-height: 932px) {
+    .footer-bg-img {
+        width: 390px !important;
+        bottom: -120px !important;
+        right: -6px !important;
+    }
+}
+
 /* iPhone 12 Pro (390x844) Resolution Specific Styles */
 @media (min-width: 390px) and (max-width: 390px) and (min-height: 844px) and (max-height: 844px) {
     .footer-bg-img {

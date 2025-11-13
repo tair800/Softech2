@@ -1660,3 +1660,60 @@
     margin-left: 1px;
   }
 }
+
+/* Bounded mobile ranges for About page title */
+@media (max-width: 389px) {
+  .page-title-container.page-title-about {
+    top: 128px !important;
+  }
+
+  .page-title-container.page-title-about .page-title-softech {
+    font-size: 2.2rem !important;
+  }
+
+  .page-title-container.page-title-about .page-title {
+    font-size: 1.05rem !important;
+  }
+}
+
+@media (min-width: 390px) and (max-width: 413px) {
+  .page-title-container.page-title-about {
+    top: 135px !important;
+  }
+
+  .page-title-container.page-title-about .page-title-softech {
+    font-size: 2.4rem !important;
+  }
+
+  .page-title-container.page-title-about .page-title {
+    font-size: 1.1rem !important;
+  }
+}
+
+@media (min-width: 414px) and (max-width: 429px) {
+  .page-title-container.page-title-about {
+    top: 142px !important;
+  }
+
+  .page-title-container.page-title-about .page-title-softech {
+    font-size: 2.6rem !important;
+  }
+
+  .page-title-container.page-title-about .page-title {
+    font-size: 1.2rem !important;
+  }
+}
+
+@media (min-width: 430px) and (max-width: 480px) {
+  .page-title-container.page-title-about {
+    top: 148px !important;
+  }
+
+  .page-title-container.page-title-about .page-title-softech {
+    font-size: 2.8rem !important;
+  }
+
+  .page-title-container.page-title-about .page-title {
+    font-size: 1.25rem !important;
+  }
+}

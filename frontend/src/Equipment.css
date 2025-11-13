@@ -292,6 +292,95 @@
     }
 }
 
+/* Bounded mobile ranges for Equipment page title alignment */
+@media (max-width: 389px) {
+    .page-title-container.page-title-equipment {
+        top: 128px !important;
+    }
+
+    .equipment-center {
+        margin-top: 60px;
+    }
+
+    .equipment-rainbow {
+        margin-top: 7%;
+    }
+
+    .page-title-container.page-title-equipment .page-title-softech {
+        font-size: 2.2rem !important;
+    }
+
+    .page-title-container.page-title-equipment .page-title {
+        font-size: 1.05rem !important;
+    }
+}
+
+@media (min-width: 390px) and (max-width: 413px) {
+    .page-title-container.page-title-equipment {
+        top: 135px !important;
+    }
+
+    .equipment-center {
+        margin-top: 50px;
+    }
+
+    .equipment-rainbow {
+        margin-top: 0%;
+    }
+
+    .page-title-container.page-title-equipment .page-title-softech {
+        font-size: 2.4rem !important;
+    }
+
+    .page-title-container.page-title-equipment .page-title {
+        font-size: 1.1rem !important;
+    }
+}
+
+@media (min-width: 414px) and (max-width: 429px) {
+    .page-title-container.page-title-equipment {
+        top: 142px !important;
+    }
+
+    .equipment-center {
+        margin-top: 50px;
+    }
+
+    .equipment-rainbow {
+        margin-top: 0%;
+    }
+
+    .page-title-container.page-title-equipment .page-title-softech {
+        font-size: 2.6rem !important;
+    }
+
+    .page-title-container.page-title-equipment .page-title {
+        font-size: 1.2rem !important;
+    }
+}
+
+@media (min-width: 430px) and (max-width: 480px) {
+    .page-title-container.page-title-equipment {
+        top: 148px !important;
+    }
+
+    .equipment-center {
+        margin-top: 50px;
+    }
+
+    .equipment-rainbow {
+        margin-top: 0%;
+    }
+
+    .page-title-container.page-title-equipment .page-title-softech {
+        font-size: 2.8rem !important;
+    }
+
+    .page-title-container.page-title-equipment .page-title {
+        font-size: 1.25rem !important;
+    }
+}
+
 /* Bounded spacing for mobile controls */
 @media (min-width: 426px) and (max-width: 480px) {
     .equipment-mobile-controls {

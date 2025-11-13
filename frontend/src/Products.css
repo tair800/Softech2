@@ -564,7 +564,7 @@
     }
 
     .products-center {
-        top: 120px;
+        top: 100px;
     }
 
     .products-logo {
@@ -612,7 +612,7 @@
     }
 
     .products-center {
-        top: 100px;
+        top: 80px;
     }
 
     .products-logo {
@@ -660,7 +660,7 @@
 
 @media (max-width: 600px) {
     .products-center {
-        top: 80px;
+        top: 40px;
     }
 
     .products-logo {
@@ -732,7 +732,7 @@
     }
 
     .products-center {
-        top: 90px;
+        top: 50px;
     }
 
     .products-logo {
@@ -824,7 +824,7 @@
     }
 
     .products-center {
-        top: 90px;
+        top: 50px;
     }
 
     .products-logo {
@@ -872,7 +872,7 @@
 
 @media (max-width: 360px) {
     .products-center {
-        top: 50px;
+        top: 40px;
     }
 
     .page-title-container.page-title-products {
@@ -1183,6 +1183,94 @@
 /* iPhone 12 Pro (390x844) Resolution Specific Styles */
 @media (min-width: 390px) and (max-width: 390px) and (min-height: 844px) and (max-height: 844px) {
     .products-rainbow {
-        margin-top: 0rem !important;
+        margin-top: 3% !important;
+    }
+}
+
+@media (max-width: 389px) {
+    .page-title-container.page-title-products {
+        top: 128px !important;
+    }
+
+    .products-center {
+        top: 60px;
+    }
+
+    .products-rainbow {
+        margin-top: 11%;
+    }
+
+    .page-title-container.page-title-products .page-title-softech {
+        font-size: 2.2rem !important;
+    }
+
+    .page-title-container.page-title-products .page-title {
+        font-size: 1.05rem !important;
+    }
+}
+
+@media (min-width: 390px) and (max-width: 413px) {
+    .page-title-container.page-title-products {
+        top: 135px !important;
+    }
+
+    .products-center {
+        top: 50px;
+    }
+
+    .products-rainbow {
+        margin-top: 5%;
+    }
+
+    .page-title-container.page-title-products .page-title-softech {
+        font-size: 2.4rem !important;
+    }
+
+    .page-title-container.page-title-products .page-title {
+        font-size: 1.1rem !important;
+    }
+}
+
+@media (min-width: 414px) and (max-width: 429px) {
+    .page-title-container.page-title-products {
+        top: 142px !important;
+    }
+
+    .products-center {
+        top: 50px;
+    }
+
+    .products-rainbow {
+        margin-top: 5%;
+    }
+
+    .page-title-container.page-title-products .page-title-softech {
+        font-size: 2.6rem !important;
+    }
+
+    .page-title-container.page-title-products .page-title {
+        font-size: 1.2rem !important;
+    }
+}
+
+@media (min-width: 430px) and (max-width: 480px) {
+    .page-title-container.page-title-products {
+        top: 148px !important;
+    }
+
+    .products-center {
+        top: 50px;
+    }
+
+    .products-rainbow {
+        margin-top: 5%;
+    }
+
+    .page-title-container.page-title-products .page-title-softech {
+        font-size: 2.8rem !important;
+    }
+
+    .page-title-container.page-title-products .page-title {
+        font-size: 1.25rem !important;
     }
 }

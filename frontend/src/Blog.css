@@ -66,21 +66,95 @@
     }
 }
 
-@media (max-width: 375px) {
+@media (max-width: 389px) {
     .page-title-container.page-title-blog {
-        top: 185px !important;
+        top: 150px !important;
+    }
+
+    .page-title-container.page-title-blog .page-title-softech {
+        font-size: 2.2rem !important;
+    }
+
+    .page-title-container.page-title-blog .page-title {
+        font-size: 1.05rem !important;
+    }
+
+    .blog-spline {
+        margin-top: -10%;
+    }
+
+    .blog-top {
+        margin-top: 60px !important;
+        gap: 1.5rem;
     }
 }
 
-@media (max-width: 360px) {
+@media (min-width: 390px) and (max-width: 413px) {
     .page-title-container.page-title-blog {
-        top: 175px !important;
+        top: 154px !important;
+    }
+
+    .page-title-container.page-title-blog .page-title-softech {
+        font-size: 2.4rem !important;
+    }
+
+    .page-title-container.page-title-blog .page-title {
+        font-size: 1.1rem !important;
+    }
+
+    .blog-spline {
+        margin-top: -8%;
+    }
+
+    .blog-top {
+        margin-top: 55px !important;
+        gap: 1.5rem;
     }
 }
 
-@media (max-width: 320px) {
+@media (min-width: 414px) and (max-width: 429px) {
     .page-title-container.page-title-blog {
         top: 160px !important;
+    }
+
+    .page-title-container.page-title-blog .page-title-softech {
+        font-size: 2.6rem !important;
+    }
+
+    .page-title-container.page-title-blog .page-title {
+        font-size: 1.2rem !important;
+    }
+
+    .blog-spline {
+        margin-top: -6%;
+    }
+
+    .blog-top {
+        margin-top: 55px !important;
+        gap: 1.5rem;
+    }
+}
+
+@media (min-width: 430px) and (max-width: 480px) {
+    .page-title-container.page-title-blog {
+        top: 166px !important;
+    }
+
+    .page-title-container.page-title-blog .page-title-softech {
+        font-size: 2.8rem !important;
+    }
+
+    .page-title-container.page-title-blog .page-title {
+        font-size: 1.25rem !important;
+    }
+
+    .blog-spline {
+        margin-top: -4%;
+    }
+
+    .blog-top {
+        margin-top: 60px !important;
+        gap: 1.5rem;
     }
 }
 
@@ -116,6 +190,7 @@
     .blog-container .page-title {
         font-size: 17px !important;
     }
+
     .blog-slider-section {
         padding-top: 0 !important;
     }
