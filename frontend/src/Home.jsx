@@ -198,8 +198,8 @@ export default function Home() {
 
   // Handle slider click to navigate to product
   const handleSliderClick = (slide) => {
-    if (slide.productId) {
-      navigate(`/product/${slide.productId}`);
+    if (slide?.productId) {
+      navigate(`/məhsul/${slide.productId}`);
     }
   };
 
